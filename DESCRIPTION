@@ -1,9 +1,16 @@
 Package: gglooper
 Type: Package
-Title: Loop through data frames to efficiently create distribution plots (density, histogram, boxplot)
-Version: 0.1.0
-Author: Luke Smith
-Maintainer: <luke@protocolvital.info>
-Description: Pass a data frame to gglooper and it will create a distribution plot for each variable in the data frame along with a facet (which can be excluded). A list object will be returned, and within each list element will be a plot corresponding to each of the data frame variables and named accordingly.
-License: What license is it under?
+Title: A looper for ggplot2
+Version: 0.0.0.9000
+Author@R: person("Luke", "Smith", email = "luke@protocolvital.info",
+               role = c("aut", "cre"))
+URL: https://github.com/seasmith1018/gglooper
+BugReports: https://github.com/seasmith1018/gglooper/issues
+Description: Pass a data frame to gglooper and it will create
+    a distribution plot for each variable in the data frame
+    along with a facet (which can be excluded). A list object
+    will be returned, and within each list element will be a plot
+    corresponding to each of the data frame variables and named accordingly.
+License: GPL-2
 LazyData: TRUE
+Imports: ggplot2
