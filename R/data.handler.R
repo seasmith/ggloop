@@ -70,16 +70,12 @@ recycle_TRUE <- function(lst){
     quotient <- length(lst[[.max]]) %/% length(lst[[.min]])
     remainder <- length(lst[[.max]]) %% length(lst[[.min]])
       if.zero <- !is.na(remainder/remainder) %>% sum() # 0 if 0/0; 1 if !0/0
-    .min.quotient <- rep(tst[[.min]], quotient)
-    .min.remainder <- rep(tst[[.min]][1L:remainder], if.zero) # rep 0 or 1
+
+    .min.quotient <- rep(lst[[.min]], quotient)
+    .min.remainder <- rep(lst[[.min]][1L:remainder], if.zero) # rep 0 or 1
 
     lst[[.min]] <- c(.min.quotient, .min.remainder)
-  } #else if(logic[[1L]]){
-
-  # } else if(logic[[2L]]){
-  #   lst[["x"]] <- lst[["y"]]
-  #   lst[["y"]] <- NULL
-  # }
+  }
   return(lst)
 }
 
@@ -96,12 +92,40 @@ recycle_FALSE <- function(lst){
     .min <- which.min(lengths)
     .max.length <- length(lst[[.max]])
 
-    lst[[.min]] <- tst[[.min]][1L:.max.length]
-  } else if(logic[[1L]]){
+    lst[[.min]] <- lst[[.min]][1L:.max.length]
+  }
+  return(lst)
+}
 
-  } else if(logic[[2L]]){
-    lst[["x"]] <- lst[["y"]]
-    lst[["y"]] <- NULL
+
+# recycle_NULL() ----------------------------------------------------------
+
+recycle_NULL <- function(lst){
+  logic <- c("x", "y") %in% names(lst)
+  if(all(logic)){
+    combo <- expand.grid(x = lst$x, y = lst$y, stringsAsFactors = F)
+    dupes <- mapply(FUN = c, combo$x, combo$y, SIMPLIFY = F) %>%
+      lapply(sort) %>%
+      duplicated() %>%
+      which()
+    dubs <- which(combo$x == combo$y)
+    deletes <- c(dupes, dubs)
+    combo <- combo[-deletes, ]
+
+    lst$x <- combo$x
+    lst$y <- combo$y
+  }
+  return(lst)
+}
+
+
+# recycle_dots() ----------------------------------------------------------
+
+
+recycle_dots <- function(lst){
+  if((length(lst) - 2) == 0){
+    combo <- expand.grid(lst[-(1:2)], stringsAsFactors = F)
+    lst[3:length(lst)] <- combo(1:length(combo))
   }
   return(lst)
 }
