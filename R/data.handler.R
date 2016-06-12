@@ -1,11 +1,12 @@
 
 
-# gglist() ----------------------------------------------------------------
+# ggloop() ----------------------------------------------------------------
 
 
-gglist <- function(data,
-                   aes = aes_list(),
-                   recycle = TRUE){
+ggloop <- function(data,
+                   mapping = aes_list(),
+                   recycle = TRUE,
+                   environment = parent.frame()){
 
 }
 
@@ -45,26 +46,62 @@ aes_inputs <- function(data,
     y.vars <- NULL
   }
 
-      dots <- substitute(list(...))[-1]
+      dots <- as.list(substitute(list(...)))[-1L]
     dot.vars <- lapply(seq_along(dots), function(i){
       arg.vars <- data %>% dplyr::select(eval(dots[[i]])) %>% names()
     }) %>%
-      set_names(names(dots))
+      magrittr::set_names(names(dots))
 
   aes_inputs <- c(x = x.vars, y = y.vars, dot.vars)
 }
 
 
 
-# recycler() --------------------------------------------------------------
+# recycle_TRUE() ----------------------------------------------------------
 
 
-recycler <- function(lst){
+recycle_TRUE <- function(lst){
   logic <- c("x", "y") %in% names(lst)
   if(all(logic)){
-    larger <- which.max(length(lst[["x"]]), length(lst[["y"]]))
+    lengths <- c(length(lst[["x"]]), length(lst[["y"]]))
+    .max <- which.max(lengths)
+    .min <- which.min(lengths)
 
-  } else if(any(logic)){
+    quotient <- length(lst[[.max]]) %/% length(lst[[.min]])
+    remainder <- length(lst[[.max]]) %% length(lst[[.min]])
+      if.zero <- !is.na(remainder/remainder) %>% sum() # 0 if 0/0; 1 if !0/0
+    .min.quotient <- rep(tst[[.min]], quotient)
+    .min.remainder <- rep(tst[[.min]][1L:remainder], if.zero) # rep 0 or 1
 
+    lst[[.min]] <- c(.min.quotient, .min.remainder)
+  } #else if(logic[[1L]]){
+
+  # } else if(logic[[2L]]){
+  #   lst[["x"]] <- lst[["y"]]
+  #   lst[["y"]] <- NULL
+  # }
+  return(lst)
+}
+
+
+
+# recycle_FALSE() ---------------------------------------------------------
+
+
+recycle_FALSE <- function(lst){
+  logic <- c("x", "y") %in% names(lst)
+  if(all(logic)){
+    lengths <- c(length(lst[["x"]]), length(lst[["y"]]))
+    .max <- which.max(lengths)
+    .min <- which.min(lengths)
+    .max.length <- length(lst[[.max]])
+
+    lst[[.min]] <- tst[[.min]][1L:.max.length]
+  } else if(logic[[1L]]){
+
+  } else if(logic[[2L]]){
+    lst[["x"]] <- lst[["y"]]
+    lst[["y"]] <- NULL
   }
+  return(lst)
 }
