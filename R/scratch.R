@@ -1,11 +1,6 @@
-
-# Basic mapply() ----------------------------------------------------------
-
-aes.list <- mapply(FUN = aes,
-                   x   = x.vars,
-                   y   = y.vars,
-                   ... = ...vars)
-
+xy <- nputs[1:2]
+dots <- nputs[3:length(nputs)]
+.dots[rep(1, length(nputs[[1]])), ]
 
 
 # select ------------------------------------------------------------------
@@ -35,3 +30,5 @@ function (vars, ..., include = character(), exclude = character())
   select_vars_(vars, args, include = include, exclude = exclude)
 }
 <environment: namespace:dplyr>
+
+
