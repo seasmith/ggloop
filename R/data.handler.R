@@ -8,12 +8,30 @@ ggloop <- function(data,
                    remap_xy = TRUE,
                    remap_dots = TRUE,
                    environment = parent.frame()){
+
+}
+
+
+
+# aes_loop() --------------------------------------------------------------
+
+
+aes_loop <- function(data, x, y, ...){
+  # place mapping argument values in a list
+  mappings <- aes_inputs()
+
+
+  # remap TRUE/FALSE/NA xy value pairs
   if(remap_xy) remap_xy_TRUE(mapping)
   if(!remap_xy) remap_xy_FALSE(mapping)
   if(is.na(remap_xy)) remap_xy_NA(mapping)
 
+  # remap TRUE/FALSE dots
   if(remap_dots) remap_dots_TRUE(mapping)
   if(!remap_dots) remap_dots_FALSE(mapping)
+
+
+
 }
 
 
@@ -38,51 +56,67 @@ aes_list <- function(lst){
 # aes_inputs() ------------------------------------------------------------
 
 
-aes_inputs <- function(data,
-                     x,
-                     y,
-                     ...){
+aes_inputs <- function(data, x, y, ...){
+  # capture x values if exist
   if(hasArg(x)){
     x <- substitute(x)
-    x.vars <- data %>% dplyr::select(eval(x)) %>% names() %>% list()
+    x.eval <- data %>% dplyr::select(eval(x)) %>% names() %>% list()
+    is.x <- TRUE
   } else{
-    x.vars <- NULL
+    x.eval <- NULL
+    is.x   <- FALSE
   }
 
+  #capture y values if exist
   if(hasArg(y)){
     y <- substitute(y)
-    y.vars <- data %>% dplyr::select(eval(y)) %>% names() %>% list()
+    y.eval <- data %>% dplyr::select(eval(y)) %>% names() %>% list()
+    is.y <- TRUE
   } else{
-    y.vars <- NULL
+    y.eval <- NULL
+    is.y   <- FALSE
   }
 
-      dots <- as.list(substitute(list(...)))[-1L]
-    dot.vars <- lapply(seq_along(dots), function(i){
-      arg.vars <- data %>% dplyr::select(eval(dots[[i]])) %>% names()
-    }) %>%
-      magrittr::set_names(names(dots))
+  # capture dots if exist
+  dots <- as.list(substitute(list(...)))[-1L]
+  if(length(dots)){
+    dot.eval <- lapply(seq_along(dots), function(i){
+      arg.eval <- data %>% dplyr::select(eval(dots[[i]])) %>% names()
+      }) %>%
+    magrittr::set_names(names(dots))
+  is.dot <- TRUE
+  } else{
+    dot.eval <- NULL
+    is.dot   <- FALSE
+  }
 
-  aes_inputs <- c(x = x.vars, y = y.vars, dot.vars)
+  # list logical existance and values (if any) for all arguments
+  mappings <- c(is.x = is.x, x = x.eval,
+                is.y = is.y, y = y.eval,
+                is.dot = is.dot, dot.eval)
+  return(mappings)
 }
-
 
 
 # remap_xy_TRUE() -----------------------------------------------------------
 
 remap_xy_TRUE <- function(lst){
-  logic <- c("x", "y") %in% names(lst)
-  if(all(logic)){
-    combo <- expand.grid(x = lst$x, y = lst$y, stringsAsFactors = F)
-    dupes <- mapply(FUN = c, combo$x, combo$y, SIMPLIFY = F) %>%
-      lapply(sort) %>%
-      duplicated() %>%
-      which()
-    dubs <- which(combo$x == combo$y)
-    deletes <- c(dupes, dubs)
-    combo <- combo[-deletes, ]
+  if(lst$is.x && lst$is.y){
+    xy <- expand.grid(x = lst$x, y = lst$y, stringsAsFactors = F)
 
-    lst$x <- combo$x
-    lst$y <- combo$y
+    is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = F) %>%
+      lapply(sort) %>%
+      duplicated()
+    dupes <- if(sum(is.dupes)) which(dupes) else NULL
+
+    is.dubs <- which(xy$x == xy$y)
+    dubs <- if(sum(is.dubs)) which(dubs) else NULL
+
+    deletes <- c(dupes, dubs)
+    if(!is.null(deletes)) xy <- xy[-deletes, ]
+
+    lst$x <- xy$x
+    lst$y <- xy$y
   }
   return(lst)
 }
@@ -92,14 +126,13 @@ remap_xy_TRUE <- function(lst){
 
 
 remap_xy_FALSE <- function(lst){
-  logic <- c("x", "y") %in% names(lst)
-  if(all(logic)){
+  if(is.x && is.y){
     lengths <- c(length(lst[["x"]]), length(lst[["y"]]))
-    .max <- which.max(lengths)
-    .min <- which.min(lengths)
-    .max.length <- length(lst[[.max]])
+    xy.max <- whichxy.max(lengths)
+    xy.min <- whichxy.min(lengths)
+    xy.max.length <- length(lst[[xy.max]])
 
-    lst[[.min]] <- lst[[.min]][1L:.max.length]
+    lst[[xy.min]] <- lst[[xy.min]][1L:xy.max.length]
   }
   return(lst)
 }
@@ -109,8 +142,7 @@ remap_xy_FALSE <- function(lst){
 
 
 remap_xy_NA <- function(lst){
-  logic <- c("x", "y") %in% names(lst)
-  if(all(logic)){
+  if(is.x && is.y){
     lengths <- c(length(lst[["x"]]), length(lst[["y"]]))
     .max <- which.max(lengths)
     .min <- which.min(lengths)
@@ -132,7 +164,7 @@ remap_xy_NA <- function(lst){
 
 
 remap_dots_TRUE <- function(lst){
-  if((length(lst) - 2) > 0){
+  if(is.dots){
     combo <- expand.grid(lst[-(1:2)], stringsAsFactors = F)
     lst[3:length(lst)] <- combo[1:length(combo)]
   }
@@ -144,7 +176,7 @@ remap_dots_TRUE <- function(lst){
 
 
 remap_dots_FALSE <- function(lst){
-  if((length(lst) - 2) > 0){
+  if(is.dots){
     dots <- lst[3:length(lst)]
     no.recycle <- sapply(dots, length) %>%
       which.max() %>%
