@@ -1,5 +1,19 @@
 xy <- nputs[1:2]
 dots <- nputs[3:length(nputs)]
+lapply(seq_len(dim(.dots)[2]), function(x){
+  print(x)
+  rep.length <- rep(x, length(xy[[1]]))
+  new.dots <- .dots[rep.length, ]
+  cbind(.xy, new.dots)
+})
+
+aes_loader <- function(lst){
+
+}
+
+
+
+
 .dots[rep(1, length(nputs[[1]])), ]
 
 
