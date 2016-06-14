@@ -67,9 +67,10 @@ remap_dots_TRUE <- function(lst){
   if(lst$is.dots){
     start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
     end <- length(lst)
-    dots <- expand.grid(lst[start:end], stringsAsFactors = F)
-    lst[start:end] <- dots[1:length(dots)]
+    dots <- expand.grid(lst[end:start], stringsAsFactors = F)
+    lst[end:start] <- dots[1:length(dots)]
   }
+  lst$is.dots.chained <- TRUE
   return(lst)
 }
 
@@ -86,12 +87,17 @@ remap_dots_FALSE <- function(lst){
       lapply(dots[-.], function(x, y) x[1L:length(dots[[y]])], y = .)
     lst[names(no.recycle)] <- no.recycle
   }
+  lst$is.dots.chained <- TRUE
   return(lst)
 }
 
 
-# exclusive_dots() ----------------------------------------------------------
 
-exclusive_dots <- function(lst){
+# remap_dots_NA() ---------------------------------------------------------
 
+
+remap_dots_NA <- function(lst){
+  lst$is.dots.chained <- FALSE
+  return(lst)
 }
+
