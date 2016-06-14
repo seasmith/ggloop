@@ -22,13 +22,14 @@ aes_loop <- function(data, x, y, ...){
 
 
   # remap TRUE/FALSE/NA xy value pairs
-  if(remap_xy) remap_xy_TRUE(mapping)
-  if(!remap_xy) remap_xy_FALSE(mapping)
-  if(is.na(remap_xy)) remap_xy_NA(mapping)
+  if(is.na(remap_xy)) remap_xy_NA(mappings)
+  if(remap_xy) remap_xy_TRUE(mappings)
+  if(!remap_xy) remap_xy_FALSE(mappings)
 
   # remap TRUE/FALSE dots
-  if(remap_dots) remap_dots_TRUE(mapping)
-  if(!remap_dots) remap_dots_FALSE(mapping)
+  if(is.na(remap_dots)) remap_dots_NA(mappings)
+  if(remap_dots) remap_dots_TRUE(mappings)
+  if(!remap_dots) remap_dots_FALSE(mappings)
 
 
 
