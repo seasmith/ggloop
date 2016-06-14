@@ -71,8 +71,6 @@ aes_inputs <- function(data, x, y, ...){
   #capture y values if exist
   if(hasArg(y)){
     y <- substitute(y)
-    print(length(y))
-    print(y)
     y.eval <- data %>% names() %>% dplyr::select_vars(eval(y)) %>%
       unname() %>% list()
     is.y <- TRUE
