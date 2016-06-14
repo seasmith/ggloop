@@ -22,7 +22,7 @@ remap_xy_TRUE <- function(lst){
 }
 
 
-# remap_xy_NA() -------------------------------------------------------
+# remap_xy_NA() -------------------------------------------------------------
 
 
 remap_xy_NA <- function(lst){
@@ -38,12 +38,12 @@ remap_xy_NA <- function(lst){
 }
 
 
-# remap_xy_FALSE() ------------------------------------------------------
+# remap_xy_FALSE() ----------------------------------------------------------
 
 
 remap_xy_FALSE <- function(lst){
   if(lst$is.x && lst$is.y){
-    xy.lengths <- c(x = length(lst[[2]]), y = length(lst[[4]]))
+    xy.lengths <- c(x = length(lst[["x"]]), y = length(lst[["y"]]))
     xy.max <- which.max(xy.lengths) %>% names()
     xy.min <- which.min(xy.lengths) %>% names()
 
@@ -65,8 +65,10 @@ remap_xy_FALSE <- function(lst){
 
 remap_dots_TRUE <- function(lst){
   if(lst$is.dots){
-    dots <- expand.grid(lst[-(1:5)], stringsAsFactors = F)
-    lst[6:length(lst)] <- dots[1:length(dots)]
+    start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
+    end <- length(lst)
+    dots <- expand.grid(lst[start:end], stringsAsFactors = F)
+    lst[start:end] <- dots[1:length(dots)]
   }
   return(lst)
 }
@@ -77,9 +79,10 @@ remap_dots_TRUE <- function(lst){
 
 remap_dots_FALSE <- function(lst){
   if(lst$is.dots){
-    dots <- lst[-(1:5)]
-    no.recycle <- sapply(dots, length) %>%
-      which.max() %>%
+    start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
+    end <- length(lst)
+    dots <- lst[start:end]
+    no.recycle <- sapply(dots, length) %>% which.max() %>%
       lapply(dots[-.], function(x, y) x[1L:length(dots[[y]])], y = .)
     lst[names(no.recycle)] <- no.recycle
   }
@@ -87,7 +90,7 @@ remap_dots_FALSE <- function(lst){
 }
 
 
-# exclusive_dots() --------------------------------------------------------
+# exclusive_dots() ----------------------------------------------------------
 
 exclusive_dots <- function(lst){
 
