@@ -16,9 +16,9 @@ ggloop <- function(data,
 # aes_loop() --------------------------------------------------------------
 
 
-aes_loop <- function(data, x, y, ...){
+aes_loop <- function(data, x, y, remap_xy, remap_dots, ...){
   # place mapping argument values in a list
-  mappings <- aes_inputs()
+  mappings <- aes_inputs2(data, x, y, ...)
 
 
   # remap TRUE/FALSE/NA xy value pairs
@@ -32,25 +32,6 @@ aes_loop <- function(data, x, y, ...){
   if(!remap_dots) remap_dots_FALSE(mappings)
 
 
-
-}
-
-
-# aes_list() --------------------------------------------------------------
-
-
-aes_list <- function(lst){
-  dots.num <- length(lst) - 2
-  dots.length <- length(lst[3])
-  lapply(dots.length, function(x){
-    Map(f = aes, x = lst$x, y = lst$y, lst)
-  })
-
-  mapply(FUN = ggplot2::aes,
-         x = x,
-         y = y,
-         ... = ...,
-         SIMPLIFY = F)
 }
 
 
@@ -100,7 +81,6 @@ aes_inputs <- function(data, x, y, ...){
                 is.dots = is.dots, dots.eval)
   return(mappings)
 }
-
 
 
 # aes_inputs2() -----------------------------------------------------------
@@ -163,4 +143,42 @@ aes_inputs2 <- function(data, x, y, ...){
                 is.dots = is.dots, dots.eval)
   return(mappings)
 }
+
+
+
+# aes_matrix() ------------------------------------------------------------
+
+
+aes_matrix <- function(lst){
+  # if exists(xy)
+  xy <- cbind(lst$x, lst$y)
+  start <- lst$is.dots + 1
+  end <- length(lst) - 1
+  dots <- lst[start:end] %>% unlist() %>%
+    matrix(ncol = length(start:end)) %>%
+    magrittr::set_colnames(names(lst[start:end]))
+
+  lapply(length(lst[start]), function(i){
+
+  })
+}
+
+
+# aes_list() --------------------------------------------------------------
+
+
+aes_list <- function(lst){
+  dots.num <- length(lst) - 2
+  dots.length <- length(lst[3])
+  lapply(dots.length, function(x){
+    Map(f = aes, x = lst$x, y = lst$y, lst)
+  })
+
+  mapply(FUN = ggplot2::aes,
+         x = x,
+         y = y,
+         ... = ...,
+         SIMPLIFY = F)
+}
+
 
