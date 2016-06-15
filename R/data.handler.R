@@ -100,7 +100,8 @@ aes_inputs2 <- function(data, x, y, ...){
   # capture x values if exist
   if(hasArg(x)){
     x <- substitute(x)
-    x.eval <- lazyeval::lazy_dots(eval(x)) %>% lazyeval::as.lazy_dots() %>%
+    x.eval <- lazyeval::lazy_dots(eval(x)) %>%
+      lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
       magrittr::extract2(1) %>% vars[.] %>% list()
     is.x <- TRUE
@@ -112,7 +113,8 @@ aes_inputs2 <- function(data, x, y, ...){
   #capture y values if exist
   if(hasArg(y)){
     y <- substitute(y)
-    y.eval <- lazyeval::lazy_dots(eval(y)) %>% lazyeval::as.lazy_dots() %>%
+    y.eval <- lazyeval::lazy_dots(eval(y)) %>%
+      lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
       magrittr::extract2(1) %>% vars[.] %>% list()
     is.y <- TRUE
