@@ -27,7 +27,7 @@ remap_xy_TRUE <- function(lst){
 
 remap_xy_NA <- function(lst){
   if(lst$is.x && lst$is.y){
-    xy.lengths <- c(x = length(lst[["x"]]), y = length(lst[["y"]]))
+    xy.lengths <- c(x = length(lst$x), y = length(lst$y))
     xy.max <- which.max(xy.lengths) %>% names()
     xy.min <- which.min(xy.lengths) %>% names()
     xy.max.length <- length(lst[[xy.max]])
@@ -43,7 +43,7 @@ remap_xy_NA <- function(lst){
 
 remap_xy_FALSE <- function(lst){
   if(lst$is.x && lst$is.y){
-    xy.lengths <- c(x = length(lst[["x"]]), y = length(lst[["y"]]))
+    xy.lengths <- c(x = length(lst$x), y = length(lst$y))
     xy.max <- which.max(xy.lengths) %>% names()
     xy.min <- which.min(xy.lengths) %>% names()
 
@@ -90,7 +90,6 @@ remap_dots_FALSE <- function(lst){
   lst$is.dots.chained <- TRUE
   return(lst)
 }
-
 
 
 # remap_dots_NA() ---------------------------------------------------------
