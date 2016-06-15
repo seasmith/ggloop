@@ -1,13 +1,4 @@
 
-# magrittr::`%>%` ---------------------------------------------------------
-
-
-# This is an alias for convenient calling of magrittr::`%>%`
-
-
-`%>%` <- magrittr::`%>%`
-
-
 # %L+%() ------------------------------------------------------------------
 
 
@@ -20,12 +11,12 @@
 # on seq_along() the left-hand argument (the list of ggplot objects)
 
 
-`%L+%` <- function(e1, e2){
-  logic.1 <- is.list(e1)
-  logic.2 <- all(vapply(e1, is.ggplot, FUN.VALUE = logical(1)))
+`%L+%` <- function(lhs, rhs){
+  logic.1 <- is.list(lhs)
+  logic.2 <- all(vapply(lhs, is.ggplot, FUN.VALUE = logical(1)))
 
   if(logic.1 & logic.2)
-    lapply(seq_along(e1), function(x, y){
-      e1[[x]] + y
-    }, y = e2)
+    lapply(seq_along(lhs), function(x, y){
+      lhs[[x]] + y
+    }, y = rhs)
 }
