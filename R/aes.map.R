@@ -33,6 +33,7 @@ set_aes <- function(...)
 {
   lst <- list(...)
   lapply(lst, function(x){
+    x <- parse(text = x)
     structure(x, class = "uneval")
   })
 }
@@ -40,7 +41,17 @@ set_aes <- function(...)
 
 # aes_map() ---------------------------------------------------------------
 
+lst.length <- lapply(seq_along(lst), function(x){
+  length(x)
+})
 
+lapply(seq_along(lst), function(x){
+  sapply(lst[[x]], `[[`, lst.length[x])
+})
+
+# mapply(`[[`, lst[[1]], 1:lst.length)
+
+# do this later
 aes.deck <- lapply(lst, function(x){
   do.call(set_aes, x)
 })
