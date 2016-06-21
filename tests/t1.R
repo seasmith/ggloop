@@ -1,5 +1,5 @@
 # create raw list from aes_loop() inputs
-nputs.raw <- aes_inputs2(data = mtcars,
+nputs.raw <- aes_assign(data = mtcars,
                      x = c(mpg, 2, disp:hp),
                      y = mpg:hp,
                      color = am:gear,
@@ -23,8 +23,20 @@ nlst <- lapply(unlist(nputs.staged[dots.vector]), function(x, times){
   rep(x, times)},
   times = rep.num)
 
+  # a summary table of name, length, and order of list elements
+  summ <- summary(nputs.staged) %>% as.data.frame.matrix()
+  summ$Name <- rownames(summ)
+  summ <- summ[ , c(4, 1:3)]
+
+  # use summ (summary) table to find x and y
+  x.pos <- which(summ$Name %in% "x")
+  if(sum(x.pos) > 0) x.length <- summ$Length["x"]
+  y.pos <- which(summ$Name %in% "y")
+  if(sum(y.pos) > 0) y.length <- summ$Length["y"]
+
   # create xy vector from $is.x and $is.y; should 2 and 4 be defined?
-  xy <- c(nputs.staged$is.x*2, nputs.staged$is.y*4) %>% nputs.staged[.]
+  xy <- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
+    nputs.staged[.]
 
 # nest the list of replicated dots into aes params groups
 nlst.lst <-  lapply(seq_len(length(nlst)/length(dots.vector)), function(x){
