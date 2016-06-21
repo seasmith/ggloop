@@ -16,7 +16,7 @@ nputs.staged <- nputs  %>% remap_xy_TRUE() %>% remap_dots_TRUE()
 
   # tell rep how many time to repeat x
   if(nputs.staged$is.x) rep.num <- length(nputs.staged$x) else
-    if(lnputs.staged$is.y) rep.num <- length(nputs.staged$y)
+    if(nputs.staged$is.y) rep.num <- length(nputs.staged$y)
 
 # create a list of replicated dots pairs
 nlst <- lapply(unlist(nputs.staged[dots.vector]), function(x, times){
@@ -34,4 +34,27 @@ nlst.lst <-  lapply(seq_len(length(nlst)/length(dots.vector)), function(x){
   multiple <- unit.vector + x - 1
   c(xy, nlst[multiple])})
 
+  # this will be used to name list elements in aes.unnamed (below)
+  to.name <- lapply(nlst.lst, function(x){
+    gsub("[0-9]+$", "", names(x))
+    })
 
+# set the list with vectors to be sent to aes
+aes.inputs <- lapply(nlst.lst, function(x){
+  extractor(x, rep.num)
+})
+
+# the unnamed aes list
+aes.list <- lapply(aes.inputs, function(x){
+  do.call(set_aes, x)
+})
+
+# give aes.list some names
+for(z in seq_along(aes.list)){
+  for(x in seq_along(aes.list[[z]])){
+    # rename <-  gsub("[0-9]+$", "", names(aes.list[[z]][x]))
+    for(y in seq_along(aes.list[[z]][[x]])){
+      names(aes.list[[z]][[x]])[y] <- to.name[[z]][y]
+    }
+  }
+}
