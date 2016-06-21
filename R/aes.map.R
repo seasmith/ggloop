@@ -1,29 +1,29 @@
 
-# jibberish now -----------------------------------------------------------
+# other.extractor() -------------------------------------------------------
 
 
+# lst.length <- lapply(seq_along(lst), function(x){
+#   length(x)
+# })
 
-lapply(seq_along(dots), function(x){
-  paste0(names(dots), "=", eval(parse(text = dots[x])))
-})
+# lapply(seq_along(lst), function(x){
+#   sapply(lst[[x]], `[[`, lst.length[x])
+# })
 
-lapply(seq_along(dots), function(x){
-  paste0(names(dots), "=", "dots$", names(dots))
-  match.call()[-1] %>% print
-})
+# mapply(`[[`, lst[[1]], 1:lst.length)
 
 
+# extractor() -------------------------------------------------------------
 
-# mcall2 <- function(...)
-# {
-#   structure(as.list(match.call()[-1]), class = "uneval")
-# }
 
-# mcall3 <- function(...)
-# {
-#   lst <- list(...)
-#   structure(lst, class = "uneval")
-# }
+# this is a force; for loop should be replaced with lapply()
+extractor <- function(lst, num){
+  rslt <- list()
+  for(i in seq_len(num)){
+    rslt[[i]] <- sapply(lst, `[[`, i)
+  }
+  return(rslt)
+}
 
 
 # set_aes() ---------------------------------------------------------------
@@ -39,33 +39,25 @@ set_aes <- function(...)
 }
 
 
-# aes_map() ---------------------------------------------------------------
+# name_aes() ------------------------------------------------------------
 
-lst.length <- lapply(seq_along(lst), function(x){
-  length(x)
+
+to.name <- lapply(lst, function()x{
+  gsub("[0-9]+$", "", names(x))
 })
 
-lapply(seq_along(lst), function(x){
-  sapply(lst[[x]], `[[`, lst.length[x])
-})
-
-# mapply(`[[`, lst[[1]], 1:lst.length)
-
-# do this later
-aes.deck <- lapply(lst, function(x){
-  do.call(set_aes, x)
-})
-
-# rename
-for(z in seq_along(aes.deck)){
-  for(x in seq_along(aes.deck[[z]])){
-    rename <-  gsub("[0-9]+$", "", names(aes.deck[[z]][x]))
-    for(y in seq_along(aes.deck[[z]][[x]])){
-      names(aes.deck[[z]][[x]])[y] <- rename
+for(z in seq_along(aes.list)){
+  for(x in seq_along(aes.list[[z]])){
+    # rename <-  gsub("[0-9]+$", "", names(aes.list[[z]][x]))
+    for(y in seq_along(aes.list[[z]][[x]])){
+      names(aes.list[[z]][[x]])[y] <- to.name[[z]][y]
     }
   }
 }
 
-# aes_structure() ---------------------------------------------------------
 
+# aes_map() ---------------------------------------------------------------
+
+
+# aes_structure() ---------------------------------------------------------
 
