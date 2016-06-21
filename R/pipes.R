@@ -2,7 +2,7 @@
 # magrittr::`%>%` ---------------------------------------------------------
 
 
-# This is an alias for convenient calling of magrittr::`%>%`
+# This is an alias of magrittr::`%>%` for convenient calling
 
 
 `%>%` <- magrittr::`%>%`
@@ -11,6 +11,6 @@
 
 # magrittr::`%<>%` --------------------------------------------------------
 
-# This is an alias for convenient calling of magrittr::`%<>%`
+# This is an alias of magrittr::`%<>%` for convenient calling
 
 `%<>%` <- magrittr::`%<>%`
