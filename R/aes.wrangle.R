@@ -1,7 +1,7 @@
 
-# aes_inputs2() -----------------------------------------------------------
+# aes_assign() ------------------------------------------------------------
 
-aes_inputs2 <- function(data, x, y, ...){
+aes_assign <- function(data, x, y, ...){
   # set dplyr::select_vars_() variables
   vars <- names(data)
   names_list <- setNames(as.list(seq_along(vars)), vars)
@@ -59,20 +59,25 @@ aes_inputs2 <- function(data, x, y, ...){
   mappings <- c(is.x = is.x, x = x.eval,
                 is.y = is.y, y = y.eval,
                 is.dots = is.dots, dots.eval)
+
   return(mappings)
 }
 
 
-# aes_list3() -------------------------------------------------------------
+# aes_split() -------------------------------------------------------------
 
 aes_split <- function(lst){
-  # assuming there is either an x or y
+
   if(lst$is.x) rep.num <- length(lst$x) else
-    if(lst$is.y) rep.num <- length(lst$y)
+    if(lst$is.y) rep.num <- length(lst$y) # else
+      # more code
 
   start <- which((names(lst) %in% "is.dots")) + 1
   end <- length(lst) - 1
   dots.vector <- start:end
+
+  xy <- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
+    nputs.staged[.]
 
   dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
     rep(x, times)},
@@ -80,13 +85,14 @@ aes_split <- function(lst){
 
   vector.len <- length(dots.vector)
   list.len <- length(dots.list)
+
   nlst.lst <-  lapply(seq_len(list.len/vector.len), function(x){
     unit.vector <- seq(from = 1,
                        to = list.len,
                        by = list.len/vector.len)
     itertor <- unit.vector + x - 1
-    dots.list[itertor]
+    c(xy, dots.list[itertor])
   })
-  # clean up the $names ending in a number
+
   return(nlst.lst)
 }
