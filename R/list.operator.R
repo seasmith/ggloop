@@ -13,8 +13,8 @@
 
 `%L+%` <- function(lhs, rhs){
   logic.1 <- is.list(lhs)
-  logic.2 <- all(vapply(lhs, is.ggplot, FUN.VALUE = logical(1)))
-  logic.3 <- is.ggproto(rhs)
+  logic.2 <- all(vapply(lhs, ggplot2::is.ggplot, FUN.VALUE = logical(1)))
+  logic.3 <- ggplot2::is.ggproto(rhs)
 
   if(logic.1 && logic.2 && logic.3)
     lapply(seq_along(lhs), function(x, y){
