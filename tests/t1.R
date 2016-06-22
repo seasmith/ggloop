@@ -3,11 +3,10 @@ nputs.raw <- aes_assign(data = mtcars,
                      x = c(mpg, 2, disp:hp),
                      y = mpg:hp,
                      color = am:gear,
-                     lty = am,
                      size = carb)
 
 # remap aes mappings
-nputs.staged <- nputs  %>% remap_xy_TRUE() %>% remap_dots_TRUE()
+nputs.staged <- nputs.raw  %>% remap_xy_TRUE() %>% remap_dots_TRUE()
 
   # create vector that identifies the dots ("...") arguments
   start <- which((names(nputs.staged) %in% "is.dots")) + 1
@@ -49,20 +48,10 @@ nlst.lst <-  lapply(seq_len(length(nlst)/length(dots.vector)), function(x){
   # rename
   nlst.lst <- rename_inputs2(nlst.lst)
 
-  # deprecated
-  # # this will be used to name list elements in aes.unnamed (below)
-  # to.name <- lapply(nlst.lst, function(x){
-  #   gsub("[0-9]+$", "", names(x))
-  #   })
-
 # set the list with vectors to be sent to aes
 aes.inputs <- lapply(nlst.lst, function(x){
   extract(x, rep.num)
 })
-
-  # deprecated
-  # # rename the inputs
-  # aes.inputs <- rename_inputs(aes.inputs)
 
 # the unnamed aes list
 aes.list <- lapply(seq_along(aes.inputs), function(x){
