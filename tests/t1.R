@@ -46,27 +46,40 @@ nlst.lst <-  lapply(seq_len(length(nlst)/length(dots.vector)), function(x){
   multiple <- unit.vector + x - 1
   c(xy, nlst[multiple])})
 
-  # this will be used to name list elements in aes.unnamed (below)
-  to.name <- lapply(nlst.lst, function(x){
-    gsub("[0-9]+$", "", names(x))
-    })
+  # rename
+  nlst.lst <- rename_inputs2(nlst.lst)
+
+  # deprecated
+  # # this will be used to name list elements in aes.unnamed (below)
+  # to.name <- lapply(nlst.lst, function(x){
+  #   gsub("[0-9]+$", "", names(x))
+  #   })
 
 # set the list with vectors to be sent to aes
 aes.inputs <- lapply(nlst.lst, function(x){
-  extractor(x, rep.num)
+  extract(x, rep.num)
 })
+
+  # deprecated
+  # # rename the inputs
+  # aes.inputs <- rename_inputs(aes.inputs)
 
 # the unnamed aes list
-aes.list <- lapply(aes.inputs, function(x){
-  do.call(set_aes, x)
-})
+aes.list <- lapply(seq_along(aes.inputs), function(x){
+  mapply(map_aes, aes.inputs[[x]], SIMPLIFY = F)
+  })
+# deprecated
+# aes.list <- lapply(aes.inputs, function(x){
+#   do.call(set_aes, x)
+# })
 
-# give aes.list some names
-for(z in seq_along(aes.list)){
-  for(x in seq_along(aes.list[[z]])){
-    # rename <-  gsub("[0-9]+$", "", names(aes.list[[z]][x]))
-    for(y in seq_along(aes.list[[z]][[x]])){
-      names(aes.list[[z]][[x]])[y] <- to.name[[z]][y]
-    }
-  }
-}
+    # deprecated
+    # # give aes.list some names
+    # for(z in seq_along(aes.list)){
+    #   for(x in seq_along(aes.list[[z]])){
+    #     # rename <-  gsub("[0-9]+$", "", names(aes.list[[z]][x]))
+    #     for(y in seq_along(aes.list[[z]][[x]])){
+    #       names(aes.list[[z]][[x]])[y] <- to.name[[z]][y]
+    #     }
+    #   }
+    # }
