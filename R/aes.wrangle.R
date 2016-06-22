@@ -64,9 +64,10 @@ aes_assign <- function(data, x, y, ...){
 }
 
 
-# aes_split() -------------------------------------------------------------
+# aes_group() -------------------------------------------------------------
 
-aes_split <- function(lst){
+
+aes_group <- function(lst){
 
   if(lst$is.x) rep.num <- length(lst$x) else
     if(lst$is.y) rep.num <- length(lst$y) # else
