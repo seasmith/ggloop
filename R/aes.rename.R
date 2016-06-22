@@ -1,6 +1,7 @@
 
 # .all_aesthetics ---------------------------------------------------------
 
+
 .all_aesthetics <- c("adj", "alpha", "angle", "bg", "cex", "col", "color",
                      "colour", "fg", "fill", "group", "hjust", "label",
                      "linetype", "lower", "lty", "lwd", "max", "middle",
@@ -8,7 +9,6 @@
                      "srt", "upper", "vjust", "weight", "width", "x",
                      "xend", "xmax", "xmin", "xintercept", "y", "yend",
                      "ymax", "ymin", "yintercept", "z")
-
 
 
 # .base_to_ggplot ---------------------------------------------------------
