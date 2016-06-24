@@ -65,7 +65,7 @@ remap_xy_FALSE <- function(lst){
 
 remap_dots_TRUE <- function(lst){
   if(lst$is.dots){
-    start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
+    start <- which(names(lst) %in% "is.dots") + 1 # first dots argument
     end <- length(lst)
     dots <- expand.grid(lst[end:start], stringsAsFactors = F)
     lst[end:start] <- dots[1:length(dots)]
@@ -80,7 +80,7 @@ remap_dots_TRUE <- function(lst){
 
 remap_dots_FALSE <- function(lst){
   if(lst$is.dots){
-    start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
+    start <- which(names(lst) %in% "is.dots") + 1 # first dots argument
     end <- length(lst)
     dots <- lst[start:end]
     no.recycle <- sapply(dots, length) %>% which.max() %>%
