@@ -72,3 +72,9 @@ aes.list <- lapply(seq_along(aes.inputs), function(x){
     #     }
     #   }
     # }
+
+# put it all in a list
+g <- lapply(seq_along(aes.list), function(x){
+  lapply(seq_along(aes.list[[x]]), function(y){
+    ggplot(mtcars, aes.list[[x]][[y]])
+  })})
