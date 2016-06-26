@@ -27,26 +27,46 @@
 # evaluation and adding the rhs into the lhs.
 
 `%L+%` <- function(lhs, rhs){
-  logic.1 <- is.list(lhs)
-    if(!logic.1) stop("The list is not in proper format: must be list!")
-  logic.1.2 <- all(vapply(lhs, is.list, FUN.VALUE = logical(1)))
-    if(!logic.1.2) stop("The list is not in proper format: must be list of lists")
-  logic.2 <- all(sapply(lhs, function(x){
+  if(!ggplot2::is.ggproto(rhs)) stop("The rhs must be of class ggproto")
+
+  if(!is.list(lhs)){
+    if(!ggplot2::is.ggplot(lhs)) stop("The lhs has no ggplot object")
+  }
+
+  # if lhs is.list = TRUE AND is.ggplot = TRUE
+  if(ggplot2::is.ggplot(lhs)){
+    lhs + rhs
+    } else{
+
+    is.all.list <- all(vapply(lhs,
+                              is.list,
+                              FUN.VALUE = logical(1)))
+    # is.all.ggplot <- all(vapply(lhs,
+    #                             ggplot2::is.ggplot,
+    #                             FUN.VALUE = logical(1)))
+    if(!is.all.list && !ggplot2::is.ggplot(lhs)){
+      is.all.ggplot <- all(vapply(lhs,
+                                  ggplot2::is.ggplot,
+                                  FUN.VALUE = logical(1))) #logic.1.2
+      if(!is.all.ggplot) stop("The lhs list is not all ggplot objects")
+        lapply(seq_along(lhs), function(x, y){
+                lhs[[x]] + y
+              }, y = rhs)
+    }
+
+  is.all.ggplot <- all(sapply(lhs, function(x){
     vapply(x, ggplot2::is.ggplot, FUN.VALUE = logical(1))
-    })
-    )
-    if(!logic.2) stop("The list of lists is not in proper format:
-                      each object in final list element must be of
-                      class ggplot (i.e. is.ggplot())")
-  logic.3 <- ggplot2::is.ggproto(rhs)
-
-    if(!logic.3) stop("rhs must be of class ggproto!")
-
+  })
+  )
+  if(!is.all.ggplot) stop("The list of lists is not in proper format:
+                    each object in final list element must be of
+                    class ggplot")
   lapply(seq_along(lhs), function(x, z){
     lapply(lhs[[x]], function(y){
       y + z
     })
   }, z = rhs)
+    }
 }
 
 
