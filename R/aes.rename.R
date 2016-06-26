@@ -44,16 +44,16 @@ rename_aes <- function(x){
 # rename_inputs() ---------------------------------------------------------
 
 
-rename_inputs <- function(lst){
-  for(z in seq_along(lst)){
-    for(x in seq_along(lst[[z]])){
-      names(lst[[z]][[x]]) <- gsub("[0-9]+$",
-                                   "",
-                                   names(lst[[z]][[x]]))
-    }
-  }
-  return(lst)
-}
+# rename_inputs <- function(lst){
+#   for(z in seq_along(lst)){
+#     for(x in seq_along(lst[[z]])){
+#       names(lst[[z]][[x]]) <- gsub("[0-9]+$",
+#                                    "",
+#                                    names(lst[[z]][[x]]))
+#     }
+#   }
+#   return(lst)
+# }
 
 
 # rename_inputs2() --------------------------------------------------------
