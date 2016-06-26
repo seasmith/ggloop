@@ -69,6 +69,7 @@ aes_assign <- function(data, x, y, ...){
 
 aes_group <- function(lst){
 
+  # MUST WRITE CODE TO DEAL WITH CIRCUMSTANCE OF NO X AND NO Y
   if(lst$is.x) rep.num <- length(lst$x) else
     if(lst$is.y) rep.num <- length(lst$y) # else
       # more code
