@@ -1,6 +1,6 @@
 # create raw list from aes_loop() inputs
 nputs.raw <- aes_assign(data = mtcars,
-                     x = c(mpg, 2, disp:hp),
+                     # x = c(mpg, 2, disp:hp),
                      y = mpg:hp,
                      color = am:gear,
                      size = carb)
@@ -76,5 +76,5 @@ aes.list <- lapply(seq_along(aes.inputs), function(x){
 # put it all in a list
 g <- lapply(seq_along(aes.list), function(x){
   lapply(seq_along(aes.list[[x]]), function(y){
-    ggplot(mtcars, aes.list[[x]][[y]])
+    ggplot2::ggplot(mtcars, aes.list[[x]][[y]])
   })})
