@@ -13,6 +13,6 @@ Description: Pass a data frame and mapping aesthetics to ggloop() in order
     operator.
 License: GPL-2
 LazyData: TRUE
-Imports: ggplot2,
-         magrittr,
-         dplyr
+Imports: dplyr,
+         ggplot2,
+         magrittr
