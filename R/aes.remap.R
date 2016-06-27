@@ -10,6 +10,8 @@ remap_xy_TRUE <- function(lst){
     dupes <- if(sum(is.dupes)) which(is.dupes) else NULL
 
     is.dubs <- xy$x == xy$y
+        # highly experimental
+        is.dubs[is.na(is.dubs)] <- FALSE
     dubs <- if(sum(is.dubs)) which(is.dubs) else NULL
 
     deletes <- c(dupes, dubs)
@@ -27,6 +29,7 @@ remap_xy_TRUE <- function(lst){
 
 remap_xy_NA <- function(lst){
   if(lst$is.x && lst$is.y){
+    # SHOULD I ADD SOMETHING TO DEAL WITH DUPES???
     xy.lengths <- c(x = length(lst$x), y = length(lst$y))
     xy.max <- which.max(xy.lengths) %>% names()
     xy.min <- which.min(xy.lengths) %>% names()
