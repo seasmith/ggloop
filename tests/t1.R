@@ -1,12 +1,13 @@
 # create raw list from aes_loop() inputs
 nputs.raw <- aes_assign(data = mtcars,
-                     # x = c(mpg, 2, disp:hp),
+                     x = c(mpg, NA),
                      y = mpg:hp,
                      color = am:gear,
-                     size = carb)
+                     fill = carb,
+                     size = c(NA, carb))
 
 # remap aes mappings
-nputs.staged <- nputs.raw  %>% remap_xy_TRUE() %>% remap_dots_TRUE()
+nputs.staged <- nputs.raw  %>% remap_xy_TRUE() %>% remap_dots_FALSE()
 
   # create vector that identifies the dots ("...") arguments
   start <- which((names(nputs.staged) %in% "is.dots")) + 1
@@ -52,6 +53,16 @@ nlst.lst <-  lapply(seq_len(length(nlst)/length(dots.vector)), function(x){
 aes.inputs <- lapply(nlst.lst, function(x){
   extract(x, rep.num)
 })
+
+      # Eliminate NA's in aes.inputs
+      # STILL IN PRODUCTION
+      # Produces character vector of length zero
+      # if all vector elements are NA == TRUE
+      aes.inputs <- lapply(aes.inputs, function(x){
+        lapply(x, function(y){
+          y[which(!is.na(y))]
+        })
+      })
 
 # the unnamed aes list
 aes.list <- lapply(seq_along(aes.inputs), function(x){
