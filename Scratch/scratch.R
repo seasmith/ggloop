@@ -1,3 +1,13 @@
+
+
+xy.m <- matrix(unlist(xy), ncol = length(xy))
+.nlst.lst <- lapply(seq_len(summary(xy)[1]), function(x){
+  c(xy.m[x, ], nlst)
+})
+
+
+
+
 # extract first element
 sapply(nlst.lst[[1]], `[[`, 1)
 
