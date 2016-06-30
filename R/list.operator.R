@@ -9,7 +9,7 @@
 #' due to the conditional statements present in \code{\%L+\%}'s structure.
 #'
 #' @param lhs Typically a \code{ggloop()} output (a nested list) but can also be a list of \code{ggplot}
-#' objects or a single \code{gglopt} object.
+#' objects or a single \code{ggplot} object.
 #' @param rhs A geom, stat, or other layer feature from the \code{ggplot2} package.
 
 `%L+%` <- function(lhs, rhs){

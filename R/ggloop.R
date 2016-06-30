@@ -51,7 +51,7 @@ aes_loop <- function(data, x, y, remap_xy, remap_dots, ...){
 
 aes_loop2 <- function(data, x, y, remap_xy, remap_dots, ...){
   # place mapping argument values in a list
-  mappings <- aes_inputs2(data, x, y, ...)
+  mappings <- aes_assign(data, x, y, ...)
 
     # Logic vector indicating value of remap_xy argument
     logic_xy <- c(isTRUE(remap_xy),
