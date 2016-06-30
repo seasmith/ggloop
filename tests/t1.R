@@ -1,10 +1,8 @@
 # create raw list from aes_loop() inputs
 nputs.raw <- aes_assign(data = mtcars,
-                     x = c(mpg, NA),
-                     y = mpg:hp,
-                     color = am:gear,
-                     fill = carb,
-                     size = c(NA, carb))
+                     x = mpg,
+                     y = cyl:hp,
+                     color = am:gear)
 
 # remap aes mappings
 nputs.staged <- nputs.raw  %>% remap_xy_TRUE() %>% remap_dots_FALSE()
