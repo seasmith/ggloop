@@ -3,7 +3,7 @@ Type: Package
 Title: A looper for ggplot2
 Version: 0.0.0.9000
 Author@R: person("Luke", "Smith", email = "luke@protocolvital.info",
-               role = c("aut", "cre"))
+    role = c("aut", "cre"))
 URL: https://github.com/seasmith1018/gglooper
 BugReports: https://github.com/seasmith1018/gglooper/issues
 Description: Pass a data frame and mapping aesthetics to ggloop() in order
@@ -13,6 +13,8 @@ Description: Pass a data frame and mapping aesthetics to ggloop() in order
     operator.
 License: GPL-2
 LazyData: TRUE
-Imports: dplyr,
-         ggplot2,
-         magrittr
+Imports:
+    dplyr,
+    ggplot2,
+    magrittr
+RoxygenNote: 5.0.1
