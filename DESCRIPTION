@@ -1,11 +1,11 @@
-Package: gglooper
+Package: ggloop
 Type: Package
 Title: A looper for ggplot2
 Version: 0.0.0.9000
 Author@R: person("Luke", "Smith", email = "luke@protocolvital.info",
     role = c("aut", "cre"))
-URL: https://github.com/seasmith1018/gglooper
-BugReports: https://github.com/seasmith1018/gglooper/issues
+URL: https://github.com/seasmith/ggloop
+BugReports: https://github.com/seasmith/ggloop/issues
 Description: Pass a data frame and mapping aesthetics to ggloop() in order
     to create a list of ggplot object for the specified remapping of aesthetics.
     Pass x, y, and ... aesthetics to ggloop as you would with ggplot. You can
