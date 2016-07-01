@@ -7,7 +7,7 @@ isFALSE <- function(x) identical(FALSE, x)
 
 
 # ggloop() ----------------------------------------------------------------
-
+#' @export
 
 ggloop <- function(data,
                    mapping = aes_loop(),
@@ -19,7 +19,7 @@ ggloop <- function(data,
 
 
 # aes_loop() --------------------------------------------------------------
-
+#' @export
 
 aes_loop <- function(data, x, y, remap_xy, remap_dots, ...){
   # place mapping argument values in a list
@@ -47,7 +47,7 @@ aes_loop <- function(data, x, y, remap_xy, remap_dots, ...){
 
 
 # aes_loop2() -------------------------------------------------------------
-
+#' @export
 
 aes_loop2 <- function(data, x, y, remap_xy, remap_dots, ...){
   # place mapping argument values in a list
