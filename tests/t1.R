@@ -2,7 +2,9 @@
 nputs.raw <- aes_assign(data = mtcars,
                         x = mpg:hp,
                         y = mpg:hp,
-                     color = am:gear)
+                     color = am:gear,
+                     fill = carb,
+                     size = gear)
 
 # remap aes mappings
 nputs.staged <- nputs.raw  %>% remap_xy_TRUE() %>% remap_dots_FALSE()
@@ -87,3 +89,27 @@ g <- lapply(seq_along(aes.list), function(x){
   lapply(seq_along(aes.list[[x]]), function(y){
     ggplot2::ggplot(mtcars, aes.list[[x]][[y]])
   })})
+
+
+# renaming g --------------------------------------------------------------
+
+# .ncol <- as.numeric(summary(nputs.staged[dots.vector])[1])
+.ncol <- length(dots.vector)
+names.matrix <-  matrix(unlist(nputs.staged[dots.vector]),
+                     ncol = length(dots.vector))
+colnames(names.matrix) <- names(nputs.staged[dots.vector])
+
+names.list <- sapply(seq_len(nrow(names.matrix)), function(x){
+  .names <- sapply(seq_len(ncol(names.matrix)), function(y){
+    if(!is.na(names.matrix[x, y])){
+      paste(colnames(names.matrix)[y],
+            na.omit(names.matrix[x, y]),
+            sep = ".")
+    } else {
+      NA
+    }
+  })
+  paste(na.omit(.names), collapse = "_")
+})
+
+names(g) <- name_groups(nputs.staged, dots.vector)
