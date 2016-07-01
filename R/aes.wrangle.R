@@ -88,7 +88,7 @@ aes_group <- function(lst){
 
   start <- which((names(lst) %in% "is.dots")) + 1
   end <- length(lst) - 1
-  dots.vector <- start:end
+  dots.vector <<- start:end
 
   # a summary table of name, length, and order of list elements
   summ <- summary(nputs.staged) %>% as.data.frame.matrix()
@@ -97,11 +97,11 @@ aes_group <- function(lst){
 
   # use summ (summary) table to find x and y
   x.pos <- which(summ$Name %in% "x")
-  if(sum(x.pos) > 0) x.length <- summ$Length["x"]
+    if(sum(x.pos) > 0) x.length <- summ$Length["x"]
   y.pos <- which(summ$Name %in% "y")
-  if(sum(y.pos) > 0) y.length <- summ$Length["y"]
+    if(sum(y.pos) > 0) y.length <- summ$Length["y"]
 
-  xy <- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
+  xy <<- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
     nputs.staged[.]
 
   dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
@@ -119,7 +119,7 @@ aes_group <- function(lst){
     c(xy, dots.list[itertor])
   })
 
-  return(lst)
+  return(nlst.lst)
 }
 
 

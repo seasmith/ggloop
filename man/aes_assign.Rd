@@ -7,7 +7,7 @@
 aes_assign(data, x, y, ...)
 }
 \arguments{
-\item{data, x, y, ...}{Arguments passed from \code{aes_loop()}}
+\item{data, x, y, ...}{Arguments passed from \code{aes_loop()}.}
 }
 \description{
 \code{aes_assign()} figures out which columns/variables have been
