@@ -26,16 +26,54 @@ map_aes <- function(lst){
 # name_groups() -----------------------------------------------------------
 
 
-name_groups <- function(lst.1, lst.2, lst.3, dots.vector){
+name_groups <- function(lst, dots.vector){
   # lst.1 = nlst
   # lst.2 = aes.inputs
-  # lst.3 = nputs.staged
+  # lst.3 = aes.raw
   # dots.vector = dots.vector
-  lapply(seq_along(lst.1), function(x){
-    names(lst.2)[x] <- lst.1[[x]] %>% unique()
+
+  names.matrix <-  matrix(unlist(lst[dots.vector]),
+                        ncol = length(dots.vector))
+  colnames(names.matrix) <- names(lst[dots.vector])
+
+  names.list <- sapply(seq_len(nrow(names.matrix)), function(x){
+    .names <- sapply(seq_len(ncol(names.matrix)), function(y){
+      if(!is.na(names.matrix[x, y])){
+        paste(colnames(names.matrix)[y],
+              na.omit(names.matrix[x, y]),
+              sep = ".")
+      } else {
+        NA
+      }
+    })
+    paste(na.omit(.names), collapse = "_")
   })
 
-  .ncol <- as.numeric(summary(lst.3[dots.vector])[1])
-  lst.names <-  matrix(unlist(lst.3[dots.vector]),
-                        ncol = as.numeric(summary(lst.3[dots.vector])[1]))
+  return(names.list)
+}
+
+
+
+# name_subgroups() --------------------------------------------------------
+
+
+name_subgroups <- function(lst, dots.vector){
+  # lst = xy
+  names.matrix <- matrix(unlist(lst), ncol = length(lst))
+  colnames(names.matrix) <- names(lst)
+
+  names.list <- sapply(seq_len(nrow(names.matrix)), function(x){
+    .names <- sapply(seq_len(ncol(names.matrix)), function(y){
+      if(!is.na(names.matrix[x, y])){
+        paste(colnames(names.matrix)[y],
+              na.omit(names.matrix[x, y]),
+              sep = ".")
+      } else {
+        NA
+      }
+    })
+    paste(na.omit(.names), collapse = "_")
+  })
+
+  return(names.list)
 }
