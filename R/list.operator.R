@@ -11,6 +11,8 @@
 #' @param lhs Typically a \code{ggloop()} output (a nested list) but can also be a list of \code{ggplot}
 #' objects or a single \code{ggplot} object.
 #' @param rhs A geom, stat, or other layer feature from the \code{ggplot2} package.
+#'
+#' @export
 
 `%L+%` <- function(lhs, rhs){
   if(!ggplot2::is.ggproto(rhs)) stop("The rhs must be of class ggproto")
