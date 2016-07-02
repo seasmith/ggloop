@@ -91,7 +91,7 @@ aes_group <- function(lst){
   dots.vector <<- start:end
 
   # a summary table of name, length, and order of list elements
-  summ <- summary(nputs.staged) %>% as.data.frame.matrix()
+  summ <- summary(lst) %>% as.data.frame.matrix()
   summ$Name <- rownames(summ)
   summ <- summ[ , c(4, 1:3)]
 
@@ -101,8 +101,8 @@ aes_group <- function(lst){
   y.pos <- which(summ$Name %in% "y")
     if(sum(y.pos) > 0) y.length <- summ$Length["y"]
 
-  xy <<- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
-    nputs.staged[.]
+  xy <<- c(lst$is.x*x.pos, lst$is.y*y.pos) %>%
+    lst[.]
 
   dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
     rep(x, times)},
@@ -155,7 +155,7 @@ aes_group2 <- function(lst){
     dots.vector <- start:end
 
     # a summary table of name, length, and order of list elements
-    summ <- summary(nputs.staged) %>% as.data.frame.matrix()
+    summ <- summary(lst) %>% as.data.frame.matrix()
     summ$Name <- rownames(summ)
     summ <- summ[ , c(4, 1:3)]
 
@@ -165,8 +165,8 @@ aes_group2 <- function(lst){
     y.pos <- which(summ$Name %in% "y")
     if(sum(y.pos) > 0) y.length <- summ$Length["y"]
 
-    xy <- c(nputs.staged$is.x*x.pos, nputs.staged$is.y*y.pos) %>%
-      nputs.staged[.] %>% matrix(unlist(.), ncol = length(.))
+    xy <- c(lst$is.x*x.pos, lst$is.y*y.pos) %>%
+      lst[.] %>% matrix(unlist(.), ncol = length(.))
 
     dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
       rep(x, times)},
