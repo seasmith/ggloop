@@ -82,27 +82,29 @@ aes_assign <- function(data, x, y, ...){
 aes_group <- function(lst){
 
   # MUST WRITE CODE TO DEAL WITH CIRCUMSTANCE OF NO X AND NO Y
-  if(lst$is.x) rep.num <- length(lst$x) else
-    if(lst$is.y) rep.num <- length(lst$y) # else
-      # more code
+      # logic <- c(use.x  = isTRUE(lst$is.x),
+      #            use.y = isTRUE(lst$is.y && !lst$is.x),
+      #            none.exist = (isFALSE(lst$is.x) && isFALSE(lst$is.y)))
+      # index <- which(logic)
+      # input <- list(x = lst$x,
+      #               y = lst$y,
+      #               none = lst$none)
+      # func <- function(x) length(x)
+      # FUN <- list(if_x_exist = func,
+      #             if_y_exist = func,
+      #             if_none_exist = 0)
+      # rep.num <- FUN[[index]](input[[index]])
 
-  start <- which((names(lst) %in% "is.dots")) + 1
+
+  xy <<- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
+
+  start <- list.pos("is.dots", aes.raw) + 1
   end <- length(lst) - 1
   dots.vector <<- start:end
 
-  # a summary table of name, length, and order of list elements
-  summ <- summary(lst) %>% as.data.frame.matrix()
-  summ$Name <- rownames(summ)
-  summ <- summ[ , c(4, 1:3)]
-
-  # use summ (summary) table to find x and y
-  x.pos <- which(summ$Name %in% "x")
-    if(sum(x.pos) > 0) x.length <- summ$Length["x"]
-  y.pos <- which(summ$Name %in% "y")
-    if(sum(y.pos) > 0) y.length <- summ$Length["y"]
-
-  xy <<- c(lst$is.x*x.pos, lst$is.y*y.pos) %>%
-    lst[.]
+  if(exists("x", lst)) rep.num <- length(lst$x) else
+    if(exists("y", lst)) rep.num <- length(lst$y) # else
+  # more code
 
   dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
     rep(x, times)},
@@ -110,6 +112,8 @@ aes_group <- function(lst){
 
   vector.len <- length(dots.vector)
   list.len <- length(dots.list)
+
+
 
   nlst.lst <-  lapply(seq_len(list.len/vector.len), function(x){
     unit.vector <- seq(from = 1,
