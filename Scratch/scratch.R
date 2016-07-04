@@ -1,3 +1,39 @@
+fun1 <- function(arg1,
+                 arg2){
+  arg1 <<- arg1
+ fun2()
+}
+
+fun2 <- function(){
+  # e <- parent.env(environment())
+  # print(e)
+  # arg1 <- get("arg1", envir = e)
+  print(paste("The first argument is", arg1))
+}
+
+fun3 <- function(){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 xy.m <- matrix(unlist(xy), ncol = length(xy))
