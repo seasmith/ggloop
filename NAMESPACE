@@ -2,5 +2,4 @@
 
 export("%L+%")
 export(aes_loop)
-export(aes_loop2)
 export(ggloop)
