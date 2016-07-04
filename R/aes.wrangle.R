@@ -27,11 +27,9 @@ aes_assign <- function(data, x, y, ...){
     x.eval <- lazyeval::lazy_dots(eval(x)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
-      magrittr::extract2(1) %>% vars[.] %>% list()
-    is.x <- TRUE
+      magrittr::extract2(1L) %>% vars[.] %>% list()
   } else{
     x.eval <- NULL
-    is.x   <- FALSE
   }
 
   # capture y values if exist
@@ -40,11 +38,9 @@ aes_assign <- function(data, x, y, ...){
     y.eval <- lazyeval::lazy_dots(eval(y)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
-      magrittr::extract2(1) %>% vars[.] %>% list()
-    is.y <- TRUE
+      magrittr::extract2(1L) %>% vars[.] %>% list()
   } else{
     y.eval <- NULL
-    is.y   <- FALSE
   }
 
   # capture dots if exist
@@ -54,7 +50,7 @@ aes_assign <- function(data, x, y, ...){
       arg.eval <- lazyeval::lazy_dots(eval(dots[[i]])) %>%
         lazyeval::as.lazy_dots() %>%
         lazyeval::lazy_eval(c(names_list, select_funs)) %>%
-        magrittr::extract2(1) %>% vars[.]
+        magrittr::extract2(1L) %>% vars[.]
     }) %>%
       magrittr::set_names(names(dots))
     is.dots <- TRUE
@@ -64,8 +60,8 @@ aes_assign <- function(data, x, y, ...){
   }
 
   # list logical existance and values (if any) for all arguments
-  mappings <- c(is.x = is.x, x = x.eval,
-                is.y = is.y, y = y.eval,
+  mappings <- c(x = x.eval,
+                y = y.eval,
                 is.dots = is.dots, dots.eval)
 
   return(mappings)
@@ -81,49 +77,32 @@ aes_assign <- function(data, x, y, ...){
 
 aes_group <- function(lst){
 
-  # MUST WRITE CODE TO DEAL WITH CIRCUMSTANCE OF NO X AND NO Y
-      # logic <- c(use.x  = isTRUE(lst$is.x),
-      #            use.y = isTRUE(lst$is.y && !lst$is.x),
-      #            none.exist = (isFALSE(lst$is.x) && isFALSE(lst$is.y)))
-      # index <- which(logic)
-      # input <- list(x = lst$x,
-      #               y = lst$y,
-      #               none = lst$none)
-      # func <- function(x) length(x)
-      # FUN <- list(if_x_exist = func,
-      #             if_y_exist = func,
-      #             if_none_exist = 0)
-      # rep.num <- FUN[[index]](input[[index]])
-
-
   xy <<- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
 
   start <- list.pos("is.dots", aes.raw) + 1
-  end <- length(lst) - 1
+  end <- length(lst)
   dots.vector <<- start:end
 
-  if(exists("x", lst)) rep.num <- length(lst$x) else
-    if(exists("y", lst)) rep.num <- length(lst$y) # else
-  # more code
+  rep.num <<- lengths(lst[na.omit(c(list.pos("x", aes.raw),
+                                    list.pos("y", aes.raw),
+                                    list.pos("is.dots", aes.raw)))])[1]
 
-  dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
-    rep(x, times)},
-    times = rep.num)
+  dots.list <- lapply(unlist(lst[dots.vector]),
+                      function(x, times) rep(x, times),
+                      times = rep.num)
 
   vector.len <- length(dots.vector)
   list.len <- length(dots.list)
 
-
-
-  nlst.lst <-  lapply(seq_len(list.len/vector.len), function(x){
+  groups <-  lapply(seq_len(list.len/vector.len), function(x){
     unit.vector <- seq(from = 1,
                        to = list.len,
                        by = list.len/vector.len)
-    itertor <- unit.vector + x - 1
-    c(xy, dots.list[itertor])
+    iterator <- unit.vector + x - 1
+    c(xy, dots.list[iterator])
   })
 
-  return(nlst.lst)
+  return(groups)
 }
 
 
