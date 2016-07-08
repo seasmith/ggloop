@@ -1,6 +1,46 @@
 # I can't bring myself to throw out this code, just yet
 
 
+# aes_loop() --------------------------------------------------------------
+#' @export
+
+aes_loop <- function(x, y, remap_xy, remap_dots, ...){
+#   # place mapping argument values in a list
+#   mappings <- aes_assign(.data, x, y, ...)
+#   e$mappings <- mappings
+#
+#   # remap TRUE/FALSE/NA xy value pairs
+#   if(is.na(remap_xy)) mappings <- remap_xy_NA(mappings) else{
+#     if(remap_xy) mappings <- remap_xy_TRUE(mappings) else{
+#       if(!remap_xy) mappings <- remap_xy_FALSE(mappings)
+#     }
+#   }
+#
+#   # remap TRUE/FALSE dots
+#   if(is.na(remap_dots)) mappings <- remap_dots_NA(mappings) else{
+#     if(remap_dots) mappings <- remap_dots_TRUE(mappings) else
+#       if(!remap_dots) mappings <- remap_dots_FALSE(mappings)
+#   }
+#
+#   mappings.grouped <- aes_group(mappings) %>% rename_inputs()
+#
+#   aes.inputs.raw <- lapply(mappings.grouped, function(x){
+#     extract(x, rep.num)
+#   })
+#
+#   aes.inputs.clean <- lapply(aes.inputs.raw, function(x){
+#     lapply(x, function(y){
+#       y[which(!is.na(y))]
+#     })
+#   })
+#
+#   aes.list <- lapply(seq_along(aes.inputs.clean), function(x){
+#     mapply(map_aes, aes.inputs.clean[[x]], SIMPLIFY = FALSE)
+#   })
+# }
+
+
+
 # aes_inputs() ------------------------------------------------------------
 
 
@@ -104,4 +144,35 @@
 #   return(matrices)
 #
 #   # if  exists(xy) one or none
+# }
+
+# aes_loop2() -------------------------------------------------------------
+#' @export
+
+# aes_loop2 <- function(data, x, y, remap_xy, remap_dots, ...){
+#   # place mapping argument values in a list
+#   mappings <- aes_assign(data, x, y, ...)
+#
+#     # Logic vector indicating value of remap_xy argument
+#     logic_xy <- c(isTRUE(remap_xy),
+#                   isFALSE(remap_xy),
+#                   is.na(remap_xy))
+#     # Logic vector of the three possible functions to run
+#     FUN_xy <- list(if_TRUE  = remap_xy_TRUE,
+#                    if_FALSE = remap_xy_FALSE,
+#                    if_NA    = remap_xy_NA)
+#   # Subset FUN_xy to run the appropriate function
+#   mappings <- FUN_xy[[which(logic_xy)]](mappings)
+#
+#
+#     # Logic vector indicating value of remap_xy argument
+#     logic_dots <- c(isTRUE(remap_dots),
+#                     isFALSE(remap_dots))
+#     # Logic vector of the two possible functions to run
+#     FUN_dots <- list(if_TRUE = remap_dots_TRUE,
+#                      if_FALSE = remap_dots_FALSE)
+#   # Subset FUN_dots to run the appropriate function
+#   mappings <- FUN_dots[[which(logic_dots)]](mappings)
+#
+#
 # }
