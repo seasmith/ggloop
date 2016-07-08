@@ -76,16 +76,18 @@ aes_assign <- function(data, x, y, ...){
 #' will be the list produced by \code{aes_assing()}.
 
 aes_group <- function(lst){
-
-  xy <<- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
-
-  start <- list.pos("is.dots", aes.raw) + 1
+  pf <- parent.frame()
+  xy <- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
+    pf$xy <- xy
+  start <- list.pos("is.dots", lst) + 1
   end <- length(lst)
-  dots.vector <<- start:end
+  dots.vector <- start:end
+    pf$dots.vector <- dots.vector
 
-  rep.num <<- lengths(lst[na.omit(c(list.pos("x", aes.raw),
-                                    list.pos("y", aes.raw),
-                                    list.pos("is.dots", aes.raw)))])[1]
+  rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
+                                    list.pos("y", lst),
+                                    list.pos("is.dots", lst)))])[1]
+    pf$rep.num <- rep.num
 
   dots.list <- lapply(unlist(lst[dots.vector]),
                       function(x, times) rep(x, times),
