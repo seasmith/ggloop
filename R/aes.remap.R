@@ -11,9 +11,9 @@
 
 remap_xy_TRUE <- function(lst){
   if(exists("x", lst) && exists("y", lst)){
-    xy <- expand.grid(y = lst$y, x = lst$x, stringsAsFactors = F)
+    xy <- expand.grid(y = lst$y, x = lst$x, stringsAsFactors = FALSE)
 
-    is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = F) %>%
+    is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = FALSE) %>%
       lapply(sort) %>%
       duplicated()
     dupes <- if(sum(is.dupes)) which(is.dupes) else NULL
