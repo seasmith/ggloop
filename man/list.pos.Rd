@@ -10,8 +10,8 @@ list.pos(name, lst)
 \arguments{
 \item{name}{A character vector. Ideally a character vector of length 1
 (just one name); hoever it can accept a character vector of length greater
-than length 1. The names in the character vector will be used as names
-(element headings) in the result vector.}
+than 1. The names in the character vector will be used as names (element
+headings) in the results vector.}
 
 \item{lst}{A list with all elements named. If each element does not have a
 name then there can be no garuantee to the accuracy of the results.}
