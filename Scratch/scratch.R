@@ -1,100 +1,58 @@
-fun1 <- function(arg1,
-                 arg2){
-  arg1 <<- arg1
- fun2()
-}
+function (..., KEEP.OUT.ATTRS = TRUE, stringsAsFactors = TRUE)
+{
+  nargs <- length(args <- list(...))
+  if (!nargs)                                       # if no args
+    return(as.data.frame(list()))
 
-fun2 <- function(){
-  # e <- parent.env(environment())
-  # print(e)
-  # arg1 <- get("arg1", envir = e)
-  print(paste("The first argument is", arg1))
-}
+  if (nargs == 1L && is.list(a1 <- args[[1L]]))     # if only a list
+    nargs <- length(args <- a1)
 
-fun3 <- function(){
+  if (nargs == 0L)                                  # if arg is blank
+    return(as.data.frame(list()))
 
-}
+  cargs <- vector("list", nargs)        # create vector = nargs.size
+  iArgs <- seq_len(nargs)               # create iterator
+  nmc <- paste0("Var", iArgs)           # default headings (Var1, Var2, etc)
+  nm <- names(args)                     # args names (for headings)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-xy.m <- matrix(unlist(xy), ncol = length(xy))
-.nlst.lst <- lapply(seq_len(summary(xy)[1]), function(x){
-  c(xy.m[x, ], nlst)
-})
-
-
-
-
-# extract first element
-sapply(nlst.lst[[1]], `[[`, 1)
-
-# do.call() attempt
-extractor <- function(lst, num){
-  sapply(lst, `[[`, num)
-}
-
-extractor2 <- function(lst, num){
-  lapply(lst, function(x){
-    sapply(x, function(y){
-
-    })
-  })
-}
-
-extractor3 <- function(lst, num){
-  rslt <- list()
-  for(i in seq_len(num)){
-  rslt[[i]] <- sapply(lst, `[[`, i)
+  if (is.null(nm))                    # use default headings if no names
+    nm <- nmc
+  else if (any(ng0 <- nzchar(nm)))    # set names if names exist
+    nmc[ng0] <- nm[ng0]
+  names(cargs) <- nmc
+  rep.fac <- 1L
+  d <- lengths(args)
+  if (KEEP.OUT.ATTRS) {
+    dn <- vector("list", nargs)
+    names(dn) <- nmc
   }
-  return(rslt)
+  orep <- prod(d)                     # set number of combinations among vectors
+  if (orep == 0L) {                   # set cargs if one is of length 0
+    for (i in iArgs) cargs[[i]] <- args[[i]][FALSE]
+  }
+  else {
+    for (i in iArgs) {
+      x <- args[[i]]
+      if (KEEP.OUT.ATTRS)
+        dn[[i]] <- paste0(nmc[i], "=", if (is.numeric(x))
+          format(x)
+          else x)
+      nx <- length(x)
+      orep <- orep/nx
+      x <- x[rep.int(rep.int(seq_len(nx), rep.int(rep.fac,
+                                                  nx)), orep)]
+      if (stringsAsFactors && !is.factor(x) && is.character(x))
+        x <- factor(x, levels = unique(x))
+      cargs[[i]] <- x
+      rep.fac <- rep.fac * nx
+    }
+  }
+  if (KEEP.OUT.ATTRS)
+    attr(cargs, "out.attrs") <- list(dim = d, dimnames = dn)
+  rn <- .set_row_names(as.integer(prod(d)))
+  structure(cargs, class = "data.frame", row.names = rn)
 }
 
-do.call(extractor,
-        list(lst = nlst.lst[[1]], 1:5))
 
 
-# Former set_aes() functions ----------------------------------------------
 
-# mcall2 <- function(...)
-# {
-#   structure(as.list(match.call()[-1]), class = "uneval")
-# }
-
-# mcall3 <- function(...)
-# {
-#   lst <- list(...)
-#   structure(lst, class = "uneval")
-# }
-
-# Other -------------------------------------------------------------------
-
-
-# if(lst$is.dots.chained){
-#   start <- which(names(lst) %in% "is.dots") + 1 # start of first dots argument
-#   end <- length(lst) - 1  # subtract for $is.dots.chained
-#
-#   lapply(seq_along(start:end), function(){
-#     Map(f = )
-#   })
-# } else{
-#
-# }
