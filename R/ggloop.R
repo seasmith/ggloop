@@ -6,8 +6,10 @@ ggloop <- function(mappings = aes_loop(),
                    remap_xy = TRUE,
                    remap_dots = FALSE,
                    environment = parent.frame()){
-  .remap_xy <- remap_xy
-  .remap_dots <- remap_dots
+  # get current environment and set mappings (i.e. aes_loop()) into it
+  env <- environment()
+  environment(mappings) <- env
+
   gg.list <- lapply(seq_along(mappings$aes.list), function(x){
     lapply(seq_along(mappings$aes.list[[x]]), function(y){
       ggplot2::ggplot(data = mappings$data,
@@ -29,11 +31,9 @@ ggloop <- function(mappings = aes_loop(),
 #' @export
 
 aes_loop <- function(data, x, y, ...){
-  # create stashing environment
+  # create stashing environment to return to the mother
   e <- new.env()
   e$data <- data
-
-  pf <- parent.frame()
 
   # filter "data" argument out of ...
   # dots.list <- list(...)
@@ -73,7 +73,6 @@ aes_loop <- function(data, x, y, ...){
         } else{
           y.eval <- NULL
         }
-        print(y.eval)
 
         # capture dots if exist
         dots <- as.list(substitute(list(...)))[-1L]
@@ -91,27 +90,24 @@ aes_loop <- function(data, x, y, ...){
           is.dots   <- FALSE
         }
 
-        # list logical existance and values (if any) for all arguments
         aes.raw <- c(x = x.eval,
                       y = y.eval,
                       is.dots = is.dots, dots.eval)
+        # stash
         e$aes.raw <- aes.raw
 
-  # place mapping argument values in a list
-  # aes.raw <- aes_assign(.data, x, y, ...)
 
-
-  # remap TRUE/FALSE/NA xy value pairs
-  if(is.na(.remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
-    if(.remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
-      if(!.remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
+  # remap_xy
+  if(is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
+    if(remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
+      if(!remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
     }
   }
 
-  # remap TRUE/FALSE dots
-  if(is.na(.remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else{
-    if(.remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
-      if(!.remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
+  # remap_dots
+  if(is.na(remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else{
+    if(remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
+      if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
   }
 
   aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
@@ -141,3 +137,4 @@ aes_loop <- function(data, x, y, ...){
 }
 
 
+aes.env <- new.env()
