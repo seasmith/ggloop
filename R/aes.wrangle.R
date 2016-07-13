@@ -1,3 +1,4 @@
+# aes_assign() ------------------------------------------------------------
 #' Assign inputs to \code{x}, \code{y} or \code{dots}
 #'
 #' \code{aes_assign()} figures out which columns/variables have been
@@ -67,6 +68,8 @@ aes_assign <- function(data, x, y, ...){
   return(mappings)
 }
 
+
+# aes_group() -------------------------------------------------------------
 #' Create unique pairings between \code{c(x, y)} and \code{dots}.
 #'
 #' \code{aes_group()} uses a list of \code{x}'s and \code{y}'s
