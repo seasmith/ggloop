@@ -10,6 +10,7 @@
 #' in the list.
 
 remap_xy_TRUE <- function(lst){
+  lst <- as.list(lst)
   if(exists("x", lst) && exists("y", lst)){
     xy <- expand.grid(y = lst$y, x = lst$x, stringsAsFactors = FALSE)
 
@@ -44,6 +45,7 @@ remap_xy_TRUE <- function(lst){
 #' in the list.
 
 remap_xy_NA <- function(lst){
+  lst <- as.list(lst)
   if(exists("x", lst) && exists("y", lst)){
     # SHOULD I ADD SOMETHING TO DEAL WITH DUPES???
       # what did i mean by that?
@@ -69,6 +71,7 @@ remap_xy_NA <- function(lst){
 #' in the list.
 
 remap_xy_FALSE <- function(lst){
+  lst <- as.list(lst)
   if(exists("x", lst) && exists("y", lst)){
     xy.lengths <- c(x = length(lst$x), y = length(lst$y))
     xy.max <- which.max(xy.lengths) %>% names()
@@ -92,6 +95,7 @@ remap_xy_FALSE <- function(lst){
 
 
 remap_dots_TRUE <- function(lst){
+  lst <- as.list(lst)
   if(lst$is.dots){
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
@@ -106,6 +110,7 @@ remap_dots_TRUE <- function(lst){
 
 
 remap_dots_FALSE <- function(lst){
+  lst <- as.list(lst)
   if(lst$is.dots){
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
