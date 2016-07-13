@@ -15,10 +15,6 @@ map_aes <- function(lst){
 
 
 name_groups <- function(lst, dots.vector){
-  # lst.1 = nlst
-  # lst.2 = aes.inputs
-  # lst.3 = aes.raw
-  # dots.vector = dots.vector
 
   names.matrix <-  matrix(unlist(lst[dots.vector]),
                         ncol = length(dots.vector))
