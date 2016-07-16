@@ -1,18 +1,18 @@
-# aes_assign() ------------------------------------------------------------
+# aes_eval() ----------------------------------------------------------
 #' Assign inputs to \code{x}, \code{y} or \code{dots}
 #'
-#' \code{aes_assign()} figures out which columns/variables have been
+#' \code{aes_eval()} figures out which columns/variables have been
 #' passed and appropriatley assigns the columns/variables to their
 #' respective mapping (\code{x}, \code{y}, or \code{dots}).
 #'
-#' \code{aes_assign()} function is the first major function called
+#' \code{aes_eval()} function is the first major function called
 #' by \code{aes_loop()}.
 #'
-#' @param data,x,y,... Arguments passed from \code{aes_loop()}.
+#' @param vars,x,y,... Arguments passed from \code{aes_loop3()}.
 
-aes_assign <- function(data, x, y, ...){
+aes_eval <- function(vars, x, y, dots){
   # set dplyr::select_vars_() variables
-  vars <- names(data)
+  # vars <- names(data)
   names_list <- setNames(as.list(seq_along(vars)), vars)
   select_funs <- list(starts_with = function(...) starts_with(vars, ...),
                       ends_with = function(...) ends_with(vars, ...),
@@ -23,8 +23,7 @@ aes_assign <- function(data, x, y, ...){
                       everything = function(...) everything(vars, ...))
 
   # capture x values if exist
-  if(hasArg(x)){
-    x <- substitute(x)
+  if(!missing(x)){
     x.eval <- lazyeval::lazy_dots(eval(x)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
@@ -34,8 +33,7 @@ aes_assign <- function(data, x, y, ...){
   }
 
   # capture y values if exist
-  if(hasArg(y)){
-    y <- substitute(y)
+  if(!missing(y)){
     y.eval <- lazyeval::lazy_dots(eval(y)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
@@ -45,7 +43,7 @@ aes_assign <- function(data, x, y, ...){
   }
 
   # capture dots if exist
-  dots <- as.list(substitute(list(...)))[-1L]
+  # dots <- as.list(substitute(list(...)))[-1L]
   if(length(dots) > 0){
     dots.eval <- lapply(seq_along(dots), function(i){
       arg.eval <- lazyeval::lazy_dots(eval(dots[[i]])) %>%
@@ -80,33 +78,40 @@ aes_assign <- function(data, x, y, ...){
 
 aes_group <- function(lst){
   pf <- parent.frame()
+
   xy <- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
     pf$xy <- xy
-  start <- list.pos("is.dots", lst) + 1
-  end <- length(lst)
-  dots.vector <- start:end
-    pf$dots.vector <- dots.vector
+  if(!lst[["is.dots"]]){
+    groups <- xy
+    pf$dots.vector <- NULL
+    pf$rep.num <- NULL
+  } else{
+    start <- list.pos("is.dots", lst) + 1
+    end <- length(lst)
+    dots.vector <- start:end
+      pf$dots.vector <- dots.vector
 
-  rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
-                                    list.pos("y", lst),
-                                    list.pos("is.dots", lst)))])[1]
-    pf$rep.num <- rep.num
+    # might need to use max()
+    rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
+                                      list.pos("y", lst),
+                                      list.pos("is.dots", lst)))])[1]
+      pf$rep.num <- rep.num
 
-  dots.list <- lapply(unlist(lst[dots.vector]),
-                      function(x, times) rep(x, times),
-                      times = rep.num)
+    dots.list <- lapply(unlist(lst[dots.vector]),
+                        function(x, times) rep(x, times),
+                        times = rep.num)
 
-  vector.len <- length(dots.vector)
-  list.len <- length(dots.list)
+    vector.len <- length(dots.vector)
+    list.len <- length(dots.list)
 
-  groups <-  lapply(seq_len(list.len/vector.len), function(x){
-    unit.vector <- seq(from = 1,
-                       to = list.len,
-                       by = list.len/vector.len)
-    iterator <- unit.vector + x - 1
-    c(xy, dots.list[iterator])
-  })
-
+    groups <-  lapply(seq_len(list.len/vector.len), function(x){
+      unit.vector <- seq(from = 1,
+                         to = list.len,
+                         by = list.len/vector.len)
+      iterator <- unit.vector + x - 1
+      c(xy, dots.list[iterator])
+    })
+  }
   return(groups)
 }
 
