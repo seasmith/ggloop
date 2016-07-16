@@ -1,10 +1,13 @@
-f1 <- function(arg2, arg1 = f2()){
-  assign("arg2", arg2, envir = environment())
-  arg1
+f1 <- function(x, y){
+  if(hasArg(x)) x <- substitute(x)
+  if(hasArg(y)) y <- substitute(y)
+
+  function(){
+    ran.fun <- f2(x, y)
+  }
 }
 
-f2 <- function(){
-  pf <- parent.frame()
-  print("arg2 is:")
-  print(pf$arg2)
+f2 <- function(x, y){
+  if(missing("x")) print(x)
+  if(missing("y")) print(z)
 }
