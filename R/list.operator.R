@@ -1,3 +1,5 @@
+
+# `%L%`() -----------------------------------------------------------------
 #' Add layers to \code{ggloop} outputs
 #'
 #' The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an \code{lapply()} loop.
@@ -15,49 +17,59 @@
 #' @export
 
 `%L+%` <- function(lhs, rhs){
-  if(!ggplot2::is.ggproto(rhs)) stop("The rhs must be of class ggproto")
+  # 0. rhs = ggproto
+  rhs.test <- ggplot2::is.ggproto(rhs)
 
-  if(!is.list(lhs)){
-    if(!ggplot2::is.ggplot(lhs)) stop("The lhs has no ggplot object")
+  # 1. lhs = ggplot
+  test_ggplot <- ggplot2::is.ggplot(lhs)
+
+  # 2. lhs = list(ggplot)
+  test_list <- is.list(lhs)
+  test_list.ggplot <- all(sapply(lhs, ggplot2::is.ggplot))
+
+  # 3. lhs = list(list(ggplot))
+  test_list.list <- all(sapply(lhs, is.list))
+  test_list.list.ggplot <- all(sapply(lhs, function(x){
+    sapply(x, ggplot2::is.ggplot)
+  }))
+
+  lhs.test <- c(first = test_ggplot,
+                second = all(test_list, test_list.ggplot),
+                third = all(test_list.list, test_list.list.ggplot))
+
+  # First case
+  first <- function() lhs + rhs
+
+  # Second case
+  second <- function(){
+    lapply(lhs, function(x){
+      x + rhs
+    })
   }
 
-  # if lhs is.list = TRUE AND is.ggplot = TRUE
-  if(ggplot2::is.ggplot(lhs)){
-    lhs + rhs
-    } else{
-
-    is.all.list <- all(vapply(lhs,
-                              is.list,
-                              FUN.VALUE = logical(1)))
-    # is.all.ggplot <- all(vapply(lhs,
-    #                             ggplot2::is.ggplot,
-    #                             FUN.VALUE = logical(1)))
-    if(!is.all.list && !ggplot2::is.ggplot(lhs)){
-      is.all.ggplot <- all(vapply(lhs,
-                                  ggplot2::is.ggplot,
-                                  FUN.VALUE = logical(1))) #logic.1.2
-      if(!is.all.ggplot) stop("The lhs list is not all ggplot objects")
-        lapply(seq_along(lhs), function(x, y){
-                lhs[[x]] + y
-              }, y = rhs)
-    }
-
-  is.all.ggplot <- all(sapply(lhs, function(x){
-    vapply(x, ggplot2::is.ggplot, FUN.VALUE = logical(1))
-  })
-  )
-  if(!is.all.ggplot) stop("The list of lists is not in proper format:
-                    each object in final list element must be of
-                    class ggplot")
-  lapply(seq_along(lhs), function(x, z){
-    lapply(lhs[[x]], function(y){
-      y + z
+  # Third case
+  third <- function(){
+    lapply(lhs, function(x){
+      lapply(x, function(y){
+        y + rhs
+      })
     })
-  }, z = rhs)
-    }
+  }
+
+  fun.list <- list(first,
+                   second,
+                   third)
+
+  if(rhs.test && sum(lhs.test)){
+    fun.list[[which(lhs.test)]]()
+  } else{
+    stop("The right-hand side or left-hand side are not of proper class")
+  }
+
 }
 
 
+# `%<L>%`() ---------------------------------------------------------------
 #' The \code{\%<L>\%} (compound L-plus) operator is  is a mix between magrittr::`%<>%`
 #' and ggloop::`%L%`.
 #' This operator has the same concept as L-plus, but reassigns the value of the
