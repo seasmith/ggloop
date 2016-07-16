@@ -17,7 +17,7 @@ map_aes <- function(lst){
 name_groups <- function(lst, dots.vector){
 
   names.matrix <-  matrix(unlist(lst[dots.vector]),
-                        ncol = length(dots.vector))
+                          ncol = length(dots.vector))
   colnames(names.matrix) <- names(lst[dots.vector])
 
   names.list <- sapply(seq_len(nrow(names.matrix)), function(x){
