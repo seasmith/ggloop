@@ -31,6 +31,9 @@ isFALSE <- function(x) identical(FALSE, x)
 list.pos <- function(name, lst){
   matches <- sapply(name, function(x){
     matched <- which(names(lst) %in% x)
+
+    # logic <- names(lst) %>% sapply(function(x) !is.na(x) && nzchar(x))
+    # chars <- which(logic)
     if(length(matched) == 0) matched <- NA
     matched
   })
