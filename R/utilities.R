@@ -1,4 +1,16 @@
 
+# magrittr::`%>%` ---------------------------------------------------------
+#' This is an alias for \code{magrittr::`\%>\%`}.
+
+`%>%` <- magrittr::`%>%`
+
+
+# magrittr::`%<>%` --------------------------------------------------------
+#' This is an alias for \code{magrittr::`\%<>\%`}.
+
+`%<>%` <- magrittr::`%<>%`
+
+
 # isFALSE() ---------------------------------------------------------------
 #
 #' This is an abbreviation of identical(FALSE, x) to go along with isTRUE()
