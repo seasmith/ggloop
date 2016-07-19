@@ -11,8 +11,7 @@
 #' @param vars,x,y,... Arguments passed from \code{aes_loop3()}.
 
 aes_eval <- function(vars, x, y, dots){
-  # set dplyr::select_vars_() variables
-  # vars <- names(data)
+  # taken from dplyr::select_vars_()
   names_list <- setNames(as.list(seq_along(vars)), vars)
   select_funs <- list(starts_with = function(...) starts_with(vars, ...),
                       ends_with = function(...) ends_with(vars, ...),
@@ -22,8 +21,23 @@ aes_eval <- function(vars, x, y, dots){
                       one_of = function(...) one_of(vars, ...),
                       everything = function(...) everything(vars, ...))
 
-  # capture x values if exist
-  if(!missing(x)){
+  # test if anything was actually passed as x or y
+  x.exists <- tryCatch({
+    get0("x")
+    TRUE
+    }, error = function(e){
+      FALSE
+    })
+
+  y.exists <- tryCatch({
+    get0("y")
+    TRUE
+  }, error = function(e){
+    FALSE
+  })
+
+  # capture x values if x exists
+  if(x.exists){
     x.eval <- lazyeval::lazy_dots(eval(x)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
@@ -32,8 +46,8 @@ aes_eval <- function(vars, x, y, dots){
     x.eval <- NULL
   }
 
-  # capture y values if exist
-  if(!missing(y)){
+  # capture y values if y exists
+  if(y.exists){
     y.eval <- lazyeval::lazy_dots(eval(y)) %>%
       lazyeval::as.lazy_dots() %>%
       lazyeval::lazy_eval(c(names_list, select_funs)) %>%
@@ -58,7 +72,7 @@ aes_eval <- function(vars, x, y, dots){
     is.dots   <- FALSE
   }
 
-  # list logical existance and values (if any) for all arguments
+  # list values and logical existance of ... arguments
   mappings <- c(x = x.eval,
                 y = y.eval,
                 is.dots = is.dots, dots.eval)
@@ -81,20 +95,24 @@ aes_group <- function(lst){
 
   xy <- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
     pf$xy <- xy
+
   if(!lst[["is.dots"]]){
     groups <- xy
-    pf$dots.vector <- NULL
-    pf$rep.num <- NULL
+      # send to parent
+      pf$dots.vector <- NULL
+      pf$rep.num <- NULL
   } else{
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
     dots.vector <- start:end
+      # send to parent
       pf$dots.vector <- dots.vector
 
     # might need to use max()
     rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
                                       list.pos("y", lst),
                                       list.pos("is.dots", lst)))])[1]
+      # send to mother
       pf$rep.num <- rep.num
 
     dots.list <- lapply(unlist(lst[dots.vector]),
