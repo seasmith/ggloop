@@ -7,19 +7,24 @@
 lhs \%L+\% rhs
 }
 \arguments{
-\item{lhs}{Typically a \code{ggloop()} output (a nested list) but can also be a list of \code{ggplot}
-objects or a single \code{ggplot} object.}
+\item{lhs}{Typically the returned object by \code{ggloop()}: either a nested
+list of \code{ggplot} objects or a list of \code{ggplot} object, but can also
+be a single \code{ggplot} object.}
 
-\item{rhs}{A geom, stat, or other layer feature from the \code{ggplot2} package.}
+\item{rhs}{A geom, stat, or other layer feature from the \code{ggplot2}
+package.}
 }
 \description{
-The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an \code{lapply()} loop.
-This function can also be a substitue for adding to "raw" \code{ggplot} objects.
+The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an
+\code{lapply()} loop. This function can also be a substitue for adding
+to "raw" \code{ggplot} objects.
 }
 \details{
-\code{\%L+\%} is typically used to add geoms, stats, and other ggplot2 features to
-the output of \code{ggloop()} (which is often a nested list of \code{ggplot} objects. However
-it is possible to use \code{\%L+\%} in place of where \code{+} would normally be used. This is
-due to the conditional statements present in \code{\%L+\%}'s structure.
+\code{\%L+\%} is a substitute for \code{+} and is used in the same fashion: to
+add geoms, stats, aesthetics, facets, and other features to \code{ggplot}
+object. The returned object from \code{ggloop()} is often a nested list of
+\code{ggplot} objects. However it is possible to use \code{\%L+\%} in place
+of where \code{+} would normally be used. This is due to the conditional
+statements present in \code{\%L+\%}'s structure.
 }
 

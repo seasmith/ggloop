@@ -1,5 +1,6 @@
-# Functions below were found at:
-#   https://raw.githubusercontent.com/hadley/dplyr/master/R/select-utils.R
+# The functions below were taken from ggplot2/R/select-utils.R, and can be
+# found at the following GitHub link:
+# https://raw.githubusercontent.com/hadley/dplyr/master/R/select-utils.R
 
 # starts_with() -----------------------------------------------------------
 

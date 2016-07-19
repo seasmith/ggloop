@@ -1,6 +1,10 @@
 
 # map_aes() ---------------------------------------------------------------
-
+#' Loop through a list an assing "uneval" class to each parsed element.
+#'
+#' This is essentially the core of \code{aes()} from \code{ggplot2} placed
+#' inside of an \code{lapply()} loop. This function will be called using an
+#' \code{mapply()} loop.
 
 map_aes <- function(lst){
     mapping <- lapply(lst, function(x){
@@ -12,7 +16,8 @@ map_aes <- function(lst){
 
 
 # name_groups() -----------------------------------------------------------
-
+#' Extract names for the first level of list components for the returned value
+#' of \code{ggloop()}.
 
 name_groups <- function(lst, dots.vector){
 
@@ -39,7 +44,8 @@ name_groups <- function(lst, dots.vector){
 
 
 # name_subgroups() --------------------------------------------------------
-
+#' Extract names for the second level of list components for the returned value
+#' of \code{ggloop()}.
 
 name_subgroups <- function(lst, dots.vector){
   # lst = xy

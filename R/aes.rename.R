@@ -1,3 +1,6 @@
+# The source for the following code is ggplot2/R/aes.r and can be accessed
+# using the following link to GitHub:
+# https://github.com/hadley/ggplot2/blob/master/R/aes.r
 
 # .all_aesthetics ---------------------------------------------------------
 

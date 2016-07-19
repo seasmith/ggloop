@@ -1,12 +1,21 @@
 # aes_loop() --------------------------------------------------------------
-#' Create a grouped list of uneval aesthetics to pass to \code{ggloop()}.
+#' Create a grouped list of aesthetic mappings to pass to \code{ggloop()}.
 #'
 #' This version of \code{aes_loop} is to be used inside \code{ggloop()}. If
 #' you wish to return the grouped list of uneval aesthetics, then use
 #' \code{aes_loop2()}.
+#'
+#' @param x,y,... A vector of variable names. Vector can consist of a combination of
+#' \code{dplyr}-like symbols (unqouted names) and \code{numerics/integers}
+#' referencing the variable position within the data frame assigned to
+#' \code{data}. \code{...} arguments (of course) must have an argument name.
+#'
+#' @details
+#' \code{aes_loop()} is meant solely to be called within \code{ggloop()}. To
+#' create the raw list of grouped mappings, use \code{aes_loop2()}.
 #' @export
 
-aes_loop <- function(x, y, ..., remap_xy = TRUE, remap_dots = FALSE){
+aes_loop <- function(x, y, ...){
 
   # handle the first set of arguments
   if(!missing(x)) x <- substitute(x)
@@ -31,17 +40,16 @@ aes_loop <- function(x, y, ..., remap_xy = TRUE, remap_dots = FALSE){
       if(remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
         if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
     }
-      # stash
-      e$aes.raw <- aes.raw
 
     aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
 
       # stash
+      e$aes.raw <- aes.raw
       e$xy <- xy
-      e$rep.num <- rep.num
+      # e$rep.num <- rep.num
       e$dots.vector <- dots.vector
 
-    if(is.null(rep.num) && is.null(dots.vector)){
+    if(!aes.raw[["is.dots"]]){
       aes.inputs.dirty <- extract(xy, lengths(xy)[[1]])
 
       aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
@@ -52,7 +60,8 @@ aes_loop <- function(x, y, ..., remap_xy = TRUE, remap_dots = FALSE){
 
         # stash
         e$aes.list <- aes.list
-    } else{
+  } else{
+      # rep.num was brought into environment from aes_group()
       aes.inputs.dirty <- lapply(aes.grouped, function(x){
         extract(x, rep.num)
       })
