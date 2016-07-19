@@ -1,55 +1,106 @@
 
-# WORKS -------------------------------------------------------------------
-gg1.1 <- ggloop(mtcars,
-              aes_loop(mpg:hp, mpg:cyl, color = am:carb),
-              TRUE,
-              FALSE)
+
+# x.y.dot -----------------------------------------------------------------
 
 
-# WORKS -------------------------------------------------------------------
-gg1.2 <- ggloop(mtcars,
-              aes_loop(mpg:disp, mpg:hp, color = am:carb),
-              FALSE,
-              FALSE)
+gg.x.y.dot.T.F <- ggloop(mtcars,
+                         aes_loop(mpg:hp, mpg:cyl, color = am:carb),
+                         TRUE,
+                         FALSE)
+
+gg.x.y.dot.T.T <- ggloop(mtcars,
+                         aes_loop(mpg:hp, mpg:cyl, color = am:carb),
+                         TRUE,
+                         TRUE)
+
+gg.x.y.dot.F.F <- ggloop(mtcars,
+                         aes_loop(mpg:disp, mpg:hp, color = am:carb),
+                         FALSE,
+                         FALSE)
+
+gg.x.y.dot.NA.T <- ggloop(mtcars,
+                         aes_loop(mpg:hp, mpg:cyl, color = am:carb),
+                         NA,
+                         TRUE)
+
+gg.x.y.dot.NA.F <- ggloop(mtcars,
+                         aes_loop(mpg:disp, mpg:hp, color = am:carb),
+                         NA,
+                         FALSE)
+
+# x.y.dots ----------------------------------------------------------------
 
 
-# WORKS -------------------------------------------------------------------
-gg2.1 <- ggloop(mtcars,
-              aes_loop(mpg:hp, mpg:hp, color = am:carb, size = vs:am),
-              TRUE,
-              FALSE)
+gg.x.y.dots.T.F <- ggloop(mtcars,
+                          aes_loop(x = mpg:hp,
+                                   y = mpg:hp,
+                                   color = am:carb,
+                                   size = vs:am),
+                          TRUE,
+                          FALSE)
+
+gg.x.y.dots.T.T <- ggloop(mtcars,
+                          aes_loop(x = mpg:hp,
+                                   y = mpg:hp,
+                                   color = am:carb,
+                                   size = vs:am),
+                          TRUE,
+                          TRUE)
+
+gg.x.y.dots.F.F <- ggloop(mtcars,
+                          aes_loop(x = mpg:hp,
+                                   y = mpg:hp,
+                                   color = am:carb,
+                                   size = vs:am),
+                          FALSE,
+                          FALSE)
+
+gg.x.y.dots.NA.T <- ggloop(mtcars,
+                          aes_loop(x = mpg:hp,
+                                   y = mpg:hp,
+                                   color = am:carb,
+                                   size = vs:am),
+                          NA,
+                          TRUE)
+
+gg.x.y.dots.NA.F <- ggloop(mtcars,
+                           aes_loop(x = mpg:hp,
+                                    y = mpg:hp,
+                                    color = am:carb,
+                                    size = vs:am),
+                           NA,
+                           FALSE)
 
 
-# WORKS -------------------------------------------------------------------
-gg2.2 <- ggloop(mtcars,
-              aes_loop(mpg:hp, mpg:hp, color = am:carb, size = vs:am),
-              TRUE,
-              TRUE)
+# x.y ---------------------------------------------------------------------
 
 
-# FAILS -------------------------------------------------------------------
-gg3.1 <- ggloop(mtcars,
-                aes_loop(mpg, cyl:hp),
+gg.x.y.T.F <- ggloop(mtcars,
+                aes_loop(x = mpg,
+                         y = cyl:hp),
                 TRUE,
                 FALSE)
 
+gg.x.y.T.T <- ggloop(mtcars,
+                     aes_loop(x = mpg,
+                              y = cyl:hp),
+                     TRUE,
+                     TRUE)
 
-# FAILS -------------------------------------------------------------------
-gg3.2 <- ggloop(mtcars,
-                aes_loop(mpg:hp, c(1,3,5,7)),
-                TRUE,
-                TRUE)
+gg.x.y.F.F <- ggloop(mtcars,
+                     aes_loop(x = mpg,
+                              y = cyl:hp),
+                     FALSE,
+                     FALSE)
 
+gg.x.y.NA.T <- ggloop(mtcars,
+                     aes_loop(x = mpg,
+                              y = cyl:hp),
+                     NA,
+                     TRUE)
 
-# FAILS -------------------------------------------------------------------
-gg4.1 <- ggloop(mtcars,
-                aes_loop(mpg:hp, mpg:hp),
-                FALSE,
-                FALSE)
-
-
-# FAILS -------------------------------------------------------------------
-gg4.2 <- ggloop(mtcars,
-                aes_loop(mpg:hp, mpg:hp),
-                FALSE,
-                TRUE)
+gg.x.y.NA.F <- ggloop(mtcars,
+                      aes_loop(x = mpg,
+                               y = cyl:hp),
+                      NA,
+                      FALSE)
