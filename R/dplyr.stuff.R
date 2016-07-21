@@ -1,6 +1,23 @@
-# The functions below were taken from ggplot2/R/select-utils.R, and can be
-# found at the following GitHub link:
-# https://raw.githubusercontent.com/hadley/dplyr/master/R/select-utils.R
+#' Helper functions to select variable names using non-standard evaluation.
+#'
+#' @rdname select_helpers
+#'
+#' @seealso
+#' Source for \code{select_helpers} and the helper functions can be found at
+#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-vars.R}
+#' and
+#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
+
+# select_helpers() --------------------------------------------------------
+
+
+select_helpers <- list(starts_with = function(...) starts_with(vars, ...),
+                       ends_with = function(...) ends_with(vars, ...),
+                       contains = function(...) contains(vars, ...),
+                       matches = function(...) matches(vars, ...),
+                       num_range = function(...) num_range(vars, ...),
+                       one_of = function(...) one_of(vars, ...),
+                       everything = function(...) everything(vars, ...))
 
 # starts_with() -----------------------------------------------------------
 
