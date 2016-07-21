@@ -1,25 +1,38 @@
 # aes_eval() ----------------------------------------------------------
+#
 #' Assign inputs to \code{x}, \code{y} or \code{dots}
 #'
-#' \code{aes_eval()} figures out which columns/variables have been
-#' passed and appropriatley assigns the columns/variables to their
-#' respective mapping (\code{x}, \code{y}, or \code{dots}).
+#' \code{aes_eval()} figures out which variables have been passed and
+#' appropriatley assigns the variables to their respective mapping: either
+#' (\code{x}, \code{y}, or \code{dots}).
 #'
-#' \code{aes_eval()} function is the first major function called
-#' by \code{aes_loop()}.
+#' \code{aes_eval()} function is the first major function called by
+#' \code{aes_loop()}.
 #'
-#' @param vars,x,y,... Arguments passed from \code{aes_loop3()}.
+#' @param vars,x,y,dots Arguments passed from \code{aes_loop()} or
+#'   \code{aes_loop2()}.
+#'
+#' @details The length of each vector (\code{x}, \code{y}, and \code{dots}) is
+#' determined by the length of the vector passed to \code{aes_loop()}. If an
+#' \code{x} or \code{y} variable is passed more than once, then it will be
+#' present however many times it was passed.
+#'
+#' The logical vector \code{$is.dots} is placed between the \code{x} and
+#' \code{y} vectors (if any) and the \code{dots} vectors (if any). This is used
+#' for easy reference in \code{if} statements.
+#'
+#' The list returned by \code{aes_eval()} is the input for the remapping
+#' functions for \code{x}, \code{y}, and \code{dots}.
+#'
+#' @seealso
+#' Source for \code{names_list} and code structure of \code{lazyeval::} function
+#' calls can be found at
+#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-vars.R}
+#' and
+#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
 aes_eval <- function(vars, x, y, dots){
-  # taken from dplyr::select_vars_()
   names_list <- setNames(as.list(seq_along(vars)), vars)
-  select_funs <- list(starts_with = function(...) starts_with(vars, ...),
-                      ends_with = function(...) ends_with(vars, ...),
-                      contains = function(...) contains(vars, ...),
-                      matches = function(...) matches(vars, ...),
-                      num_range = function(...) num_range(vars, ...),
-                      one_of = function(...) one_of(vars, ...),
-                      everything = function(...) everything(vars, ...))
 
   # test if anything was actually passed as x or y
   x.exists <- tryCatch({
@@ -40,7 +53,7 @@ aes_eval <- function(vars, x, y, dots){
   if(x.exists){
     x.eval <- lazyeval::lazy_dots(eval(x)) %>%
       lazyeval::as.lazy_dots() %>%
-      lazyeval::lazy_eval(c(names_list, select_funs)) %>%
+      lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
       magrittr::extract2(1L) %>% vars[.] %>% list()
   } else{
     x.eval <- NULL
@@ -50,19 +63,18 @@ aes_eval <- function(vars, x, y, dots){
   if(y.exists){
     y.eval <- lazyeval::lazy_dots(eval(y)) %>%
       lazyeval::as.lazy_dots() %>%
-      lazyeval::lazy_eval(c(names_list, select_funs)) %>%
+      lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
       magrittr::extract2(1L) %>% vars[.] %>% list()
   } else{
     y.eval <- NULL
   }
 
   # capture dots if exist
-  # dots <- as.list(substitute(list(...)))[-1L]
   if(length(dots) > 0){
     dots.eval <- lapply(seq_along(dots), function(i){
       arg.eval <- lazyeval::lazy_dots(eval(dots[[i]])) %>%
         lazyeval::as.lazy_dots() %>%
-        lazyeval::lazy_eval(c(names_list, select_funs)) %>%
+        lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
         magrittr::extract2(1L) %>% vars[.]
     }) %>%
       magrittr::set_names(names(dots))
@@ -75,29 +87,44 @@ aes_eval <- function(vars, x, y, dots){
   # list values and logical existance of ... arguments
   mappings <- c(x = x.eval,
                 y = y.eval,
-                is.dots = is.dots, dots.eval)
+                is.dots = is.dots,
+                dots.eval)
 
   return(mappings)
 }
 
 
 # aes_group() -------------------------------------------------------------
-#' Create unique pairings between \code{c(x, y)} and \code{dots}.
+#
+#' Create unique pairings between \code{x}, \code{y} and \code{dots}.
 #'
-#' \code{aes_group()} uses a list of \code{x}'s and \code{y}'s
-#' to create each unique combination with \code{dots}.
+#' \code{aes_group()} uses a list of \code{x}'s and \code{y}'s to create each
+#' unique combination with \code{dots}.
 #'
-#' @param lst A list. The list that will be passed to \code{aes_group()}
-#' will be the list produced by \code{aes_assing()}.
+#' @param lst A list. The list that will be passed to \code{aes_group()} will be
+#'   the list produced by \code{aes_assing()}.
+#'
+#' @details \code{aes_group()} uses an {lapply} loop to give every \code{dots}
+#' element with a copy of the \code{x} and \code{y} vectors (if any). This
+#' creates a list in which the first set of components correspond to the
+#' combination of \code{dots} elements, and the second set of components (the
+#' nested components) correspond to the \code{x} and \code{y} vectors.
 
 aes_group <- function(lst){
+  # ee <- new.env()
   pf <- parent.frame()
 
   xy <- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
+    # stash
+    # ee$xy <- xy
+    # send to parent
     pf$xy <- xy
 
   if(!lst[["is.dots"]]){
     groups <- xy
+      # stash
+      # ee$dots.vector <- NULL
+      # ee$rep.num <- NULL
       # send to parent
       pf$dots.vector <- NULL
       pf$rep.num <- NULL
@@ -105,6 +132,8 @@ aes_group <- function(lst){
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
     dots.vector <- start:end
+      # stash
+      # ee$dots.vector <- dots.vector
       # send to parent
       pf$dots.vector <- dots.vector
 
@@ -112,6 +141,8 @@ aes_group <- function(lst){
     rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
                                       list.pos("y", lst),
                                       list.pos("is.dots", lst)))])[1]
+      # stash
+      # ee$rep.num <- rep.num
       # send to mother
       pf$rep.num <- rep.num
 
@@ -130,29 +161,32 @@ aes_group <- function(lst){
       c(xy, dots.list[iterator])
     })
   }
+  # stash
+  # ee$groups <- groups
+  # return(ee)
   return(groups)
 }
 
 
+# aes_group2() ------------------------------------------------------------
+#
 #' Create unique pairings between \code{c(x, y)} and \code{dots}.
 #'
-#' \code{aes_group()} uses a list of \code{x's} and \code{y's}
-#' to create each unique combination with \code{dots}. The difference
-#' between \code{aes_group()} and \code{aes_group2()} is how they create
-#' unqiue combinations. \code{aes_group2()} takes each unique \code{x},
-#' \code{y} combination and assigns all \code{dots} to that unique
-#' combination.
+#' \code{aes_group()} uses a list of \code{x's} and \code{y's} to create each
+#' unique combination with \code{dots}. The difference between
+#' \code{aes_group()} and \code{aes_group2()} is how they create unqiue
+#' combinations. \code{aes_group2()} takes each unique \code{x}, \code{y}
+#' combination and assigns all \code{dots} to that unique combination.
 #'
-#' \code{aes_group()} does the opposite in that it takes
-#' a list of all \code{x} and \code{y} variables and assings a unique
-#' \code{dots} argument. In this sense, if there are multiple variables
-#' assigned to a \code{dot} (like \code{colour}, then \code{aes_group()}
-#' will take a list of all \code{x} and \code{y} variables and add to it
-#' \code{colour.N} where \code{.N} denotes the number of variables assigned
-#' to \code{colour}.
+#' \code{aes_group()} does the opposite in that it takes a list of all \code{x}
+#' and \code{y} variables and assings a unique \code{dots} argument. In this
+#' sense, if there are multiple variables assigned to a \code{dot} (like
+#' \code{colour}, then \code{aes_group()} will take a list of all \code{x} and
+#' \code{y} variables and add to it \code{colour.N} where \code{.N} denotes the
+#' number of variables assigned to \code{colour}.
 #'
-#' @param lst A list. The list that will be passed to \code{aes_group()}
-#' will be the list produced by \code{aes_assing()}.
+#' @param lst A list. The list that will be passed to \code{aes_group()} will be
+#'   the list produced by \code{aes_assing()}.
 
 aes_group2 <- function(lst){
 
