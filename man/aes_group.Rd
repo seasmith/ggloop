@@ -2,16 +2,23 @@
 % Please edit documentation in R/aes.wrangle.R
 \name{aes_group}
 \alias{aes_group}
-\title{Create unique pairings between \code{c(x, y)} and \code{dots}.}
+\title{Create unique pairings between \code{x}, \code{y} and \code{dots}.}
 \usage{
 aes_group(lst)
 }
 \arguments{
-\item{lst}{A list. The list that will be passed to \code{aes_group()}
-will be the list produced by \code{aes_assing()}.}
+\item{lst}{A list. The list that will be passed to \code{aes_group()} will be
+the list produced by \code{aes_assing()}.}
 }
 \description{
-\code{aes_group()} uses a list of \code{x}'s and \code{y}'s
-to create each unique combination with \code{dots}.
+\code{aes_group()} uses a list of \code{x}'s and \code{y}'s to create each
+unique combination with \code{dots}.
+}
+\details{
+\code{aes_group()} uses an {lapply} loop to give every \code{dots}
+element with a copy of the \code{x} and \code{y} vectors (if any). This
+creates a list in which the first set of components correspond to the
+combination of \code{dots} elements, and the second set of components (the
+nested components) correspond to the \code{x} and \code{y} vectors.
 }
 

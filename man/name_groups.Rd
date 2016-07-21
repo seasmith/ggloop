@@ -7,6 +7,12 @@ of \code{ggloop()}.}
 \usage{
 name_groups(lst, dots.vector)
 }
+\arguments{
+\item{lst}{A list - specifically \code{aes.raw}.}
+
+\item{dots.vector}{A vector corresponding to the position of the \code{...}
+arguments in the \code{aes.raw} list.}
+}
 \description{
 Extract names for the first level of list components for the returned value
 of \code{ggloop()}.

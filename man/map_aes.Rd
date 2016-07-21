@@ -2,13 +2,17 @@
 % Please edit documentation in R/aes.map.R
 \name{map_aes}
 \alias{map_aes}
-\title{Loop through a list an assing "uneval" class to each parsed element.}
+\title{Loop through a list of grouped variables and assign class "uneval" to each
+element in the group.}
 \usage{
 map_aes(lst)
 }
+\arguments{
+\item{lst}{A list of grouped variables to be assigned class \code{uneval}}
+}
 \description{
-This is essentially the core of \code{aes()} from \code{ggplot2} placed
-inside of an \code{lapply()} loop. This function will be called using an
-\code{mapply()} loop.
+This is essentially \code{aes()} from \code{ggplot2} placed inside of an
+\code{lapply()} loop. The function name is passed in an \code{mapply()} loop
+inside of \code{aes_loop()} and \code{aes_loop2()}.
 }
 

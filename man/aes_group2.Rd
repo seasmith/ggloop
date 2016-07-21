@@ -7,24 +7,22 @@
 aes_group2(lst)
 }
 \arguments{
-\item{lst}{A list. The list that will be passed to \code{aes_group()}
-will be the list produced by \code{aes_assing()}.}
+\item{lst}{A list. The list that will be passed to \code{aes_group()} will be
+the list produced by \code{aes_assing()}.}
 }
 \description{
-\code{aes_group()} uses a list of \code{x's} and \code{y's}
-to create each unique combination with \code{dots}. The difference
-between \code{aes_group()} and \code{aes_group2()} is how they create
-unqiue combinations. \code{aes_group2()} takes each unique \code{x},
-\code{y} combination and assigns all \code{dots} to that unique
-combination.
+\code{aes_group()} uses a list of \code{x's} and \code{y's} to create each
+unique combination with \code{dots}. The difference between
+\code{aes_group()} and \code{aes_group2()} is how they create unqiue
+combinations. \code{aes_group2()} takes each unique \code{x}, \code{y}
+combination and assigns all \code{dots} to that unique combination.
 }
 \details{
-\code{aes_group()} does the opposite in that it takes
-a list of all \code{x} and \code{y} variables and assings a unique
-\code{dots} argument. In this sense, if there are multiple variables
-assigned to a \code{dot} (like \code{colour}, then \code{aes_group()}
-will take a list of all \code{x} and \code{y} variables and add to it
-\code{colour.N} where \code{.N} denotes the number of variables assigned
-to \code{colour}.
+\code{aes_group()} does the opposite in that it takes a list of all \code{x}
+and \code{y} variables and assings a unique \code{dots} argument. In this
+sense, if there are multiple variables assigned to a \code{dot} (like
+\code{colour}, then \code{aes_group()} will take a list of all \code{x} and
+\code{y} variables and add to it \code{colour.N} where \code{.N} denotes the
+number of variables assigned to \code{colour}.
 }
 

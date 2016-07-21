@@ -1,23 +1,40 @@
 # aes_loop() --------------------------------------------------------------
-#' Create a grouped list of aesthetic mappings to pass to \code{ggloop()}.
+#
+#' Create a list of grouped aesthetic mappings.
 #'
-#' This version of \code{aes_loop} is to be used inside \code{ggloop()}. If
-#' you wish to return the grouped list of uneval aesthetics, then use
+#' This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
+#' wish to return the grouped list of uneval aesthetics, then use
 #' \code{aes_loop2()}.
 #'
-#' @param x,y,... A vector of variable names. Vector can consist of a combination of
-#' \code{dplyr}-like symbols (unqouted names) and \code{numerics/integers}
-#' referencing the variable position within the data frame assigned to
-#' \code{data}. \code{...} arguments (of course) must have an argument name.
+#' @param x,y,... A vector of variable names. Vector can consist of a
+#'   combination of \code{dplyr}-like symbols (unqouted names) and
+#'   \code{numerics/integers} referencing the variable position within
+#'   \code{data}.
 #'
-#' @details
-#' \code{aes_loop()} is meant solely to be called within \code{ggloop()}. To
-#' create the raw list of grouped mappings, use \code{aes_loop2()}.
+#' @details \code{aes_loop()} is solely meant to be called within
+#' \code{ggloop()}. To create the raw list of grouped mappings, use
+#' \code{aes_loop2()}.
+#'
+#' @return
+#' \code{aes_loop()} returns an environment that includes \code{aes.list} (the
+#' list of grouped aesthetic mappings used inside \code{ggloop()}) and a few
+#' vectors used by other functions and \code{lapply()} loops for control (to
+#' eliminate running duplicate code to return a result from a previously ran
+#' function).
+#'
+#' \code{aes_loop2()} returns a list of grouped mappings. This is similar to a
+#' bunch of \code{aes()} mappings in a list waiting to be passed to
+#' \code{ggplot()}.
+#'
+#' @example
+#'
+#' (aes.list <- aes_loop2(mtcars, mpg:hp, disp, color = gear))
+#'
 #' @export
 
 aes_loop <- function(x, y, ...){
 
-  # handle the first set of arguments
+  # handle the first set of arguments: x, y, ...
   if(!missing(x)) x <- substitute(x)
   if(!missing(y)) y <- substitute(y)
   dots <- as.list(substitute(list(...)))[-1L]
@@ -86,6 +103,12 @@ aes_loop <- function(x, y, ...){
 
 
 # aes_loop2() -------------------------------------------------------------
+#
+#' @rdname aes_loop
+#' @param data Default dataset to use for plot. Must be a data frame and can be
+#'   only one data frame.
+#' @param remap_xy Remapping behavior of \code{x} and \code{y} vectors.
+#' @param remap_dots Remapping behavior of \code{...} vectors.
 #' @export
 
 aes_loop2 <- function(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE){

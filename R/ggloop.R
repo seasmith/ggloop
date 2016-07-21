@@ -7,41 +7,43 @@
 #' and returns a list of grouped \code{ggplot} plots.
 #'
 #' @param data Default dataset to use for plot. Must be a data frame and can be
-#' only one data frame.
+#'   only one data frame.
 #' @param mappings Default list of aesthetic mappings to use for plots.
 #' @param remap_xy Remapping behavior of \code{x} and \code{y} vectors specified
-#' in \code{aes_loop()}.
-#' @param remap_dots Remapping behavior of \code{...} vectors specified
-#' in \code{aes_loop()}.
+#'   in \code{aes_loop()}.
+#' @param remap_dots Remapping behavior of \code{...} vectors specified in
+#'   \code{aes_loop()}.
 #' @param environment An environment and only one environment (cannot be a
-#' vector). If a variable defined in the aesthetic mapping is not found in the
-#' data, \code{ggplot()} (called inside \code{ggloop()}) will look for it in
-#' this environment. It defaults to using the environment in which
-#' \code{ggloop()} was called.
-#' @details
-#' \code{ggloop()} makes use of the first of two \code{aes_loop} functions.
-#' \code{aes_loop()} is meant to mimic \code{aes} from \code{ggplot2}, and
-#' because of this, the remapping behavior of the aesthetics is controlled by
-#' the remapping arguments supplied to \code{ggloop()}.
+#'   vector). If a variable defined in the aesthetic mapping is not found in the
+#'   data, \code{ggplot()} (called inside \code{ggloop()}) will look for it in
+#'   this environment. It defaults to using the environment in which
+#'   \code{ggloop()} was called.
+#' @details \code{ggloop()} makes use of the first of two \code{aes_loop}
+#' functions. \code{aes_loop()} is meant to mimic \code{aes} from
+#' \code{ggplot2}, and because of this, the remapping behavior of the aesthetics
+#' is controlled by the remapping arguments supplied to \code{ggloop()}.
 #'
 #' The first remapping argument, \code{remap_xy} can take three values:
-#' \itemize{
-#' \item \code{TRUE} = The default behavior. All unqiue combinations of \code{x}
-#' and \code{y} are generated. This means that if a variable (i.e. \code{mpg})
-#' is supplied in both \code{x} and \code{y}, then no mapping will have \code{x}
-#' and \code{y} variables that are the same (i.e. \code{x -> mpg; y -> mpg} will
-#' not ever happen). Likewise, no unordered pair duplicates will happen (i.e.
-#' \code{x -> mpg; y -> cyl} and \code{x -> cyl; y -> mpg} will be treated the
-#' same).
-#' \item \code{FALSE} = If \code{x} and \code{y} vectors are not the same length,
-#' then the shorter of the two will be recycled. Recycling is similar to
-#' \code{mapply()}'s recycling.
-#' \item \code{NA} = If \code{x} and \code{y} vectors are not the same length,
-#' then the shorter of the two will have \code{NA} assigned to the missing
-#' elements. These are meant to act as placeholders during the wrangling
-#' operations (extracting and grouping the aesthetics), and will be taken out
-#' before the final list of mappings is sent to \code{ggloop()}.
-#'          }
+#' \itemize{ \item \code{TRUE} = The default behavior. All unqiue combinations
+#' of \code{x} and \code{y} are generated. This means that if a variable (i.e.
+#' \code{mpg}) is supplied in both \code{x} and \code{y}, then no mapping will
+#' have \code{x} and \code{y} variables that are the same (i.e. \code{x -> mpg;
+#' y -> mpg} will not ever happen). Likewise, no unordered pair duplicates will
+#' happen (i.e. \code{x -> mpg; y -> cyl} and \code{x -> cyl; y -> mpg} will be
+#' treated the same). \item \code{FALSE} = If \code{x} and \code{y} vectors are
+#' not the same length, then the shorter of the two will be recycled. Recycling
+#' is similar to \code{mapply()}'s recycling. \item \code{NA} = If \code{x} and
+#' \code{y} vectors are not the same length, then the shorter of the two will
+#' have \code{NA} assigned to the missing elements. These are meant to act as
+#' placeholders during the wrangling operations (extracting and grouping the
+#' aesthetics), and will be taken out before the final list of mappings is sent
+#' to \code{ggloop()}. }
+#'
+#' @examples
+#' # An example using default remapping values.
+#' \dontrun{ggplots <- ggloop(data = mtcars, mappings = aes_loop(x = mpg:hp, y =
+#' mpg:hp, lty = gear))}
+#'
 #' @export
 
 ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,

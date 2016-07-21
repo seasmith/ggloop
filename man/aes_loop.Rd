@@ -2,23 +2,44 @@
 % Please edit documentation in R/aes.loop.R
 \name{aes_loop}
 \alias{aes_loop}
-\title{Create a grouped list of aesthetic mappings to pass to \code{ggloop()}.}
+\alias{aes_loop2}
+\title{Create a grouped list of aesthetic mappings.}
 \usage{
 aes_loop(x, y, ...)
+
+aes_loop2(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE)
 }
 \arguments{
-\item{x, y, ...}{A vector of variable names. Vector can consist of a combination of
-\code{dplyr}-like symbols (unqouted names) and \code{numerics/integers}
-referencing the variable position within the data frame assigned to
-\code{data}. \code{...} arguments (of course) must have an argument name.}
+\item{x, y, ...}{A vector of variable names. Vector can consist of a
+combination of \code{dplyr}-like symbols (unqouted names) and
+\code{numerics/integers} referencing the variable position within
+\code{data}.}
+
+\item{data}{Default dataset to use for plot. Must be a data frame and can be
+only one data frame.}
+
+\item{remap_xy}{Remapping behavior of \code{x} and \code{y} vectors.}
+
+\item{remap_dots}{Remapping behavior of \code{...} vectors.}
+}
+\value{
+\code{aes_loop()} and actually returns an environment since several variables,
+from the functions inside \code{aes_loop()}, must be used within
+\code{ggloop()}. The most crucial of these variables is the last one created:
+\code{aes.list} - the grouped list of aesthetic mappings.
+
+\code{aes_loop2()} returns the grouped list of mappings. This is similar to a
+bunch of \code{aes()} mappings in a list waiting to be passed to
+\code{ggplot()}
 }
 \description{
-This version of \code{aes_loop} is to be used inside \code{ggloop()}. If
-you wish to return the grouped list of uneval aesthetics, then use
+This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
+wish to return the grouped list of uneval aesthetics, then use
 \code{aes_loop2()}.
 }
 \details{
-\code{aes_loop()} is meant solely to be called within \code{ggloop()}. To
-create the raw list of grouped mappings, use \code{aes_loop2()}.
+\code{aes_loop()} is solely meant to be called within
+\code{ggloop()}. To create the raw list of grouped mappings, use
+\code{aes_loop2()}.
 }
 

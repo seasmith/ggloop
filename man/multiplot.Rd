@@ -6,18 +6,28 @@
 \usage{
 multiplot(..., plotlist = NULL, file, cols = 1, layout = NULL)
 }
-\description{
-\code{ggplot} objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-- cols:   Number of columns in layout
-- layout: A matrix specifying the layout. If present, 'cols' is ignored.
-}
-\details{
-If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-then plot 1 will go in the upper left, 2 will go in the upper right, and
-3 will go all the way across the bottom.
+\arguments{
+\item{...}{\code{ggplot} plots.}
 
-The source for the code is Winston Chang's "Cookbook for R", and can be
-found at the following link:
-http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+\item{plotlist}{Plot lists.}
+
+\item{file}{File to retrieve plots.}
+
+\item{cols}{Number of columns to divide plots into.}
+
+\item{layout}{Extra layout style information.}
+}
+\description{
+\code{ggplot} objects can be passed in ..., or to plotlist (as a list of
+ggplot objects) - cols:   Number of columns in layout - layout: A matrix
+specifying the layout. If present, 'cols' is ignored. If the layout is
+something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE), then plot 1 will go in
+the upper left, 2 will go in the upper right, and 3 will go all the way
+across the bottom.
+}
+\seealso{
+The source for the code is Winston Chang's "Cookbook for R", and can be found
+at the following link:
+\url{http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/}
 }
 
