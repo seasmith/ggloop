@@ -31,4 +31,11 @@ for easy reference in \code{if} statements.
 The list returned by \code{aes_eval()} is the input for the remapping
 functions for \code{x}, \code{y}, and \code{dots}.
 }
+\seealso{
+Source for \code{names_list} and code structure of \code{lazyeval::} function
+calls can be found at
+\href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-vars.R}
+and
+\href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
+}
 

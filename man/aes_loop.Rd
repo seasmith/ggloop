@@ -3,7 +3,7 @@
 \name{aes_loop}
 \alias{aes_loop}
 \alias{aes_loop2}
-\title{Create a grouped list of aesthetic mappings.}
+\title{Create a list of grouped aesthetic mappings.}
 \usage{
 aes_loop(x, y, ...)
 
@@ -23,14 +23,15 @@ only one data frame.}
 \item{remap_dots}{Remapping behavior of \code{...} vectors.}
 }
 \value{
-\code{aes_loop()} and actually returns an environment since several variables,
-from the functions inside \code{aes_loop()}, must be used within
-\code{ggloop()}. The most crucial of these variables is the last one created:
-\code{aes.list} - the grouped list of aesthetic mappings.
+\code{aes_loop()} returns an environment that includes \code{aes.list} (the
+list of grouped aesthetic mappings used inside \code{ggloop()}) and a few
+vectors used by other functions and \code{lapply()} loops for control (to
+eliminate running duplicate code to return a result from a previously ran
+function).
 
-\code{aes_loop2()} returns the grouped list of mappings. This is similar to a
+\code{aes_loop2()} returns a list of grouped mappings. This is similar to a
 bunch of \code{aes()} mappings in a list waiting to be passed to
-\code{ggplot()}
+\code{ggplot()}.
 }
 \description{
 This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
@@ -41,5 +42,25 @@ wish to return the grouped list of uneval aesthetics, then use
 \code{aes_loop()} is solely meant to be called within
 \code{ggloop()}. To create the raw list of grouped mappings, use
 \code{aes_loop2()}.
+}
+\examples{
+aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
+gear)
+print(aes.list)
+[[1]]
+[[1]][[1]]
+* x      -> mpg
+* y      -> disp
+* colour -> gear
+
+[[1]][[2]]
+* x      -> cyl
+* y      -> disp
+* colour -> gear
+
+[[1]][[3]]
+* x      -> hp
+* y      -> disp
+* colour -> gear
 }
 

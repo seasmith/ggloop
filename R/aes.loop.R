@@ -26,9 +26,6 @@
 #' bunch of \code{aes()} mappings in a list waiting to be passed to
 #' \code{ggplot()}.
 #'
-#' @example
-#'
-#' (aes.list <- aes_loop2(mtcars, mpg:hp, disp, color = gear))
 #'
 #' @export
 
@@ -61,6 +58,9 @@ aes_loop <- function(x, y, ...){
     aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
 
       # stash
+      # e$aes.raw <- aes.grouped$aes.raw
+      # e$xy <- aes.grouped$xy
+      # e$dots.vector <- aes.grouped$dots.vector
       e$aes.raw <- aes.raw
       e$xy <- xy
       # e$rep.num <- rep.num
@@ -109,6 +109,27 @@ aes_loop <- function(x, y, ...){
 #'   only one data frame.
 #' @param remap_xy Remapping behavior of \code{x} and \code{y} vectors.
 #' @param remap_dots Remapping behavior of \code{...} vectors.
+#'
+#' @examples
+#' aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
+#' gear)
+#' print(aes.list)
+#'
+#' [[1]]
+#' [[1]][[1]]
+#' * x      -> mpg
+#' * y      -> disp
+#' * colour -> gear
+#'
+#' [[1]][[2]]
+#' * x      -> cyl
+#' * y      -> disp
+#' * colour -> gear
+#'
+#' [[1]][[3]]
+#' * x      -> hp
+#' * y      -> disp
+#' * colour -> gear
 #' @export
 
 aes_loop2 <- function(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE){

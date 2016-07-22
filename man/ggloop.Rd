@@ -26,7 +26,8 @@ this environment. It defaults to using the environment in which
 \code{ggloop()} was called.}
 }
 \description{
-\code{ggloop()} takes a list of grouped mappings created by \code{aes_loop()}
+\code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
+and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
 and returns a list of grouped \code{ggplot} plots.
 }
 \details{
