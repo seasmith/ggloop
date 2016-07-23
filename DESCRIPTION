@@ -13,8 +13,9 @@ Description: Pass a data frame and mapping aesthetics to ggloop() in order
     special %L+% (L-plus) operator.
 License: GPL-2
 LazyData: TRUE
-Imports:
+Imports: 
     dplyr,
     ggplot2,
     magrittr
 RoxygenNote: 5.0.1
+Suggests: testthat
