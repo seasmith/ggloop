@@ -1,12 +1,12 @@
 
-# multiplot() -------------------------------------------------------------
+# mplot() ---------------------------------------------------------
 #' Plot multiple plots in one layout.
 #'
 #' \code{ggplot} objects can be passed in ..., or to plotlist (as a list of
 #' ggplot objects) - cols:   Number of columns in layout - layout: A matrix
 #' specifying the layout. If present, 'cols' is ignored.
 #'
-#' @param ... Unrendered \code{ggplot} plots tp view in a single pane.
+# @param ... Unrendered \code{ggplot} plots tp view in a single pane.
 #' @param plotlist A list of \code{ggplot} plots (if you prefer).
 #' @param file Not yet known/defined.
 #' @param cols Number of columns in the layout.
@@ -31,11 +31,11 @@
 #' \item \href{http://stackoverflow.com/questions/28138257/r-multiplot-write-plot-to-file-grid-package}{R multiplot write plot to file grid package}
 #' }
 
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+mplot <- function(plotlist=NULL, file, cols=1, layout=NULL) {
   # library(grid)
 
   # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
+  plots <- c(plotlist)
 
   numPlots = length(plots)
 
@@ -54,7 +54,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   } else {
     # Set up the page
     grid::grid.newpage()
-    grid::pushViewport(viewport(layout = grid::grid.layout(nrow(layout),
+    grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow(layout),
                                                            ncol(layout))))
 
     # Make each plot, in the correct location
