@@ -53,13 +53,36 @@ list.pos <- function(name, lst){
 }
 
 # extract() ---------------------------------------------------------------
+#
+#' Extract the nth element from vectors in a list.
+#'
+#' \code{extract()} simply uses a \code{for} loop to extract the nth element
+#' from each vector in a list. However, it can also operate on a data frame.
+#' This is equivalent to taking the first element of each vector and making a
+#' those elements the first vector in a new list, and it continues on so until
+#' it reaches the last element.
+#'
+#' @param lst A list of vectors of equal length, a data frame, or a matrix.
+#' If the length of the smallest vector in \code{lst} is smaller than
+#' \code{num} then an error will be thrown (\code{subscript out of bounds}).
+#' @param num A number (preferably the length of the vectors) to create a
+#' sequence for \code{extract()} to extract the elements of \code{lst}. Default
+#' value is the length of the shortest vector in the list.
 
+extract <- function(lst, num = min(lengths(lst))){
+#   extracted <- list()
+#   for(i in seq_len(num)){
+#     extracted[[i]] <- sapply(lst, `[[`, i)
+#   }
+#   return(extracted)
 
-extract <- function(lst, num){
-  extracted <- list()
-  for(i in seq_len(num)){
-    extracted[[i]] <- sapply(lst, `[[`, i)
-  }
+  # classes <- vapply(lst, class, character(1))
+  # class.fun <- lapply(classes, match.fun)
+  # lst <- lapply(lst, as.character)
+  extracted <- lapply(seq_len(num), function(i){
+    sapply(lst, `[[`, i)
+    # extracted[[i]] <- vapply(lst, `[[`, cl(1), i)
+  })
   return(extracted)
 }
 
@@ -127,6 +150,93 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
   return(grid)
 }
 
+
+# `%M%`() -----------------------------------------------------------------
+#
+#' The modified combination of the modulus function (\code{\%\%}) and
+#' integer divisor function (\code{\%/\%}).
+#'
+#' The placement of the arguments (\code{lhs} and \code{rhs}) does not matter
+#' unlike the actual modulus function (\code{\%\%}) and integer divisor
+#' function (\code{\%/\%})
+#'
+#' @param lhs A number (integer or numeric)
+#' @param rhs A number (integer or numeric)
+`%M%` <- function(lhs, rhs){
+  if(lhs < rhs){
+    old.lhs <- lhs
+    lhs <- rhs
+    rhs <- old.lhs
+  }
+  x <- lhs %/% rhs
+  y <- lhs %% rhs
+  return(c(quotient = x, remainder = y))
+}
+
+
+# recycle.NA() ------------------------------------------------------------
+#
+#' A vector recycler.
+#'
+#'
+
+recycle.NA <- function(x, y){
+  xy.list <- list(x = x, y = y)
+  xy.lengths <- c(length.x = length(x), length.y = length(y))
+  xy.max <- which.max(xy.lengths)
+  xy.min <- which.min(xy.lengths)
+  xy.max.length <- length(xy.list[[xy.max]])
+
+  xy.list[[xy.min]] <- xy.list[[xy.min]][1L:xy.max.length]
+  return(xy.list)
+}
+
+
+
+# recycle.vector() --------------------------------------------------------
+#
+#' A vector recycler.
+
+recycle.vector <- function(x, y){
+  if(is.list(x) && length(x) == 2){
+    y <- x[[2]]
+    x <- x[[1]]
+  }
+  xy.list <- list(x = x, y = y)
+  xy.lengths <- c(length.x = length(x), length.y = length(y))
+  xy.max <- which.max(xy.lengths)
+  xy.min <- which.min(xy.lengths)
+
+  if(xy.max == xy.min) return(xy.list)
+
+  division <- xy.lengths[[xy.min]] %M% xy.lengths[[xy.max]]
+    if.zero <- !is.na(division[["remainder"]]/division[["remainder"]]) %>% sum()
+
+  xy.quotient <- rep(xy.list[[xy.min]], division[["quotient"]])
+  xy.remainder <- rep(xy.list[[xy.min]][1L:division[["remainder"]]], if.zero)
+
+  xy.list[[xy.min]] <- c(xy.quotient, xy.remainder)
+
+  return(xy.list)
+}
+
+
+
+# what() ------------------------------------------------------------------
+#
+#' Console function for determing: class, type, mode, and names of an object.
+#'
+#' @param x An object.
+
+
+what <- function(x){
+  que <- list(class = class(x),
+       type = typeof(x),
+       mode = mode(x),
+       names = names(x))
+
+  return(que)
+}
 
 
 # time.test() -------------------------------------------------------------
