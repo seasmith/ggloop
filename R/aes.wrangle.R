@@ -1,3 +1,93 @@
+
+# ops ---------------------------------------------------------------------
+#
+#' Arithmetic operators to search for.
+
+ops <- c("/", "\\+", "-", "\\*", "\\^")
+
+
+# is.arth() ---------------------------------------------------------------
+#
+#' Determine if an input uses an arithmetical operator (\code{/}, \code{+},
+#' \code{-}, \code{*}, \code{^}).
+
+is.arth <- function(lst){
+  has.ops <- sapply(ops, function(x) grep(x, lst))
+  has.ops <- unlist(has.ops)
+  names(has.ops) <- NULL
+  unique(has.ops)
+}
+
+
+# fun.par -----------------------------------------------------------------
+#
+#' Regular expression pattern for determing if possible function parenthesis
+#' are present. Searches for \code{"("} and \code{")"} preceeded by any number
+#' of characters.
+
+fun.par <- c("[A-Za-z]+\\(.+\\)")
+
+
+# is.c() ------------------------------------------------------------------
+#
+#' Determine if the supplied input is identical to the \code{c} function.
+#' @param x Possibly the body of a function.
+
+is.c <- function(x) identical(x, c)
+
+
+
+# is.c2() -----------------------------------------------------------------
+#
+
+is.cwrap <- function(x) identical(x, as.name("c"))
+
+
+# is.fun() ----------------------------------------------------------------
+#
+#' Attempts to decipher if a function other than \code{c()} has been supplied as
+#' input. Returns the position of the possible non-\code{c} functions in
+#' \code{lst}.
+#'
+#' @param lst A list of inputs wrapped in \code{substitute()} and coerced to a
+#' list using \code{as.list()}.
+
+is.fun <- function(lst){
+  pars <- lapply(fun.par, function(x) grep(x, lst))[[1L]]
+  is.c.TRUE <- sapply(lst[pars], function(x){
+    x.parse <- parse(text = x)
+    x.eval <- eval(x.parse[[1L]])
+    is.c(x.eval)
+  })
+  pars[!is.c.TRUE]
+}
+
+
+
+# rm.gg2() ----------------------------------------------------------------
+#
+#' Remove \code{ggplot2} style and stand-alone aesthetic arguments (i.e.
+#' \code{y}, \code{x:z}, etc).
+
+rm.gg2 <- function(x){
+  arths <- is.arth(x)
+  funs <- is.fun(x)
+  -c(arths, funs)
+}
+
+
+# messy_eval --------------------------------------------------------------
+#
+#' Reduce the amount of code by turning this sequence into a function.
+
+messy_eval <- function(i, vars, names_list){
+  lazyeval::lazy_dots(eval(i)) %>%
+    lazyeval::as.lazy_dots() %>%
+    lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
+    magrittr::extract2(1L) %>% vars[.]
+}
+
+
 # aes_eval() ----------------------------------------------------------
 #
 #' Assign inputs to \code{x}, \code{y} or \code{dots}
@@ -48,48 +138,77 @@ aes_eval <- function(vars, x, y, dots){
   }, error = function(e){
     FALSE
   })
-
+xy <<- list(x = x, y = y)
   # capture x values if x exists
   if(x.exists){
-    x.eval <- lazyeval::lazy_dots(eval(x)) %>%
-      lazyeval::as.lazy_dots() %>%
-      lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
-      magrittr::extract2(1L) %>% vars[.] %>% list()
+    rm <- (rm.gg2(x[-1L]) - 1)
+    kp <- if(length(rm) > 0){
+            seq_along(x)[rm][-1L]
+          } else{
+              seq_along(x)[-1L]
+          }
+
+    x.eval <- list()
+    x.eval[kp - 1] <- lapply(kp, function(i){
+      messy_eval(x[c(1, i)], vars, names_list)
+      })
+    if(length(rm) > 0) x.eval[-(rm + 1)] <- sapply(x[-rm], deparse)
+
+    x.eval <- unlist(x.eval) %>% `names<-`(NULL)
   } else{
     x.eval <- NULL
   }
 
   # capture y values if y exists
   if(y.exists){
-    y.eval <- lazyeval::lazy_dots(eval(y)) %>%
-      lazyeval::as.lazy_dots() %>%
-      lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
-      magrittr::extract2(1L) %>% vars[.] %>% list()
+    rm <- (rm.gg2(y[-1L]) - 1)
+    kp <- if(length(rm) > 0){
+            seq_along(y)[rm][-1L]
+          } else{
+            seq_along(y)[-1L]
+          }
+
+    y.eval <- list()
+    y.eval[kp - 1] <- lapply(kp, function(i){
+      messy_eval(y[c(1, i)], vars, names_list)
+      })
+    if(length(rm) > 0) y.eval[-(rm + 1)] <- sapply(y[-rm], deparse)
+
+    y.eval <- unlist(y.eval) %>% `names<-`(NULL)
   } else{
     y.eval <- NULL
   }
 
   # capture dots if exist
   if(length(dots) > 0){
-    dots.eval <- lapply(seq_along(dots), function(i){
-      arg.eval <- lazyeval::lazy_dots(eval(dots[[i]])) %>%
-        lazyeval::as.lazy_dots() %>%
-        lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
-        magrittr::extract2(1L) %>% vars[.]
-    }) %>%
-      magrittr::set_names(names(dots))
+    rm <- rm.gg2(dots)
+    kp <- if(length(rm) > 0){
+            seq_along(dots)[rm]
+          } else{
+            seq_along(dots)
+          }
+
+dots.info <<- list(dots = dots, rm = rm, kp = kp)
+
+    dots.eval <- list()
+    dots.eval <- sapply(seq_along(kp), function(i){
+      messy_eval(dots[[i]], vars, names_list)
+    })
+    if(length(rm) > 0) dots.eval <- sapply(dots[-rm], deparse)
+
+    names(dots.eval) <- names(dots)
     is.dots <- TRUE
   } else{
     dots.eval <- NULL
     is.dots   <- FALSE
   }
-
+print(dots.eval)
   # list values and logical existance of ... arguments
-  mappings <- c(x = x.eval,
-                y = y.eval,
+  mappings <- c(x = list(x.eval),
+                y = list(y.eval),
                 is.dots = is.dots,
                 dots.eval)
-
+rtn <<- mappings
   return(mappings)
 }
 
