@@ -4,7 +4,7 @@
 # aes_loop() --------------------------------------------------------------
 #' @export
 
-aes_loop <- function(x, y, remap_xy, remap_dots, ...){
+# aes_loop <- function(x, y, remap_xy, remap_dots, ...){
 #   # place mapping argument values in a list
 #   mappings <- aes_assign(.data, x, y, ...)
 #   e$mappings <- mappings
@@ -176,3 +176,28 @@ aes_loop <- function(x, y, remap_xy, remap_dots, ...){
 #
 #
 # }
+
+
+  # is.fun() ----------------------------------------------------------------
+  #
+  #' Attempts to decipher if a function other than \code{c()} has been supplied as
+  #' input. Returns the position of the possible non-\code{c} functions in
+  #' \code{lst}.
+  #'
+  #' @param lst A list of inputs wrapped in \code{substitute()} and coerced to a
+  #' list using \code{as.list()}.
+
+  # is.fun <- function(lst){
+  #   # pars <- lapply(fun.par, function(x) grep(x, lst))[[1L]]
+  #   # is.c.TRUE <- sapply(lst[pars], function(x){
+  #   #   x.parse <- parse(text = x)
+  #   #   x.eval <- eval(x.parse[[1L]])
+  #   #   is.c(x.eval)
+  #   # })
+  #   # pars[!is.c.TRUE]
+  #   pars <- sapply(fun.par, function(x) grep(x, lst))
+  #   names(pars) <- NULL
+  #   unique(pars)
+  #   if(is.list(pars)) pars <- unlist(pars)
+  #   pars
+  # }
