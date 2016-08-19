@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\./R/scratch.R
+^\./R/scratch2.R
+^\./R/scratch3.R
+^\./obsolete$
