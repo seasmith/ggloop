@@ -1,4 +1,4 @@
-#' Helper functions to select variable names using non-standard evaluation.
+#' Helper functions to select NSE (non-standard evaluation) variable names.
 #'
 #' @rdname select_helpers
 #'
