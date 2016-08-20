@@ -4,3 +4,4 @@
 ^\./R/scratch2.R
 ^\./R/scratch3.R
 ^\./obsolete$
+^./R/utilities.eval.R$
