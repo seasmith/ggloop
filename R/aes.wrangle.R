@@ -1,93 +1,4 @@
 
-# ops ---------------------------------------------------------------------
-#
-#' Arithmetic operators to search for.
-
-ops <- c("/", "\\+", "-", "\\*", "\\^")
-
-
-# is.arth() ---------------------------------------------------------------
-#
-#' Determine if an input uses an arithmetical operator (\code{/}, \code{+},
-#' \code{-}, \code{*}, \code{^}).
-
-is.arth <- function(lst){
-  has.ops <- sapply(ops, function(x) grep(x, lst))
-  has.ops <- unlist(has.ops)
-  names(has.ops) <- NULL
-  unique(has.ops)
-}
-
-
-# fun.par -----------------------------------------------------------------
-#
-#' Regular expression pattern for determing if possible function parenthesis
-#' are present. Searches for \code{"("} and \code{")"} preceeded by any number
-#' of characters.
-
-fun.par <- c("[A-Za-z]+\\(.+\\)")
-
-
-# is.c() ------------------------------------------------------------------
-#
-#' Determine if the supplied input is identical to the \code{c} function.
-#' @param x Possibly the body of a function.
-
-is.c <- function(x) identical(x, c)
-
-
-
-# is.c2() -----------------------------------------------------------------
-#
-
-is.cwrap <- function(x) identical(x, as.name("c"))
-
-
-# is.fun() ----------------------------------------------------------------
-#
-#' Attempts to decipher if a function other than \code{c()} has been supplied as
-#' input. Returns the position of the possible non-\code{c} functions in
-#' \code{lst}.
-#'
-#' @param lst A list of inputs wrapped in \code{substitute()} and coerced to a
-#' list using \code{as.list()}.
-
-is.fun <- function(lst){
-  pars <- lapply(fun.par, function(x) grep(x, lst))[[1L]]
-  is.c.TRUE <- sapply(lst[pars], function(x){
-    x.parse <- parse(text = x)
-    x.eval <- eval(x.parse[[1L]])
-    is.c(x.eval)
-  })
-  pars[!is.c.TRUE]
-}
-
-
-
-# rm.gg2() ----------------------------------------------------------------
-#
-#' Remove \code{ggplot2} style and stand-alone aesthetic arguments (i.e.
-#' \code{y}, \code{x:z}, etc).
-
-rm.gg2 <- function(x){
-  arths <- is.arth(x)
-  funs <- is.fun(x)
-  -c(arths, funs)
-}
-
-
-# messy_eval --------------------------------------------------------------
-#
-#' Reduce the amount of code by turning this sequence into a function.
-
-messy_eval <- function(i, vars, names_list){
-  lazyeval::lazy_dots(eval(i)) %>%
-    lazyeval::as.lazy_dots() %>%
-    lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
-    magrittr::extract2(1L) %>% vars[.]
-}
-
-
 # aes_eval() ----------------------------------------------------------
 #
 #' Assign inputs to \code{x}, \code{y} or \code{dots}
@@ -138,9 +49,34 @@ aes_eval <- function(vars, x, y, dots){
   }, error = function(e){
     FALSE
   })
-xy <<- list(x = x, y = y)
+
   # capture x values if x exists
   if(x.exists){
+    # # Strip c() wrapper or wrap in list if no c() (for is.fun())
+    # if(is.c(x[[1L]])) x <- x[-1L]
+    # else x <- list(x)
+    #
+    # # "Remove" entries with ggplot2-like syntax.
+    # # "Keep" other entries (assumed to have dplyr-like syntax)
+    # rm <- rm.gg2(x) %||% FALSE
+    # kp <- if(isFALSE(rm)){
+    #   seq_along(x)
+    # } else{
+    #   seq_along(x)[rm] %||% FALSE
+    # }
+    #
+    # x.eval <- list()
+    #
+    # x.eval[kp] <- if(length(kp)){
+    #   lapply(kp, function(i){
+    #   messy_eval(x[[i]], vars, names_list)
+    # })
+    # }
+    #
+    # x.eval[abs(rm)] <- if(length(rm)){
+    #   sapply(x[abs(rm)], deparse)
+    # }
+
     rm <- (rm.gg2(x[-1L]) - 1)
     kp <- if(length(rm) > 0){
             seq_along(x)[rm][-1L]
@@ -161,6 +97,31 @@ xy <<- list(x = x, y = y)
 
   # capture y values if y exists
   if(y.exists){
+    # # Strip c() wrapper or wrap in list if no c() (for is.fun())
+    # if(is.c(y[[1L]])) y <- y[-1L]
+    # else y <- list(y)
+    #
+    # # "Remove" entries with ggplot2-like syntax.
+    # # "Keep" other entries (assumed to have dplyr-like syntax)
+    # rm <- rm.gg2(y) %||% FALSE
+    # kp <- if(isFALSE(rm)){
+    #   seq_along(y)
+    # } else{
+    #   seq_along(y)[rm] %||% FALSE
+    # }
+    #
+    # y.eval <- list()
+    #
+    # y.eval[kp] <- if(length(kp)){
+    #   lapply(kp, function(i){
+    #   messy_eval(y[[i]], vars, names_list)
+    # })
+    # }
+    #
+    # y.eval[abs(rm)] <- if(length(rm)){
+    #   sapply(y[abs(rm)], deparse)
+    # }
+
     rm <- (rm.gg2(y[-1L]) - 1)
     kp <- if(length(rm) > 0){
             seq_along(y)[rm][-1L]
@@ -187,8 +148,6 @@ xy <<- list(x = x, y = y)
           } else{
             seq_along(dots)
           }
-
-dots.info <<- list(dots = dots, rm = rm, kp = kp)
 
     dots.eval <- list()
     dots.eval <- sapply(seq_along(kp), function(i){
