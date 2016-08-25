@@ -10,6 +10,74 @@ x.eval[kp] <- lapply(kp, function(i){
 })
 
 
+# Step 1: Make dots -------------------------------------------------------
+
+
+dts <- mkdots(color = c(factor(gear), gear + cyl, mpg:cyl),
+              lty = mpg:cyl,
+              fill = factor(gear))
+
+# Step 2: Strip dots of c() -----------------------------------------------
+
+dots.names <- names(dts)
+
+dts <- lapply(seq_along(dts), function(x){
+  if(is.c(dts[[x]][[1L]])) dts[[x]][-1L]
+  else list(dts[[x]])
+})
+
+
+# Step 3: Remove and Keep -------------------------------------------------
+
+rm <- sapply(dts, function(x){
+  rm.gg2(x) %||% FALSE
+})
+
+kp <- lapply(seq_along(dts), function(i){
+  if(isFALSE(rm[[i]])){
+    seq_along(dts[[i]])
+    } else{
+      seq_along(dts[[i]])[rm[[i]]] %||% FALSE
+    }
+})
+
+
+
+# Step 4: Evaluate --------------------------------------------------------
+
+
+dots.eval <- list()
+
+# Evaluate ggplot2-like expressions.
+kp.eval <- lapply(seq_along(kp), function(i){
+  if(isFALSE(kp[[i]])) NULL
+  else {
+    d.eval <- list()
+    d.eval[kp[[i]]] <- lapply(kp[[i]], function(j) messy_eval(dts[[i]][[j]], vars, names_list))
+    d.eval
+  }
+})
+
+# Evaluate dplyr-like expressions.
+rm.eval <- lapply(seq_along(dts), function(i){
+  d.eval <- list()
+  d.eval[rev(abs(rm[[i]]))] <- sapply(dts[[i]][rev(abs(rm[[i]]))], deparse) %||% NULL
+})
+
+
+
+# Step 5: Combine Evaluations ---------------------------------------------
+
+dots.eval <- lapply(seq_along(dts), function(x) c(unlist(rm.eval[[x]]), unlist(kp.eval[[x]])))
+names(dots.eval) <- dots.names
+# lapply(seq_along(kp), function(i){
+#   if(is.c(dts[[i]][[1L]])) x <- dts[[i]][-1L]
+#   else x <- list(dts[[i]])
+#   sapply(kp[i], function(j){
+#     messy_eval(x[[j]], vars, names_list)
+#   })
+# })
+
 # messy_eval --------------------------------------------------------------
 #
 #' Reduce the amount of code by turning this sequence into a function.

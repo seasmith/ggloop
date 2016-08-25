@@ -52,122 +52,122 @@ aes_eval <- function(vars, x, y, dots){
 
   # capture x values if x exists
   if(x.exists){
-    # # Strip c() wrapper or wrap in list if no c() (for is.fun())
-    # if(is.c(x[[1L]])) x <- x[-1L]
-    # else x <- list(x)
-    #
-    # # "Remove" entries with ggplot2-like syntax.
-    # # "Keep" other entries (assumed to have dplyr-like syntax)
-    # rm <- rm.gg2(x) %||% FALSE
-    # kp <- if(isFALSE(rm)){
-    #   seq_along(x)
-    # } else{
-    #   seq_along(x)[rm] %||% FALSE
-    # }
-    #
-    # x.eval <- list()
-    #
-    # x.eval[kp] <- if(length(kp)){
-    #   lapply(kp, function(i){
-    #   messy_eval(x[[i]], vars, names_list)
-    # })
-    # }
-    #
-    # x.eval[abs(rm)] <- if(length(rm)){
-    #   sapply(x[abs(rm)], deparse)
-    # }
+    # Strip c() wrapper or wrap in list if no c() (for is.fun())
+    if(is.c(x[[1L]])) x <- x[-1L]
+    else x <- list(x)
 
-    rm <- (rm.gg2(x[-1L]) - 1)
-    kp <- if(length(rm) > 0){
-            seq_along(x)[rm][-1L]
-          } else{
-              seq_along(x)[-1L]
-          }
+    # "Remove" entries with ggplot2-like syntax.
+    # "Keep" entries with dplyr-like syntax (assumed).
+    rm <- rm.gg2(x) %||% FALSE
+    kp <- if(isFALSE(rm)){
+      seq_along(x)
+    } else{
+      seq_along(x)[rm] %||% FALSE
+      }
 
     x.eval <- list()
-    x.eval[kp - 1] <- lapply(kp, function(i){
-      messy_eval(x[c(1, i)], vars, names_list)
-      })
-    if(length(rm) > 0) x.eval[-(rm + 1)] <- sapply(x[-rm], deparse)
 
-    x.eval <- unlist(x.eval) %>% `names<-`(NULL)
-  } else{
-    x.eval <- NULL
-  }
+    x.eval[kp] <- if(length(kp)){
+      lapply(kp, function(i){
+      messy_eval(x[[i]], vars, names_list)
+        })
+      }
+
+    x.eval[abs(rm)] <- if(length(rm)){
+      sapply(x[abs(rm)], deparse)
+      }
+    } else{
+      x.eval <- NULL
+      }
 
   # capture y values if y exists
   if(y.exists){
-    # # Strip c() wrapper or wrap in list if no c() (for is.fun())
-    # if(is.c(y[[1L]])) y <- y[-1L]
-    # else y <- list(y)
-    #
-    # # "Remove" entries with ggplot2-like syntax.
-    # # "Keep" other entries (assumed to have dplyr-like syntax)
-    # rm <- rm.gg2(y) %||% FALSE
-    # kp <- if(isFALSE(rm)){
-    #   seq_along(y)
-    # } else{
-    #   seq_along(y)[rm] %||% FALSE
-    # }
-    #
-    # y.eval <- list()
-    #
-    # y.eval[kp] <- if(length(kp)){
-    #   lapply(kp, function(i){
-    #   messy_eval(y[[i]], vars, names_list)
-    # })
-    # }
-    #
-    # y.eval[abs(rm)] <- if(length(rm)){
-    #   sapply(y[abs(rm)], deparse)
-    # }
+    # Strip c() wrapper or wrap in list if no c() (for is.fun())
+    if(is.c(y[[1L]])) y <- y[-1L]
+    else y <- list(y)
 
-    rm <- (rm.gg2(y[-1L]) - 1)
-    kp <- if(length(rm) > 0){
-            seq_along(y)[rm][-1L]
-          } else{
-            seq_along(y)[-1L]
-          }
+    # "Remove" entries with ggplot2-like syntax.
+    # "Keep" other entries (assumed to have dplyr-like syntax)
+    rm <- rm.gg2(y) %||% FALSE
+    kp <- if(isFALSE(rm)){
+      seq_along(y)
+    } else{
+      seq_along(y)[rm] %||% FALSE
+      }
 
     y.eval <- list()
-    y.eval[kp - 1] <- lapply(kp, function(i){
-      messy_eval(y[c(1, i)], vars, names_list)
-      })
-    if(length(rm) > 0) y.eval[-(rm + 1)] <- sapply(y[-rm], deparse)
 
-    y.eval <- unlist(y.eval) %>% `names<-`(NULL)
-  } else{
-    y.eval <- NULL
-  }
+    y.eval[kp] <- if(length(kp)){
+      lapply(kp, function(i){
+      messy_eval(y[[i]], vars, names_list)
+        })
+      }
+
+    y.eval[abs(rm)] <- if(length(rm)){
+      sapply(y[abs(rm)], deparse)
+      }
+    } else{
+      y.eval <- NULL
+      }
 
   # capture dots if exist
   if(length(dots) > 0){
-    rm <- rm.gg2(dots)
-    kp <- if(length(rm) > 0){
-            seq_along(dots)[rm]
-          } else{
-            seq_along(dots)
-          }
-
-    dots.eval <- list()
-    dots.eval <- sapply(seq_along(kp), function(i){
-      messy_eval(dots[[i]], vars, names_list)
+    # Capture names (names will be lost in the following lapply()).
+    dots.names <- names(dots)
+    # Strip c().
+    dots <- lapply(seq_along(dots), function(x){
+      if(is.c(dots[[x]][[1L]])) dots[[x]][-1L]
+      else list(dots[[x]])
     })
-    if(length(rm) > 0) dots.eval <- sapply(dots[-rm], deparse)
 
-    names(dots.eval) <- names(dots)
+    # Remove and Keep
+    rm <- sapply(dots, function(x){
+      rm.gg2(x) %||% FALSE
+    })
+
+    kp <- lapply(seq_along(dots), function(i){
+      if(isFALSE(rm[[i]])){
+        seq_along(dots[[i]])
+      } else{
+        seq_along(dots[[i]])[rm[[i]]] %||% FALSE
+      }
+    })
+
+    # Creat list to hold evaluations.
+    dots.eval <- list()
+
+    # Evaluate ggplot2-like expressions.
+    kp.eval <- lapply(seq_along(kp), function(i){
+      if(isFALSE(kp[[i]])) NULL
+      else {
+        d.eval <- list()
+        d.eval[kp[[i]]] <- lapply(kp[[i]], function(j) messy_eval(dots[[i]][[j]], vars, names_list))
+        d.eval
+      }
+    })
+
+    # Evaluate dplyr-like expressions.
+    rm.eval <- lapply(seq_along(dots), function(i){
+      d.eval <- list()
+      d.eval[rev(abs(rm[[i]]))] <- sapply(dots[[i]][rev(abs(rm[[i]]))], deparse) %||% NULL
+    })
+
+
+
+    # Combine Evaluations
+    dots.eval <- lapply(seq_along(dots), function(x) c(unlist(rm.eval[[x]]), unlist(kp.eval[[x]])))
+    names(dots.eval) <- dots.names
     is.dots <- TRUE
   } else{
     dots.eval <- NULL
     is.dots   <- FALSE
   }
-print(dots.eval)
   # list values and logical existance of ... arguments
   mappings <- c(x = list(x.eval),
                 y = list(y.eval),
                 is.dots = is.dots,
                 dots.eval)
-rtn <<- mappings
+# rtn <<- mappings
   return(mappings)
 }
 
