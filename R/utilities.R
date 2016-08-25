@@ -1,12 +1,12 @@
 
 # magrittr::`%>%` ---------------------------------------------------------
-#' This is an alias for \code{magrittr::`\%>\%`}.
+#' This is an alias for \code{\pkg{magrittr}::`\%>\%`}.
 
 `%>%` <- magrittr::`%>%`
 
 
 # magrittr::`%<>%` --------------------------------------------------------
-#' This is an alias for \code{magrittr::`\%<>\%`}.
+#' This is an alias for \code{\pkg{magrittr}::`\%<>\%`}.
 
 `%<>%` <- magrittr::`%<>%`
 
@@ -20,7 +20,6 @@
 isFALSE <- function(x) identical(FALSE, x)
 
 
-
 # `%||%`() ----------------------------------------------------------------
 #
 #' The replacement operator. Replaces the \code{lhs} with \code{rhs} on the
@@ -32,7 +31,6 @@ isFALSE <- function(x) identical(FALSE, x)
 `%||%` <- function(lhs, rhs){
   if(length(lhs)) lhs else rhs
 }
-
 
 
 # list.pos() --------------------------------------------------------------
@@ -67,6 +65,7 @@ list.pos <- function(name, lst){
   return(matches)
 }
 
+
 # extract() ---------------------------------------------------------------
 #
 #' Extract the nth element from vectors in a list.
@@ -100,7 +99,6 @@ extract <- function(lst, num = min(lengths(lst))){
   })
   return(extracted)
 }
-
 
 
 # expand.grid2() ----------------------------------------------------------
@@ -207,7 +205,6 @@ recycle.NA <- function(x, y){
 }
 
 
-
 # recycle.vector() --------------------------------------------------------
 #
 #' A vector recycler.
@@ -236,7 +233,6 @@ recycle.vector <- function(x, y){
 }
 
 
-
 # what() ------------------------------------------------------------------
 #
 #' Console function for determing: class, type, mode, and names of an object.
@@ -259,7 +255,6 @@ what <- function(x, SIMPLIFY = TRUE){
          names = names(x))
   }
 }
-
 
 
 # time.test() -------------------------------------------------------------
