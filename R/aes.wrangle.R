@@ -50,7 +50,7 @@ aes_eval <- function(vars, x, y, dots){
     FALSE
   })
 
-  # capture x values if x exists
+  # --- Capture x values if x exists
   if(x.exists){
     # Strip c() wrapper or wrap in list if no c() (for is.fun())
     if(is.c(x[[1L]])) x <- x[-1L]
@@ -80,7 +80,7 @@ aes_eval <- function(vars, x, y, dots){
       x.eval <- NULL
       }
 
-  # capture y values if y exists
+  # --- Capture y values if y exists
   if(y.exists){
     # Strip c() wrapper or wrap in list if no c() (for is.fun())
     if(is.c(y[[1L]])) y <- y[-1L]
@@ -110,7 +110,7 @@ aes_eval <- function(vars, x, y, dots){
       y.eval <- NULL
       }
 
-  # capture dots if exist
+  # --- Capture dots if exist
   if(length(dots) > 0){
     # Capture names (names will be lost in the following lapply()).
     dots.names <- names(dots)
