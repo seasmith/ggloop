@@ -2,7 +2,7 @@ Package: ggloop
 Type: Package
 Title: Create ggplot2 plots in a loop
 Version: 0.0.0.9000
-Author@R: person("Luke", "Smith", email = "luke@protocolvital.info",
+Authors@R: person("Luke", "Smith", email = "luke@protocolvital.info",
     role = c("aut", "cre"))
 URL: https://github.com/seasmith/ggloop
 BugReports: https://github.com/seasmith/ggloop/issues
