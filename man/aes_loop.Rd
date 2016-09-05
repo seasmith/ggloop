@@ -47,6 +47,7 @@ wish to return the grouped list of uneval aesthetics, then use
 aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
 gear)
 print(aes.list)
+
 [[1]]
 [[1]][[1]]
 * x      -> mpg

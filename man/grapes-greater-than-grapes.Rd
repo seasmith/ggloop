@@ -2,11 +2,11 @@
 % Please edit documentation in R/utilities.R
 \name{\%>\%}
 \alias{\%>\%}
-\title{This is an alias for \code{magrittr::`\%>\%`}.}
+\title{This is an alias for \code{\pkg{magrittr}::`\%>\%`}.}
 \usage{
 lhs \%>\% rhs
 }
 \description{
-This is an alias for \code{magrittr::`\%>\%`}.
+This is an alias for \code{\pkg{magrittr}::`\%>\%`}.
 }
 

@@ -10,26 +10,29 @@ aes_eval(vars, x, y, dots)
 \item{vars, x, y, dots}{Arguments passed from \code{aes_loop()} or
 \code{aes_loop2()}.}
 }
-\description{
-\code{aes_eval()} figures out which variables have been passed and
-appropriatley assigns the variables to their respective mapping: either
-(\code{x}, \code{y}, or \code{dots}).
-}
-\details{
-\code{aes_eval()} function is the first major function called by
-\code{aes_loop()}.
-
-The length of each vector (\code{x}, \code{y}, and \code{dots}) is
-determined by the length of the vector passed to \code{aes_loop()}. If an
-\code{x} or \code{y} variable is passed more than once, then it will be
-present however many times it was passed.
+\value{
+The list returned by \code{aes_eval()} is the input for the remapping
+functions.
 
 The logical vector \code{$is.dots} is placed between the \code{x} and
 \code{y} vectors (if any) and the \code{dots} vectors (if any). This is used
 for easy reference in \code{if} statements.
 
-The list returned by \code{aes_eval()} is the input for the remapping
-functions for \code{x}, \code{y}, and \code{dots}.
+The length of each vector (\code{x}, \code{y}, and \code{dots}) in the output
+list is determined by the length of the vector passed to \code{aes_loop()}.
+If an \code{x} or \code{y} variable is passed more than once, then it will be
+present in the vector the same number of times it was passed into
+\code{aes_loop()}.
+}
+\description{
+\code{aes_eval()} figures out which variables have been passed and
+appropriatley assigns the variables to their respective mapping: either
+(\code{x}, \code{y}, or \code{dots}). Furthermore, it distinguishes between
+ggplot-like syntax and dplyr-like syntax calling of variables.
+}
+\details{
+\code{aes_eval()} is the first major function to be called by
+\code{aes_loop()}.
 }
 \seealso{
 Source for \code{names_list} and code structure of \code{lazyeval::} function
