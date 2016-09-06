@@ -37,11 +37,13 @@ aes_loop <- function(x, y, ...){
   dots <- as.list(substitute(list(...)))[-1L]
 
   function(vars, remap_xy, remap_dots){
-    # create stashing environment to return to the mother
-    e <- new.env()
+    # Create stashing environment to return to the mother.
+    # This step is now obsolete, as e is assigned the contents of
+    # aes_groupe
+    # e <- new.env()
 
     aes.raw <- aes_eval(vars, x, y, dots)
-
+chk <<- aes.raw
     # remap_xy
     if(is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
       if(remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
@@ -55,19 +57,13 @@ aes_loop <- function(x, y, ...){
         if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
     }
 
-    aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
+    e <- aes_group(aes.raw)
+    e$xy <- rename_inputs(e$xy)
+    # stash
+    e$aes.raw <- aes.raw
 
-      # stash
-      # e$aes.raw <- aes.grouped$aes.raw
-      # e$xy <- aes.grouped$xy
-      # e$dots.vector <- aes.grouped$dots.vector
-      e$aes.raw <- aes.raw
-      e$xy <- xy
-      # e$rep.num <- rep.num
-      e$dots.vector <- dots.vector
-
-    if(!aes.raw[["is.dots"]]){
-      aes.inputs.dirty <- extract(xy, lengths(xy)[[1]])
+    if(!e$aes.raw[["is.dots"]]){
+      aes.inputs.dirty <- extract(e$xy, lengths(e$xy)[[1]])
 
       aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
         x[which(!is.na(x))]
@@ -79,8 +75,8 @@ aes_loop <- function(x, y, ...){
         e$aes.list <- aes.list
   } else{
       # rep.num was brought into environment from aes_group()
-      aes.inputs.dirty <- lapply(aes.grouped, function(x){
-        extract(x, rep.num)
+      aes.inputs.dirty <- lapply(e$groups, function(x){
+        extract(x, e$rep.num)
       })
 
       aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
