@@ -175,7 +175,8 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
 #'
 #' @param lhs A number (integer or numeric)
 #' @param rhs A number (integer or numeric)
-`%M%` <- function(lhs, rhs){
+
+"%M%" <- function(lhs, rhs){
   if(lhs < rhs){
     old.lhs <- lhs
     lhs <- rhs
