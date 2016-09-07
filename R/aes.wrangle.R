@@ -60,20 +60,25 @@ aes_eval <- function(vars, x, y, dots){
   # --- Capture x values if x exists
   if(x.exists){
     # Strip c() wrapper or wrap in list if no c() (for is.fun())
-    if(is.c(x[[1L]])) x <- x[-1L]
-    else x <- list(x)
+    sym <- is.symbol(x)
+    cll <- is.call(x)
+    x <- if(is.c(x[[1L]])){
+            x[-1L]
+          } else{
+            x <- list(x)
+          }
 
     x.eval <- list()
 
     # Evaluate entries with ggplot2-like syntax.
-    rm <- rm.gg2(x) %||% FALSE
+    rm <<- rm.gg2(x) %||% FALSE
 
       x.eval[abs(rm)] <- if(!isFALSE(rm)){
         sapply(x[abs(rm)], deparse)
       }
 
     # Evaluate entries with dplyr-like syntax (assumed).
-    kp <- if(isFALSE(rm)){
+    kp <<- if(isFALSE(rm)){
       seq_along(x)
       } else{
         seq_along(x)[rm] %||% FALSE
