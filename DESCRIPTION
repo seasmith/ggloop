@@ -19,7 +19,21 @@ Imports:
     grid,
     magrittr
 RoxygenNote: 5.0.1
-Suggests: testthat,
+Suggests:
+    testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate:
+    'aes.loop.R'
+    'aes.map.R'
+    'aes.remap.R'
+    'aes.rename.R'
+    'utilities.eval2.R'
+    'utilities.eval.R'
+    'aes.wrangle.R'
+    'ggloop.R'
+    'list.operator.R'
+    'plot.R'
+    'utilities.R'
+    'utilities.info.R'
