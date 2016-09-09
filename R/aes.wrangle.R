@@ -244,13 +244,16 @@ aes_group <- function(lst){
     vector.len <- length(ee$dots.vector)
     list.len <- length(dots.list)
 
+    # Group xy and dots, and then rename (scrape off the trailing numbers in the
+    # dots)
     ee$groups <-  lapply(seq_len(list.len/vector.len), function(x){
       unit.vector <- seq(from = 1,
                          to = list.len,
                          by = list.len/vector.len)
       iterator <- unit.vector + x - 1
       c(xy, dots.list[iterator])
-    })
+    }) %>%
+      rename_inputs()
   } else{
     groups <- xy
     # stash

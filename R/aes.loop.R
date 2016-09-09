@@ -57,9 +57,8 @@ aes_loop <- function(x, y, ...){
         if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
     }
 
-    e <<- aes_group(aes.raw)
-    # Rename.
-    e$groups <- rename_inputs(e$groups)
+    e <- aes_group(aes.raw)
+
     # stash
     e$aes.raw <- aes.raw
 
