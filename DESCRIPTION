@@ -14,11 +14,13 @@ Description: Pass a data frame and mapping aesthetics to ggloop() in order
 License: GPL-2
 LazyData: TRUE
 Imports:
+    plyr,
     dplyr,
     ggplot2,
     grid,
     magrittr,
-    lazyeval
+    lazyeval,
+    assertthat
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
