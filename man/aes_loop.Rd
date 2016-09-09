@@ -3,7 +3,6 @@
 \name{aes_loop}
 \alias{aes_loop}
 \alias{aes_loop2}
-\title{Create a list of grouped aesthetic mappings.}
 \usage{
 aes_loop(x, y, ...)
 
@@ -32,11 +31,6 @@ function).
 \code{aes_loop2()} returns a list of grouped mappings. This is similar to a
 bunch of \code{aes()} mappings in a list waiting to be passed to
 \code{ggplot()}.
-}
-\description{
-This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
-wish to return the grouped list of uneval aesthetics, then use
-\code{aes_loop2()}.
 }
 \details{
 \code{aes_loop()} is solely meant to be called within

@@ -6,7 +6,17 @@
 \usage{
 messy_eval(i, vars, names_list)
 }
+\arguments{
+\item{i}{Lazy dots.}
+
+\item{vars}{Variable names}
+
+\item{names_list}{List of names built from \code{vars}.}
+}
 \description{
 Reduce the amount of code by turning this sequence into a function.
+}
+\details{
+The bulk of this code was taken from the \code{dply} package.
 }
 
