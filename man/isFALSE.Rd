@@ -6,6 +6,9 @@
 \usage{
 isFALSE(x)
 }
+\arguments{
+\item{x}{An object to be tested.}
+}
 \description{
 Use this when needing to test explicitly if a value is FALSE.
 }

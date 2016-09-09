@@ -7,6 +7,8 @@
 expand.grid2(..., rm.dupes = TRUE, rm.dubs = TRUE)
 }
 \arguments{
+\item{...}{Vectors to be expanded.}
+
 \item{rm.dupes}{Removes duplicated "rows". If \code{TRUE} (default) then
 rows that are unordered duplicates of other rows will be removed. i.e.
 \code{c("A", "B", "C")} is the same as \code{c("C", "B", "A")}

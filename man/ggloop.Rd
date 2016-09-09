@@ -2,11 +2,7 @@
 % Please edit documentation in R/ggloop.R
 \name{ggloop}
 \alias{ggloop}
-\title{Create ggplot plots in a loop.
-
-\code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
-and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
-and returns a list of grouped \code{ggplot} plots.}
+\title{Create ggplot plots in a loop.}
 \usage{
 ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE,
   environment = parent.frame())
@@ -28,6 +24,11 @@ vector). If a variable defined in the aesthetic mapping is not found in the
 data, \code{ggplot()} (called inside \code{ggloop()}) will look for it in
 this environment. It defaults to using the environment in which
 \code{ggloop()} was called.}
+}
+\description{
+\code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
+and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
+and returns a list of grouped \code{ggplot} plots.
 }
 \details{
 \code{ggloop()} makes use of the first of two \code{aes_loop}

@@ -2,11 +2,16 @@
 % Please edit documentation in R/utilities.R
 \name{recycle.vector}
 \alias{recycle.vector}
-\title{A vector recycler.}
+\title{A vector recycler using the contents of the shorter vector to do the
+recycling.}
 \usage{
 recycle.vector(x, y)
 }
+\arguments{
+\item{x, y}{Vectors, of which the shorter will be recycled.}
+}
 \description{
-A vector recycler.
+The shorter of the two vectors will be recycled. Imitates \code{R}'s internal
+recycling mechanism.
 }
 

@@ -7,8 +7,11 @@
 \usage{
 is.op(lst)
 }
+\arguments{
+\item{lst}{A list object to be tested.}
+}
 \description{
-Determine if an input uses an arithmetical operator (\code{/}, \code{+},
-\code{-}, \code{*}, \code{^}).
+Matches the arugment the \code{ops} string using \code{grep}. Any matches are
+subsequently noted and the unique list is returned.
 }
 

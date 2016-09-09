@@ -13,7 +13,10 @@ wrapped by \code{c()} then it is advised to wrap \code{x} with
 \code{list()}.}
 }
 \description{
-
+Expression aesthetics (variables wrapped in functions or using prefix/infix
+operators) need to be handled differently than just standalone variable
+aesthetics (i.e. \code{mpg}) or \pkg{dplyr}-like variable calls (i.e.
+\code{mpg:hp}).
 }
 \details{
 The reason it is advised wrap \code{x} in a \code{list} is due to the way

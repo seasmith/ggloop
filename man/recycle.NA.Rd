@@ -2,11 +2,15 @@
 % Please edit documentation in R/utilities.R
 \name{recycle.NA}
 \alias{recycle.NA}
-\title{A vector recycler.}
+\title{A vector recycler using \code{NA}.}
 \usage{
 recycle.NA(x, y)
 }
+\arguments{
+\item{x, y}{Vectors, of which the shorter will be recycled.}
+}
 \description{
-A vector recycler.
+Will recycle using \code{NA} rather than imitating \code{R}'s internal
+recycling mechanism.
 }
 
