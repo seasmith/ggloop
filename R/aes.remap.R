@@ -128,8 +128,10 @@ remap_dots_FALSE <- function(lst){
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
     dots <- lst[start:end]
-    recycled <- sapply(dots, length) %>% which.max() %>%
-      lapply(dots[-.], function(x, y) x[1L:length(dots[[y]])], y = .)
+    recycled.index <- sapply(dots, length) %>% which.max()
+    recycled <- lapply(
+      dots[-recycled.index],
+      function(x, y) x[1L:length(dots[[y]])], y = recycled.index)
     lst[names(recycled)] <- recycled
   }
   return(lst)
