@@ -9,8 +9,15 @@ ops <- c("/", "\\+", "-", "\\*", "\\^")
 
 # is.op() ---------------------------------------------------------------
 #
+#' @title
 #' Determine if an input uses an arithmetical operator (\code{/}, \code{+},
 #' \code{-}, \code{*}, \code{^}).
+#'
+#' @description
+#' Matches the arugment the \code{ops} string using \code{grep}. Any matches are
+#' subsequently noted and the unique list is returned.
+#'
+#' @param lst A list object to be tested.
 
 is.op <- function(lst){
   has.ops <- sapply(ops, function(x) grep(x, lst))
@@ -115,8 +122,12 @@ rm.gg2 <- function(x){
 #' The bulk of this code was taken from the \code{dply} package.
 
 messy_eval <- function(i, vars, names_list){
-  lazyeval::lazy_dots(eval(i)) %>%
+
+  eval.index <- lazyeval::lazy_dots(eval(i)) %>%
     lazyeval::as.lazy_dots() %>%
-    lazyeval::lazy_eval(c(names_list, select_helpers)) %>%
-    magrittr::extract2(1L) %>% vars[.]
+    lazyeval::lazy_eval(c(names_list, select_helpers))
+
+  eval.index <- eval.index[[1]]
+
+  vars[eval.index]
 }
