@@ -3,8 +3,10 @@
 
 # aes_loop() --------------------------------------------------------------
 #
+#' @title
 #' Create a list of grouped aesthetic mappings.
 #'
+#' @description
 #' This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
 #' wish to return the grouped list of uneval aesthetics, then use
 #' \code{aes_loop2()}.
@@ -34,7 +36,7 @@
 
 aes_loop <- function(x, y, ...){
 
-  # handle the first set of arguments: x, y, ...
+  # Handle the first set of arguments (x, y, ...).
   if(!missing(x)) x <- substitute(x)
   if(!missing(y)) y <- substitute(y)
   dots <- as.list(substitute(list(...)))[-1L]
@@ -95,83 +97,83 @@ aes_loop <- function(x, y, ...){
 
 # aes_loop2() -------------------------------------------------------------
 #
-#' @rdname aes_loop
-#' @param data Default dataset to use for plot. Must be a data frame and can be
-#'   only one data frame.
-#' @param remap_xy Remapping behavior of \code{x} and \code{y} vectors.
-#' @param remap_dots Remapping behavior of \code{...} vectors.
-#'
-#' @examples
-#' aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
-#' gear)
-#' print(aes.list)
-#'
-#' [[1]]
-#' [[1]][[1]]
-#' * x      -> mpg
-#' * y      -> disp
-#' * colour -> gear
-#'
-#' [[1]][[2]]
-#' * x      -> cyl
-#' * y      -> disp
-#' * colour -> gear
-#'
-#' [[1]][[3]]
-#' * x      -> hp
-#' * y      -> disp
-#' * colour -> gear
-#' @export
+# #' @rdname aes_loop
+# #' @param data Default dataset to use for plot. Must be a data frame and can be
+# #'   only one data frame.
+# #' @param remap_xy Remapping behavior of \code{x} and \code{y} vectors.
+# #' @param remap_dots Remapping behavior of \code{...} vectors.
+# #'
+# #' @examples
+# #' aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
+# #' gear)
+# #' print(aes.list)
+# #'
+# #' [[1]]
+# #' [[1]][[1]]
+# #' * x      -> mpg
+# #' * y      -> disp
+# #' * colour -> gear
+# #'
+# #' [[1]][[2]]
+# #' * x      -> cyl
+# #' * y      -> disp
+# #' * colour -> gear
+# #'
+# #' [[1]][[3]]
+# #' * x      -> hp
+# #' * y      -> disp
+# #' * colour -> gear
+# #' @export
 
-aes_loop2 <- function(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE){
-
-  # set dplyr::select_vars_() variables
-  if(is.data.frame(data)) vars <- names(data)
-  else if(is.character(data)) vars <- data
-  else stop("data argument is not of correct type: must be either data
-            frame or character vector")
-
-  if(!missing(x)) x <- substitute(x)
-  if(!missing(y)) y <- substitute(y)
-  dots <- as.list(substitute(list(...)))[-1L]
-
-  aes.raw <- aes_eval(vars, x, y, dots)
-
-  # remap_xy
-  if(is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
-    if(remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
-      if(!remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
-    }
-  }
-
-  # remap_dots
-  if(is.na(remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else{
-    if(remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
-      if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
-  }
-
-  aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
-
-  if(!aes.raw[["is.dots"]]){
-    aes.inputs <- extract(xy, lengths(xy)[[1]])
-
-    aes.list <- mapply(map_aes, aes.inputs, SIMPLIFY = F)
-  } else{
-    aes.inputs.dirty <- lapply(aes.grouped, function(x){
-      extract(x, rep.num)
-    })
-
-    aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
-      lapply(x, function(y){
-        y[which(!is.na(y))]
-      })
-    })
-
-    aes.list <- lapply(seq_along(aes.inputs.clean), function(x){
-      mapply(map_aes, aes.inputs.clean[[x]], SIMPLIFY = FALSE)
-    })
-  }
-
-  return(aes.list)
-
-}
+# aes_loop2 <- function(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE){
+#
+#   # set dplyr::select_vars_() variables
+#   if(is.data.frame(data)) vars <- names(data)
+#   else if(is.character(data)) vars <- data
+#   else stop("data argument is not of correct type: must be either data
+#             frame or character vector")
+#
+#   if(!missing(x)) x <- substitute(x)
+#   if(!missing(y)) y <- substitute(y)
+#   dots <- as.list(substitute(list(...)))[-1L]
+#
+#   aes.raw <- aes_eval(vars, x, y, dots)
+#
+#   # remap_xy
+#   if(is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
+#     if(remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
+#       if(!remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
+#     }
+#   }
+#
+#   # remap_dots
+#   if(is.na(remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else{
+#     if(remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
+#       if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
+#   }
+#
+#   aes.grouped <- aes_group(aes.raw) %>% rename_inputs()
+#
+#   if(!aes.raw[["is.dots"]]){
+#     aes.inputs <- extract(xy, lengths(xy)[[1]])
+#
+#     aes.list <- mapply(map_aes, aes.inputs, SIMPLIFY = F)
+#   } else{
+#     aes.inputs.dirty <- lapply(aes.grouped, function(x){
+#       extract(x, rep.num)
+#     })
+#
+#     aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
+#       lapply(x, function(y){
+#         y[which(!is.na(y))]
+#       })
+#     })
+#
+#     aes.list <- lapply(seq_along(aes.inputs.clean), function(x){
+#       mapply(map_aes, aes.inputs.clean[[x]], SIMPLIFY = FALSE)
+#     })
+#   }
+#
+#   return(aes.list)
+#
+# }
