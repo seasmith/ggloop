@@ -70,7 +70,7 @@ aes_eval <- function(vars, x, y, dots){
     x.eval <- list()
 
     # Evaluate entries with ggplot2-like syntax (formulae and functions).
-    x.ggplot2 <- rm.gg2(x) %||% FALSE
+    x.ggplot2 <- rm.gg2(x) %R% FALSE
 
       x.eval[abs(x.ggplot2)] <- if(!isFALSE(x.ggplot2)){
         sapply(x[abs(x.ggplot2)], deparse)
@@ -80,7 +80,7 @@ aes_eval <- function(vars, x, y, dots){
     x.dplyr <- if(isFALSE(x.ggplot2)){
       seq_along(x)
       } else{
-        seq_along(x)[x.ggplot2] %||% FALSE
+        seq_along(x)[x.ggplot2] %R% FALSE
       }
 
       x.eval[x.dplyr] <- if(!isFALSE(x.dplyr)){
@@ -106,7 +106,7 @@ aes_eval <- function(vars, x, y, dots){
     y.eval <- list()
 
       # Evaluate entries with ggplot2-like syntax (formulae and functions).
-      y.ggplot2 <- rm.gg2(y) %||% FALSE
+      y.ggplot2 <- rm.gg2(y) %R% FALSE
 
         y.eval[abs(y.ggplot2)] <- if(!isFALSE(y.ggplot2)){
           sapply(y[abs(y.ggplot2)], deparse)
@@ -116,7 +116,7 @@ aes_eval <- function(vars, x, y, dots){
       y.dplyr <- if(isFALSE(y.ggplot2)){
         seq_along(y)
       } else{
-        seq_along(y)[y.ggplot2] %||% FALSE
+        seq_along(y)[y.ggplot2] %R% FALSE
         }
 
         y.eval[y.dplyr] <- if(!isFALSE(y.dplyr)){
@@ -145,14 +145,14 @@ aes_eval <- function(vars, x, y, dots){
 
       # Remove and Keep
       dots.ggplot2 <- sapply(dots, function(x){
-        rm.gg2(x) %||% FALSE
+        rm.gg2(x) %R% FALSE
       })
 
         # Evaluate ggplot2-like expressions.
         dots.ggplot2.eval <- lapply(seq_along(dots), function(i){
           d.eval <- list()
           d.eval[rev(abs(dots.ggplot2[[i]]))] <- sapply(
-            dots[[i]][rev(abs(dots.ggplot2[[i]]))], deparse) %||% NULL
+            dots[[i]][rev(abs(dots.ggplot2[[i]]))], deparse) %R% NULL
         })
 
 
@@ -160,7 +160,7 @@ aes_eval <- function(vars, x, y, dots){
         if(isFALSE(dots.ggplot2[[i]])){
           seq_along(dots[[i]])
         } else{
-          seq_along(dots[[i]])[dots.ggplot2[[i]]] %||% FALSE
+          seq_along(dots[[i]])[dots.ggplot2[[i]]] %R% FALSE
         }
       })
 
@@ -225,12 +225,7 @@ aes_group <- function(lst){
     # stash
     ee$xy <- xy
 
-  if(!lst[["is.dots"]]){
-    groups <- xy
-      # stash
-      ee$dots.vector <- NULL
-      ee$rep.num <- NULL
-  } else{
+  if(lst[["is.dots"]]){
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
     # stash
@@ -239,8 +234,8 @@ aes_group <- function(lst){
     # might need to use max()
     # stash
     ee$rep.num <- lengths(lst[stats::na.omit(c(list.pos("x", lst),
-                                      list.pos("y", lst),
-                                      list.pos("is.dots", lst)))])[1]
+                                               list.pos("y", lst),
+                                               list.pos("is.dots", lst)))])[1]
 
     dots.list <- lapply(unlist(lst[ee$dots.vector]),
                         function(x, times) rep(x, times),
@@ -256,6 +251,11 @@ aes_group <- function(lst){
       iterator <- unit.vector + x - 1
       c(xy, dots.list[iterator])
     })
+  } else{
+    groups <- xy
+    # stash
+    ee$dots.vector <- NULL
+    ee$rep.num <- NULL
   }
 
   return(ee)
