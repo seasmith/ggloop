@@ -12,6 +12,9 @@ rm.gg2(x)
 wrapped by \code{c()} then it is advised to wrap \code{x} with
 \code{list()}.}
 }
+\description{
+
+}
 \details{
 The reason it is advised wrap \code{x} in a \code{list} is due to the way
 \code{x} will be indexed/subsetted. The \code{c} function wrapping is

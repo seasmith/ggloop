@@ -1,12 +1,14 @@
 
 # mplot() ---------------------------------------------------------
+#'
+#' @title
 #' Plot multiple plots in one layout.
 #'
+#' @description
 #' \code{ggplot} objects can be passed in ..., or to plotlist (as a list of
 #' ggplot objects) - cols:   Number of columns in layout - layout: A matrix
 #' specifying the layout. If present, 'cols' is ignored.
 #'
-# @param ... Unrendered \code{ggplot} plots tp view in a single pane.
 #' @param plotlist A list of \code{ggplot} plots (if you prefer).
 #' @param file Not yet known/defined.
 #' @param cols Number of columns in the layout.

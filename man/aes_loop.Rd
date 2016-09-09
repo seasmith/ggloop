@@ -2,24 +2,15 @@
 % Please edit documentation in R/aes.loop.R
 \name{aes_loop}
 \alias{aes_loop}
-\alias{aes_loop2}
+\title{Create a list of grouped aesthetic mappings.}
 \usage{
 aes_loop(x, y, ...)
-
-aes_loop2(data, x, y, ..., remap_xy = TRUE, remap_dots = FALSE)
 }
 \arguments{
 \item{x, y, ...}{A vector of variable names. Vector can consist of a
 combination of \code{dplyr}-like symbols (unqouted names) and
 \code{numerics/integers} referencing the variable position within
 \code{data}.}
-
-\item{data}{Default dataset to use for plot. Must be a data frame and can be
-only one data frame.}
-
-\item{remap_xy}{Remapping behavior of \code{x} and \code{y} vectors.}
-
-\item{remap_dots}{Remapping behavior of \code{...} vectors.}
 }
 \value{
 \code{aes_loop()} returns an environment that includes \code{aes.list} (the
@@ -32,30 +23,14 @@ function).
 bunch of \code{aes()} mappings in a list waiting to be passed to
 \code{ggplot()}.
 }
+\description{
+This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
+wish to return the grouped list of uneval aesthetics, then use
+\code{aes_loop2()}.
+}
 \details{
 \code{aes_loop()} is solely meant to be called within
 \code{ggloop()}. To create the raw list of grouped mappings, use
 \code{aes_loop2()}.
-}
-\examples{
-aes.list <- aes_loop2(data = mtcars, x = mpg:hp, y = disp, color =
-gear)
-print(aes.list)
-
-[[1]]
-[[1]][[1]]
-* x      -> mpg
-* y      -> disp
-* colour -> gear
-
-[[1]][[2]]
-* x      -> cyl
-* y      -> disp
-* colour -> gear
-
-[[1]][[3]]
-* x      -> hp
-* y      -> disp
-* colour -> gear
 }
 

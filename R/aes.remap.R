@@ -1,6 +1,10 @@
+#' @include utilities.R
+
 # remap_xy_TRUE() -----------------------------------------------------------
+#' @title
 #' Uses \code{expand.grid()} to create all possible combinations of xy pairings.
 #'
+#' @description
 #' Matching duplicates (xy pairings that contain identical xy values) will be
 #' tossed, and unordered duplicate pairs (xy pairings which match another xy
 #' pair (i.e. (mpg, cyl) == (cyl, mpg))) will be tossed.
@@ -14,15 +18,18 @@ remap_xy_TRUE <- function(lst){
   if(exists("x", lst) && exists("y", lst)){
     xy <- expand.grid(y = lst$y, x = lst$x, stringsAsFactors = FALSE)
 
+    # Find unordered duplicate pairs and extract them.
     is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = FALSE) %>%
       lapply(sort) %>%
       duplicated()
     dupes <- if(sum(is.dupes)) which(is.dupes) else NULL
 
+    # Find exact duplicates (doubles) and extract them.
     is.dubs <- xy$x == xy$y
         is.dubs[is.na(is.dubs)] <- FALSE
     dubs <- if(sum(is.dubs)) which(is.dubs) else NULL
 
+    # Delete and duplicates or doubles.
     deletes <- c(dupes, dubs)
     if(!is.null(deletes)) xy <- xy[-deletes, ]
 
@@ -34,8 +41,11 @@ remap_xy_TRUE <- function(lst){
 
 
 # remap_xy_NA() -------------------------------------------------------------
+#'
+#' @title
 #' Attaches NA during recycling of the smaller of the two vectors.
 #'
+#' @description
 #' The smallest of the two vectors (\code{x} or \code{y}) will be recycled with
 #' NA instead of using the vector itself (similar to R's internal recycling
 #' mechanism).
@@ -61,8 +71,11 @@ remap_xy_NA <- function(lst){
 
 
 # remap_xy_FALSE() ----------------------------------------------------------
+#'
+#' @title
 #' Mimicks R's internal recycling mechanism for the shorter of the two vectors.
 #'
+#' @description
 #' The smallest of the two vectors (\code{x} or \code{y}) will be recycled in
 #' a manner similar to R's internal recycling mechanism.
 #'

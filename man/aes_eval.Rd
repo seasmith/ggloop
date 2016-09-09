@@ -2,6 +2,7 @@
 % Please edit documentation in R/aes.wrangle.R
 \name{aes_eval}
 \alias{aes_eval}
+\title{Assign inputs to \code{x}, \code{y} or \code{dots}.}
 \usage{
 aes_eval(vars, x, y, dots)
 }

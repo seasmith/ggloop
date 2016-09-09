@@ -2,6 +2,11 @@
 % Please edit documentation in R/ggloop.R
 \name{ggloop}
 \alias{ggloop}
+\title{Create ggplot plots in a loop.
+
+\code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
+and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
+and returns a list of grouped \code{ggplot} plots.}
 \usage{
 ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE,
   environment = parent.frame())
@@ -45,11 +50,5 @@ have \code{NA} assigned to the missing elements. These are meant to act as
 placeholders during the wrangling operations (extracting and grouping the
 aesthetics), and will be taken out before the final list of mappings is sent
 to \code{ggloop()}. }
-}
-\examples{
-# An example using default remapping values.
-\dontrun{ggplots <- ggloop(data = mtcars, mappings = aes_loop(x = mpg:hp, y =
-mpg:hp, lty = gear))}
-
 }
 

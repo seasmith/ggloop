@@ -2,9 +2,7 @@
 % Please edit documentation in R/utilities.eval.R
 \name{is.fun}
 \alias{is.fun}
-\title{Attempts to decipher if a function other than \code{c()} has been supplied as
-input. Returns the position of the possible non-\code{c} functions in
-\code{lst}.}
+\title{Is it a function?}
 \usage{
 is.fun(lst)
 }

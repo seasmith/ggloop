@@ -3,8 +3,10 @@
 
 # ggloop() ----------------------------------------------------------------
 #
+#' @title
 #' Create ggplot plots in a loop.
 #'
+#' @description
 #' \code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
 #' and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
 #' and returns a list of grouped \code{ggplot} plots.
@@ -41,11 +43,6 @@
 #' placeholders during the wrangling operations (extracting and grouping the
 #' aesthetics), and will be taken out before the final list of mappings is sent
 #' to \code{ggloop()}. }
-#'
-#' @examples
-#' # An example using default remapping values.
-#' \dontrun{ggplots <- ggloop(data = mtcars, mappings = aes_loop(x = mpg:hp, y =
-#' mpg:hp, lty = gear))}
 #'
 #' @export
 
