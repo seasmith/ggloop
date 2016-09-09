@@ -1,20 +1,16 @@
+#' @importFrom magrittr %>%
 
 # magrittr::`%>%` ---------------------------------------------------------
-#' This is an alias for \code{\pkg{magrittr}::`\%>\%`}.
+# This is an alias for \code{magrittr::`\%>\%`}.
 
-`%>%` <- magrittr::`%>%`
-
-
-# magrittr::`%<>%` --------------------------------------------------------
-#' This is an alias for \code{\pkg{magrittr}::`\%<>\%`}.
-
-`%<>%` <- magrittr::`%<>%`
-
+# `%>%` <- magrittr::`%>%`
 
 # isFALSE() ---------------------------------------------------------------
 #
+#' @title
 #' This is an abbreviation of identical(FALSE, x) to go along with isTRUE()
 #'
+#' @description
 #' Use this when needing to test explicitly if a value is FALSE.
 
 isFALSE <- function(x) identical(FALSE, x)
