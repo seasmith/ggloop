@@ -59,11 +59,11 @@ aes_loop <- function(x, y, ...){
 
     e <<- aes_group(aes.raw)
     # Rename.
-    e$xy <- rename_inputs(e$xy)
+    e$groups <- rename_inputs(e$groups)
     # stash
     e$aes.raw <- aes.raw
 
-    if(!e$aes.raw[["is.dots"]]){
+    if(e$aes.raw[["is.dots"]]){
       aes.inputs.dirty <- lapply(e$groups, function(x){
         extract(x, e$rep.num)
       })
