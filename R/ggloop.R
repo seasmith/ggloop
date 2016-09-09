@@ -1,3 +1,5 @@
+#' @include aes.loop.R
+#' @include aes.map.R
 
 # ggloop() ----------------------------------------------------------------
 #
@@ -50,10 +52,13 @@
 ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
                    remap_dots = FALSE, environment = parent.frame()){
 
+  # Create names variable and evaluate `mappings` to give it ggloop() enclosure
+  # so that it may use other ggloop() arguments.
   vars <- names(data)
   mappings <- eval(mappings)
   mappings <- mappings(vars, remap_xy, remap_dots)
 
+  # Run loop in case of either TRUE/FALSE for is.dots.
   if(mappings$aes.raw[["is.dots"]]){
     gg.list <- lapply(seq_along(mappings$aes.list), function(x){
       lapply(seq_along(mappings$aes.list[[x]]), function(y){
@@ -63,8 +68,10 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
       })
     })
 
+    # Tidy-up the group names ("dots" names).
     names(gg.list) <- name_groups(mappings$aes.raw, mappings$dots.vector)
 
+    # Tidy-up the subgroup names ("xy" names).
     for(i in seq_along(gg.list)){
       names(gg.list[[i]]) <- name_subgroups(mappings$xy, mappings$dots.vector)
     }
@@ -77,6 +84,7 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
                       environment = environment)
     })
 
+    # No need to run name_groups since there are no "dots" in the FALSE case.
     names(gg.list) <- name_subgroups(mappings$xy, lengths(mappings$xy)[1])
 
     return(gg.list)
