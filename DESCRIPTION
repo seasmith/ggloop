@@ -17,7 +17,8 @@ Imports:
     dplyr,
     ggplot2,
     grid,
-    magrittr
+    magrittr,
+    lazyeval
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
@@ -25,6 +26,7 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Collate:
+    'utilities.R'
     'aes.remap.R'
     'utilities.eval2.R'
     'utilities.eval.R'
@@ -35,5 +37,4 @@ Collate:
     'ggloop.R'
     'list.operator.R'
     'plot.R'
-    'utilities.R'
     'utilities.info.R'
