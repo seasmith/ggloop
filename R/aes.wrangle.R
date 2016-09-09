@@ -2,7 +2,7 @@
 
 # aes_eval() ----------------------------------------------------------
 #
-#' Assign inputs to \code{x}, \code{y} or \code{dots}
+#' Assign inputs to \code{x}, \code{y} or \code{dots}.
 #'
 #' @description
 #' \code{aes_eval()} figures out which variables have been passed and
@@ -40,7 +40,6 @@
 #' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
 aes_eval <- function(vars, x, y, dots){
-  names_list <- setNames(as.list(seq_along(vars)), vars)
 
   # test if anything was actually passed as x or y
   x.exists <- tryCatch({
@@ -57,28 +56,28 @@ aes_eval <- function(vars, x, y, dots){
     FALSE
   })
 
+  names_list <- setNames(as.list(seq_along(vars)), vars)
+
   # --- Capture x values if x exists
   if(x.exists){
-    # Strip c() wrapper or wrap in list if no c() (for is.fun())
-    sym <- is.symbol(x)
-    cll <- is.call(x)
-    x <- if(is.c(x[[1L]])){
-            x[-1L]
-          } else{
-            x <- list(x)
-          }
+    # Strip c() wrapper or wrap in list if no c() (for is.fun()).
+    x <- if(is.symbol(x)){list(x)} else{
+              if(is.c(x[[1L]])){x[-1L]} else{
+                list(x)
+              }
+      }
 
     x.eval <- list()
 
     # Evaluate entries with ggplot2-like syntax.
-    rm <<- rm.gg2(x) %||% FALSE
+    rm <- rm.gg2(x) %||% FALSE
 
       x.eval[abs(rm)] <- if(!isFALSE(rm)){
         sapply(x[abs(rm)], deparse)
       }
 
     # Evaluate entries with dplyr-like syntax (assumed).
-    kp <<- if(isFALSE(rm)){
+    kp <- if(isFALSE(rm)){
       seq_along(x)
       } else{
         seq_along(x)[rm] %||% FALSE
@@ -98,8 +97,11 @@ aes_eval <- function(vars, x, y, dots){
   # --- Capture y values if y exists.
   if(y.exists){
     # Strip c() wrapper or wrap in list if no c() (for is.fun()).
-    if(is.c(y[[1L]])) y <- y[-1L]
-    else y <- list(y)
+    y <- if(is.symbol(y)){list(y)} else{
+      if(is.c(y[[1L]])){y[-1L]} else{
+        list(y)
+      }
+    }
 
     y.eval <- list()
 
@@ -149,7 +151,8 @@ aes_eval <- function(vars, x, y, dots){
         # Evaluate dplyr-like expressions.
         rm.eval <- lapply(seq_along(dots), function(i){
           d.eval <- list()
-          d.eval[rev(abs(rm[[i]]))] <- sapply(dots[[i]][rev(abs(rm[[i]]))], deparse) %||% NULL
+          d.eval[rev(abs(rm[[i]]))] <- sapply(
+            dots[[i]][rev(abs(rm[[i]]))], deparse) %||% NULL
         })
 
 
@@ -166,14 +169,16 @@ aes_eval <- function(vars, x, y, dots){
           if(isFALSE(kp[[i]])) NULL
           else {
             d.eval <- list()
-            d.eval[kp[[i]]] <- lapply(kp[[i]], function(j) messy_eval(dots[[i]][[j]], vars, names_list))
+            d.eval[kp[[i]]] <- lapply(
+              kp[[i]], function(j) messy_eval(dots[[i]][[j]], vars, names_list))
             d.eval
           }
         })
 
 
     # Combine Evaluations
-    dots.eval <- lapply(seq_along(dots), function(x) c(unlist(rm.eval[[x]]), unlist(kp.eval[[x]])))
+    dots.eval <- lapply(
+      seq_along(dots), function(x) c(unlist(rm.eval[[x]]), unlist(kp.eval[[x]])))
     names(dots.eval) <- dots.names
     is.dots <- TRUE
   } else{
@@ -186,7 +191,7 @@ aes_eval <- function(vars, x, y, dots){
                 is.dots = is.dots),
                 dots.eval)
 
-  mappings <<- mappings[!vapply(mappings, is.null, logical(1))]
+  mappings <- mappings[!vapply(mappings, is.null, logical(1))]
 
   return(mappings)
 }
@@ -251,70 +256,4 @@ aes_group <- function(lst){
   }
 
   return(ee)
-}
-
-
-# aes_group2() ------------------------------------------------------------
-#
-#' Create unique pairings between \code{c(x, y)} and \code{dots}.
-#'
-#' \code{aes_group()} uses a list of \code{x's} and \code{y's} to create each
-#' unique combination with \code{dots}. The difference between
-#' \code{aes_group()} and \code{aes_group2()} is how they create unqiue
-#' combinations. \code{aes_group2()} takes each unique \code{x}, \code{y}
-#' combination and assigns all \code{dots} to that unique combination.
-#'
-#' \code{aes_group()} does the opposite in that it takes a list of all \code{x}
-#' and \code{y} variables and assings a unique \code{dots} argument. In this
-#' sense, if there are multiple variables assigned to a \code{dot} (like
-#' \code{colour}, then \code{aes_group()} will take a list of all \code{x} and
-#' \code{y} variables and add to it \code{colour.N} where \code{.N} denotes the
-#' number of variables assigned to \code{colour}.
-#'
-#' @param lst A list. The list that will be passed to \code{aes_group()} will be
-#'   the list produced by \code{aes_assing()}.
-
-aes_group2 <- function(lst){
-
-  # MUST WRITE CODE TO DEAL WITH CIRCUMSTANCE OF NO X AND NO Y
-  if(lst$is.x) rep.num <- length(lst$x) else
-    if(lst$is.y) rep.num <- length(lst$y) # else
-    # more code
-
-    start <- which((names(lst) %in% "is.dots")) + 1
-    end <- length(lst) - 1
-    dots.vector <- start:end
-
-    # a summary table of name, length, and order of list elements
-    summ <- summary(lst) %>% as.data.frame.matrix()
-    summ$Name <- rownames(summ)
-    summ <- summ[ , c(4, 1:3)]
-
-    # use summ (summary) table to find x and y
-    x.pos <- which(summ$Name %in% "x")
-    if(sum(x.pos) > 0) x.length <- summ$Length["x"]
-    y.pos <- which(summ$Name %in% "y")
-    if(sum(y.pos) > 0) y.length <- summ$Length["y"]
-
-    xy <- c(lst$is.x*x.pos, lst$is.y*y.pos) %>%
-      lst[.] %>% matrix(unlist(.), ncol = length(.))
-
-    dots.list <- lapply(unlist(lst[dots.vector]), function(x, times){
-      rep(x, times)},
-      times = rep.num)
-
-    # vector.len <- length(dots.vector)
-    # list.len <- length(dots.list)
-
-    # nlst.lst <-  lapply(seq_len(list.len/vector.len), function(x){
-    #   unit.vector <- seq(from = 1,
-    #                      to = list.len,
-    #                      by = list.len/vector.len)
-    #   itertor <- unit.vector + x - 1
-    #   c(xy[iterator], dots.list)
-    # })
-
-
-
-    return(lst)
 }
