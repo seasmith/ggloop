@@ -38,13 +38,13 @@ name_groups <- function(lst, dots.vector){
     .names <- sapply(seq_len(ncol(names.matrix)), function(y){
       if(!is.na(names.matrix[x, y])){
         paste(colnames(names.matrix)[y],
-              na.omit(names.matrix[x, y]),
+              stats::na.omit(names.matrix[x, y]),
               sep = ".")
       } else {
         NA
       }
     })
-    paste(na.omit(.names), collapse = "_")
+    paste(stats::na.omit(.names), collapse = "_")
   })
 
   return(names.list)
@@ -70,13 +70,13 @@ name_subgroups <- function(lst, dots.vector){
     .names <- sapply(seq_len(ncol(names.matrix)), function(y){
       if(!is.na(names.matrix[x, y])){
         paste(colnames(names.matrix)[y],
-              na.omit(names.matrix[x, y]),
+              stats::na.omit(names.matrix[x, y]),
               sep = ".")
       } else {
         NA
       }
     })
-    paste(na.omit(.names), collapse = "_")
+    paste(stats::na.omit(.names), collapse = "_")
   })
 
   return(names.list)

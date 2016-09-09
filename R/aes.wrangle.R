@@ -1,7 +1,7 @@
 #' @include utilities.eval.R
 
 # aes_eval() ----------------------------------------------------------
-#
+#' @title
 #' Assign inputs to \code{x}, \code{y} or \code{dots}.
 #'
 #' @description
@@ -56,7 +56,7 @@ aes_eval <- function(vars, x, y, dots){
     FALSE
   })
 
-  names_list <- setNames(as.list(seq_along(vars)), vars)
+  names_list <- stats::setNames(as.list(seq_along(vars)), vars)
 
   # --- Capture x values if x exists
   if(x.exists){
@@ -69,22 +69,22 @@ aes_eval <- function(vars, x, y, dots){
 
     x.eval <- list()
 
-    # Evaluate entries with ggplot2-like syntax.
-    rm <- rm.gg2(x) %||% FALSE
+    # Evaluate entries with ggplot2-like syntax (formulae and functions).
+    x.ggplot2 <- rm.gg2(x) %||% FALSE
 
-      x.eval[abs(rm)] <- if(!isFALSE(rm)){
-        sapply(x[abs(rm)], deparse)
+      x.eval[abs(x.ggplot2)] <- if(!isFALSE(x.ggplot2)){
+        sapply(x[abs(x.ggplot2)], deparse)
       }
 
-    # Evaluate entries with dplyr-like syntax (assumed).
-    kp <- if(isFALSE(rm)){
+    # Evaluate entries with (assumed) dplyr-like syntax.
+    x.dplyr <- if(isFALSE(x.ggplot2)){
       seq_along(x)
       } else{
-        seq_along(x)[rm] %||% FALSE
+        seq_along(x)[x.ggplot2] %||% FALSE
       }
 
-      x.eval[kp] <- if(!isFALSE(kp)){
-        lapply(kp, function(i){
+      x.eval[x.dplyr] <- if(!isFALSE(x.dplyr)){
+        lapply(x.dplyr, function(i){
         messy_eval(x[[i]], vars, names_list)
           })
         }
@@ -105,22 +105,22 @@ aes_eval <- function(vars, x, y, dots){
 
     y.eval <- list()
 
-      # Evaluate entries with ggplot2-like syntax.
-      rm <- rm.gg2(y) %||% FALSE
+      # Evaluate entries with ggplot2-like syntax (formulae and functions).
+      y.ggplot2 <- rm.gg2(y) %||% FALSE
 
-        y.eval[abs(rm)] <- if(!isFALSE(rm)){
-          sapply(y[abs(rm)], deparse)
+        y.eval[abs(y.ggplot2)] <- if(!isFALSE(y.ggplot2)){
+          sapply(y[abs(y.ggplot2)], deparse)
         }
 
       # Evaluate entries with (assumed) dplyr-like syntax.
-      kp <- if(isFALSE(rm)){
+      y.dplyr <- if(isFALSE(y.ggplot2)){
         seq_along(y)
       } else{
-        seq_along(y)[rm] %||% FALSE
+        seq_along(y)[y.ggplot2] %||% FALSE
         }
 
-        y.eval[kp] <- if(!isFALSE(kp)){
-          lapply(kp, function(i){
+        y.eval[y.dplyr] <- if(!isFALSE(y.dplyr)){
+          lapply(y.dplyr, function(i){
             messy_eval(y[[i]], vars, names_list)
           })
         }
@@ -144,33 +144,33 @@ aes_eval <- function(vars, x, y, dots){
     dots.eval <- list()
 
       # Remove and Keep
-      rm <- sapply(dots, function(x){
+      dots.ggplot2 <- sapply(dots, function(x){
         rm.gg2(x) %||% FALSE
       })
 
-        # Evaluate dplyr-like expressions.
-        rm.eval <- lapply(seq_along(dots), function(i){
+        # Evaluate ggplot2-like expressions.
+        dots.ggplot2.eval <- lapply(seq_along(dots), function(i){
           d.eval <- list()
-          d.eval[rev(abs(rm[[i]]))] <- sapply(
-            dots[[i]][rev(abs(rm[[i]]))], deparse) %||% NULL
+          d.eval[rev(abs(dots.ggplot2[[i]]))] <- sapply(
+            dots[[i]][rev(abs(dots.ggplot2[[i]]))], deparse) %||% NULL
         })
 
 
-      kp <- lapply(seq_along(dots), function(i){
-        if(isFALSE(rm[[i]])){
+      dots.dplyr <- lapply(seq_along(dots), function(i){
+        if(isFALSE(dots.ggplot2[[i]])){
           seq_along(dots[[i]])
         } else{
-          seq_along(dots[[i]])[rm[[i]]] %||% FALSE
+          seq_along(dots[[i]])[dots.ggplot2[[i]]] %||% FALSE
         }
       })
 
-        # Evaluate ggplot2-like expressions.
-        kp.eval <- lapply(seq_along(kp), function(i){
-          if(isFALSE(kp[[i]])) NULL
+        # Evaluate dplyr-like expressions.
+        dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i){
+          if(isFALSE(dots.dplyr[[i]])) NULL
           else {
             d.eval <- list()
-            d.eval[kp[[i]]] <- lapply(
-              kp[[i]], function(j) messy_eval(dots[[i]][[j]], vars, names_list))
+            d.eval[dots.dplyr[[i]]] <- lapply(
+              dots.dplyr[[i]], function(j) messy_eval(dots[[i]][[j]], vars, names_list))
             d.eval
           }
         })
@@ -178,7 +178,8 @@ aes_eval <- function(vars, x, y, dots){
 
     # Combine Evaluations
     dots.eval <- lapply(
-      seq_along(dots), function(x) c(unlist(rm.eval[[x]]), unlist(kp.eval[[x]])))
+      seq_along(dots),
+      function(x) c(unlist(dots.ggplot2.eval[[x]]), unlist(dots.dplyr.eval[[x]])))
     names(dots.eval) <- dots.names
     is.dots <- TRUE
   } else{
@@ -199,8 +200,10 @@ aes_eval <- function(vars, x, y, dots){
 
 # aes_group() -------------------------------------------------------------
 #
+#' @title
 #' Create unique pairings between \code{x}, \code{y} and \code{dots}.
 #'
+#' @description
 #' \code{aes_group()} uses a list of \code{x}'s and \code{y}'s to create each
 #' unique combination with \code{dots}.
 #'
@@ -218,7 +221,7 @@ aes_group <- function(lst){
     # Variables that will be stashed in ee:
       # xy, dots.vector, rep.num, groups
 
-  xy <- lst[na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
+  xy <- lst[stats::na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
     # stash
     ee$xy <- xy
 
@@ -235,7 +238,7 @@ aes_group <- function(lst){
 
     # might need to use max()
     # stash
-    ee$rep.num <- lengths(lst[na.omit(c(list.pos("x", lst),
+    ee$rep.num <- lengths(lst[stats::na.omit(c(list.pos("x", lst),
                                       list.pos("y", lst),
                                       list.pos("is.dots", lst)))])[1]
 
