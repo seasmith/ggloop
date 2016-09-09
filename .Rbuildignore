@@ -3,3 +3,5 @@
 ^obsolete$
 ^Scratch$
 ^Issues\.MD$
+^R/mplot\.R$
+^man/mplot\.Rd$
