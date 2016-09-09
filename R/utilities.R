@@ -12,11 +12,13 @@
 #'
 #' @description
 #' Use this when needing to test explicitly if a value is FALSE.
+#'
+#' @param x An object to be tested.
 
 isFALSE <- function(x) identical(FALSE, x)
 
 
-# `%||%`() ----------------------------------------------------------------
+# `%R%`() -----------------------------------------------------------------
 #
 #' The replacement operator. Replaces the \code{lhs} with \code{rhs} on the
 #' condition that \code{length(lhs) == FALSE} (the length is \code{0}).
@@ -24,7 +26,7 @@ isFALSE <- function(x) identical(FALSE, x)
 #' @param lhs An object of any length.
 #' @param rhs A replacement value if  \code{length(lhs) == FALSE}.
 
-"%||%" <- function(lhs, rhs){
+`%R%` <- function(lhs, rhs){
   if(length(lhs)) lhs else rhs
 }
 
@@ -106,6 +108,7 @@ extract <- function(lst, num = min(lengths(lst))){
 #' for removing two different type of duplicates. \code{stringsAsFactors} is
 #' set to \code{TRUE}.
 #'
+#' @param ... Vectors to be expanded.
 #' @param rm.dupes Removes duplicated "rows". If \code{TRUE} (default) then
 #' rows that are unordered duplicates of other rows will be removed. i.e.
 #' \code{c("A", "B", "C")} is the same as \code{c("C", "B", "A")}
@@ -186,9 +189,14 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
 
 # recycle.NA() ------------------------------------------------------------
 #
-#' A vector recycler.
+#' @title
+#' A vector recycler using \code{NA}.
 #'
+#' @description
+#' Will recycle using \code{NA} rather than imitating \code{R}'s internal
+#' recycling mechanism.
 #'
+#' @param x,y Vectors, of which the shorter will be recycled.
 
 recycle.NA <- function(x, y){
   xy.list <- list(x = x, y = y)
@@ -204,7 +212,15 @@ recycle.NA <- function(x, y){
 
 # recycle.vector() --------------------------------------------------------
 #
-#' A vector recycler.
+#' @title
+#' A vector recycler using the contents of the shorter vector to do the
+#' recycling.
+#'
+#' @description
+#' The shorter of the two vectors will be recycled. Imitates \code{R}'s internal
+#' recycling mechanism.
+#'
+#' @param x,y Vectors, of which the shorter will be recycled.
 
 recycle.vector <- function(x, y){
   if(is.list(x) && length(x) == 2){
