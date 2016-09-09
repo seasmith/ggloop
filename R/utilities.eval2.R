@@ -23,7 +23,7 @@ select_helpers <- list(starts_with = function(...) starts_with(vars, ...),
 
 
 starts_with <- function(match, ignore.case = TRUE, vars = current_vars()) {
-  stopifnot(is.string(match), !is.na(match), nchar(match) > 0)
+  stopifnot(assertthat::is.string(match), !is.na(match), nchar(match) > 0)
 
   if (ignore.case) match <- tolower(match)
   n <- nchar(match)
@@ -38,7 +38,7 @@ starts_with <- function(match, ignore.case = TRUE, vars = current_vars()) {
 
 
 ends_with <- function(match, ignore.case = TRUE, vars = current_vars()) {
-  stopifnot(is.string(match), !is.na(match), nchar(match) > 0)
+  stopifnot(assertthat::is.string(match), !is.na(match), nchar(match) > 0)
 
   if (ignore.case) match <- tolower(match)
   n <- nchar(match)
@@ -55,7 +55,7 @@ ends_with <- function(match, ignore.case = TRUE, vars = current_vars()) {
 
 
 contains <- function(match, ignore.case = TRUE, vars = current_vars()) {
-  stopifnot(is.string(match), nchar(match) > 0)
+  stopifnot(assertthat::is.string(match), nchar(match) > 0)
 
   if (ignore.case) {
     vars <- tolower(vars)
@@ -70,7 +70,7 @@ contains <- function(match, ignore.case = TRUE, vars = current_vars()) {
 
 
 matches <- function(match, ignore.case = TRUE, vars = current_vars()) {
-  stopifnot(is.string(match), nchar(match) > 0)
+  stopifnot(assertthat::is.string(match), nchar(match) > 0)
 
   grep_vars(match, vars, ignore.case = ignore.case)
 }
