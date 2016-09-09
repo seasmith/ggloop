@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^R/utilities\.eval\.R$
 ^obsolete$
 ^Scratch$
 ^Issues\.MD$
