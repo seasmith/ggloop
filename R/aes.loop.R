@@ -1,3 +1,6 @@
+#' @include aes.wrangle.R
+#' @include aes.remap.R
+
 # aes_loop() --------------------------------------------------------------
 #
 #' Create a list of grouped aesthetic mappings.
@@ -37,44 +40,28 @@ aes_loop <- function(x, y, ...){
   dots <- as.list(substitute(list(...)))[-1L]
 
   function(vars, remap_xy, remap_dots){
-    # Create stashing environment to return to the mother.
-    # This step is now obsolete, as e is assigned the contents of
-    # aes_groupe
-    # e <- new.env()
-
     aes.raw <- aes_eval(vars, x, y, dots)
-chk <<- aes.raw
-    # remap_xy
+
+    # remap_xy precedence: NA -> TRUE -> FALSE
     if(is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else{
       if(remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else{
         if(!remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
       }
     }
 
-    # remap_dots
+    # remap_dots precedence: NA -> TRUE -> FALSE
     if(is.na(remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else{
       if(remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else
         if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
     }
 
-    e <- aes_group(aes.raw)
+    e <<- aes_group(aes.raw)
+    # Rename.
     e$xy <- rename_inputs(e$xy)
     # stash
     e$aes.raw <- aes.raw
 
     if(!e$aes.raw[["is.dots"]]){
-      aes.inputs.dirty <- extract(e$xy, lengths(e$xy)[[1]])
-
-      aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
-        x[which(!is.na(x))]
-      })
-
-      aes.list <- mapply(map_aes, aes.inputs.clean, SIMPLIFY = FALSE)
-
-        # stash
-        e$aes.list <- aes.list
-  } else{
-      # rep.num was brought into environment from aes_group()
       aes.inputs.dirty <- lapply(e$groups, function(x){
         extract(x, e$rep.num)
       })
@@ -85,12 +72,20 @@ chk <<- aes.raw
         })
       })
 
-      aes.list <- lapply(seq_along(aes.inputs.clean), function(x){
+      # stash
+      e$aes.list <- lapply(seq_along(aes.inputs.clean), function(x){
         mapply(map_aes, aes.inputs.clean[[x]], SIMPLIFY = FALSE)
       })
-        #stash
-        e$aes.list <- aes.list
-    }
+  } else{
+    aes.inputs.dirty <- extract(e$xy, lengths(e$xy)[[1]])
+
+    aes.inputs.clean <- lapply(aes.inputs.dirty, function(x){
+      x[which(!is.na(x))]
+    })
+
+    # stash
+    e$aes.list <- mapply(map_aes, aes.inputs.clean, SIMPLIFY = FALSE)
+  }
     return(e)
   }
 
