@@ -8,6 +8,12 @@
 #' and
 #' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
+
+# current_vars() ----------------------------------------------------------
+
+cur_vars_env <- new.env()
+current_vars <- function() cur_vars_env$selected
+
 # select_helpers() --------------------------------------------------------
 
 
@@ -114,4 +120,27 @@ one_of <- function(..., vars = current_vars()) {
 
 everything <- function(vars = current_vars()) {
   seq_along(vars)
+}
+
+
+# non-select_helpers functions --------------------------------------------
+
+match_vars <- function(needle, haystack) {
+  x <- match(needle, haystack)
+  x <- x[!is.na(x)]
+
+  fill_out(x, haystack)
+}
+
+grep_vars <- function(needle, haystack, ...) {
+  fill_out(grep(needle, haystack, ...), haystack)
+}
+
+which_vars <- function(needle, haystack) {
+  fill_out(which(needle == haystack), haystack)
+}
+
+fill_out <- function(x, haystack) {
+  if (length(x) > 0) return(x)
+  -seq_along(haystack)
 }
