@@ -25,13 +25,13 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Collate:
-    'aes.loop.R'
-    'aes.map.R'
     'aes.remap.R'
-    'aes.rename.R'
     'utilities.eval2.R'
     'utilities.eval.R'
     'aes.wrangle.R'
+    'aes.loop.R'
+    'aes.map.R'
+    'aes.rename.R'
     'ggloop.R'
     'list.operator.R'
     'plot.R'
