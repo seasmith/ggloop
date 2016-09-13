@@ -1,3 +1,4 @@
+#' @importFrom methods hasArg
 #' @include aes.loop.R
 #' @include aes.map.R
 
@@ -18,6 +19,8 @@
 #'   in \code{aes_loop()}.
 #' @param remap_dots Remapping behavior of \code{...} vectors specified in
 #'   \code{aes_loop()}.
+#' @param ... Other arguments, such as \code{map.list} which is set to
+#'   \code{FALSE} by default.
 #' @param environment An environment and only one environment (cannot be a
 #'   vector). If a variable defined in the aesthetic mapping is not found in the
 #'   data, \code{ggplot()} (called inside \code{ggloop()}) will look for it in
@@ -47,7 +50,7 @@
 #' @export
 
 ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
-                   remap_dots = FALSE, environment = parent.frame()){
+                   remap_dots = FALSE, ..., environment = parent.frame()){
 
   # Create names variable and evaluate `mappings` to give it ggloop() enclosure
   # so that it may use other ggloop() arguments.
@@ -55,7 +58,14 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
   mappings <- eval(mappings)
   mappings <- mappings(vars, remap_xy, remap_dots)
 
-  # Run loop in case of either TRUE/FALSE for is.dots.
+  # Check if map.list argument was passed.
+  if(methods::hasArg("map.list")) map.list <- list(...)$map.list
+  else map.list <- FALSE
+
+  # Return mappings$aes.list if map.list == TRUE
+  if(eval(parse(text = map.list))) return(mappings$aes.list)
+
+  # Loop.
   if(mappings$aes.raw[["is.dots"]]){
     gg.list <- lapply(seq_along(mappings$aes.list), function(x){
       lapply(seq_along(mappings$aes.list[[x]]), function(y){

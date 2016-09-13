@@ -20,7 +20,8 @@ Imports:
     grid,
     magrittr,
     lazyeval,
-    assertthat
+    assertthat,
+    methods
 RoxygenNote: 5.0.1
 Suggests:
     testthat,

@@ -5,7 +5,7 @@
 \title{Create ggplot plots in a loop.}
 \usage{
 ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE,
-  environment = parent.frame())
+  ..., environment = parent.frame())
 }
 \arguments{
 \item{data}{Default dataset to use for plot. Must be a data frame and can be
@@ -18,6 +18,9 @@ in \code{aes_loop()}.}
 
 \item{remap_dots}{Remapping behavior of \code{...} vectors specified in
 \code{aes_loop()}.}
+
+\item{...}{Other arguments, such as \code{map.list} which is set to
+\code{FALSE} by default.}
 
 \item{environment}{An environment and only one environment (cannot be a
 vector). If a variable defined in the aesthetic mapping is not found in the
