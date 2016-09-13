@@ -41,6 +41,9 @@ aes_loop <- function(x, y, ...){
   if(!missing(y)) y <- substitute(y)
   dots <- as.list(substitute(list(...)))[-1L]
 
+  # Write the function body to be assigned inside ggloop(). This will allow the
+  # function body to have access to the other formal arguments declared in
+  # ggloop().
   function(vars, remap_xy, remap_dots){
     aes.raw <- aes_eval(vars, x, y, dots)
 
@@ -57,6 +60,7 @@ aes_loop <- function(x, y, ...){
         if(!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
     }
 
+    # Create "group" combinations between the x,y and the dots.
     e <- aes_group(aes.raw)
 
     # stash
