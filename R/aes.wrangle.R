@@ -39,30 +39,30 @@
 #' and
 #' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
-aes_eval <- function(vars, x, y, dots){
+aes_eval <- function(vars, x, y, dots) {
 
   # test if anything was actually passed as x or y
   x.exists <- tryCatch({
     get0("x")
     TRUE
-    }, error = function(e){
+    }, error = function(e) {
       FALSE
     })
 
   y.exists <- tryCatch({
     get0("y")
     TRUE
-  }, error = function(e){
+  }, error = function(e) {
     FALSE
   })
 
   names_list <- stats::setNames(as.list(seq_along(vars)), vars)
 
   # --- Capture x values if x exists
-  if(x.exists){
+  if (x.exists) {
     # Strip c() wrapper or wrap in list if no c() (for is.fun()).
-    x <- if(is.symbol(x)){list(x)} else{
-              if(is.c(x[[1L]])){x[-1L]} else{
+    x <- if (is.symbol(x)) list(x) else {
+              if (is.c(x[[1L]])) x[-1L] else {
                 list(x)
               }
       }
@@ -72,33 +72,33 @@ aes_eval <- function(vars, x, y, dots){
     # Evaluate entries with ggplot2-like syntax (formulae and functions).
     x.ggplot2 <- rm.gg2(x) %R% FALSE
 
-      x.eval[abs(x.ggplot2)] <- if(!isFALSE(x.ggplot2)){
+      x.eval[abs(x.ggplot2)] <- if (!isFALSE(x.ggplot2)) {
         sapply(x[abs(x.ggplot2)], deparse)
       }
 
     # Evaluate entries with (assumed) dplyr-like syntax.
-    x.dplyr <- if(isFALSE(x.ggplot2)){
+    x.dplyr <- if (isFALSE(x.ggplot2)) {
       seq_along(x)
-      } else{
+      } else {
         seq_along(x)[x.ggplot2] %R% FALSE
       }
 
-      x.eval[x.dplyr] <- if(!isFALSE(x.dplyr)){
-        lapply(x.dplyr, function(i){
+      x.eval[x.dplyr] <- if (!isFALSE(x.dplyr)) {
+        lapply(x.dplyr, function(i) {
         messy_eval(x[[i]], vars, names_list)
           })
         }
 
     x.eval <- unlist(x.eval, use.names = FALSE)
-    } else{
+    } else {
       x.eval <- NULL
       }
 
   # --- Capture y values if y exists.
-  if(y.exists){
+  if (y.exists) {
     # Strip c() wrapper or wrap in list if no c() (for is.fun()).
-    y <- if(is.symbol(y)){list(y)} else{
-      if(is.c(y[[1L]])){y[-1L]} else{
+    y <- if (is.symbol(y)) list(y) else {
+      if (is.c(y[[1L]])) y[-1L] else {
         list(y)
       }
     }
@@ -108,35 +108,35 @@ aes_eval <- function(vars, x, y, dots){
       # Evaluate entries with ggplot2-like syntax (formulae and functions).
       y.ggplot2 <- rm.gg2(y) %R% FALSE
 
-        y.eval[abs(y.ggplot2)] <- if(!isFALSE(y.ggplot2)){
+        y.eval[abs(y.ggplot2)] <- if (!isFALSE(y.ggplot2)) {
           sapply(y[abs(y.ggplot2)], deparse)
         }
 
       # Evaluate entries with (assumed) dplyr-like syntax.
-      y.dplyr <- if(isFALSE(y.ggplot2)){
+      y.dplyr <- if (isFALSE(y.ggplot2)) {
         seq_along(y)
-      } else{
+      } else {
         seq_along(y)[y.ggplot2] %R% FALSE
         }
 
-        y.eval[y.dplyr] <- if(!isFALSE(y.dplyr)){
-          lapply(y.dplyr, function(i){
+        y.eval[y.dplyr] <- if (!isFALSE(y.dplyr)) {
+          lapply(y.dplyr, function(i) {
             messy_eval(y[[i]], vars, names_list)
           })
         }
 
     y.eval <- unlist(y.eval, use.names = FALSE)
-    } else{
+    } else {
       y.eval <- NULL
       }
 
   # --- Capture dots if exist
-  if(length(dots) > 0){
+  if (length(dots) > 0) {
     # Capture names (names will be lost in the following lapply()).
     dots.names <- names(dots)
     # Strip c().
-    dots <- lapply(seq_along(dots), function(x){
-      if(is.c(dots[[x]][[1L]])) dots[[x]][-1L]
+    dots <- lapply(seq_along(dots), function(x) {
+      if (is.c(dots[[x]][[1L]])) dots[[x]][-1L]
       else list(dots[[x]])
     })
 
@@ -144,29 +144,29 @@ aes_eval <- function(vars, x, y, dots){
     dots.eval <- list()
 
       # Remove and Keep
-      dots.ggplot2 <- sapply(dots, function(x){
+      dots.ggplot2 <- sapply(dots, function(x) {
         rm.gg2(x) %R% FALSE
       })
 
         # Evaluate ggplot2-like expressions.
-        dots.ggplot2.eval <- lapply(seq_along(dots), function(i){
+        dots.ggplot2.eval <- lapply(seq_along(dots), function(i) {
           d.eval <- list()
           d.eval[rev(abs(dots.ggplot2[[i]]))] <- sapply(
             dots[[i]][rev(abs(dots.ggplot2[[i]]))], deparse) %R% NULL
         })
 
 
-      dots.dplyr <- lapply(seq_along(dots), function(i){
-        if(isFALSE(dots.ggplot2[[i]])){
+      dots.dplyr <- lapply(seq_along(dots), function(i) {
+        if (isFALSE(dots.ggplot2[[i]])) {
           seq_along(dots[[i]])
-        } else{
+        } else {
           seq_along(dots[[i]])[dots.ggplot2[[i]]] %R% FALSE
         }
       })
 
         # Evaluate dplyr-like expressions.
-        dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i){
-          if(isFALSE(dots.dplyr[[i]])) NULL
+        dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i) {
+          if (isFALSE(dots.dplyr[[i]])) NULL
           else {
             d.eval <- list()
             d.eval[dots.dplyr[[i]]] <- lapply(
@@ -182,14 +182,14 @@ aes_eval <- function(vars, x, y, dots){
       function(x) c(unlist(dots.ggplot2.eval[[x]]), unlist(dots.dplyr.eval[[x]])))
     names(dots.eval) <- dots.names
     is.dots <- TRUE
-  } else{
+  } else {
     dots.eval <- NULL
     is.dots   <- FALSE
   }
   # list values and logical existance of ... arguments
   mappings <- c(list(x = x.eval,
-                y = y.eval,
-                is.dots = is.dots),
+                     y = y.eval,
+                     is.dots = is.dots),
                 dots.eval)
 
   mappings <- mappings[!vapply(mappings, is.null, logical(1))]
@@ -216,7 +216,7 @@ aes_eval <- function(vars, x, y, dots){
 #' combination of \code{dots} elements, and the second set of components (the
 #' nested components) correspond to the \code{x} and \code{y} vectors.
 
-aes_group <- function(lst){
+aes_group <- function(lst) {
   ee <- new.env()
     # Variables that will be stashed in ee:
       # xy, dots.vector, rep.num, groups
@@ -225,7 +225,7 @@ aes_group <- function(lst){
     # stash
     ee$xy <- xy
 
-  if(lst[["is.dots"]]){
+  if (lst[["is.dots"]]) {
     start <- list.pos("is.dots", lst) + 1
     end <- length(lst)
     # stash
@@ -238,7 +238,7 @@ aes_group <- function(lst){
                                                list.pos("is.dots", lst)))])[1]
 
     dots.list <- lapply(unlist(lst[ee$dots.vector]),
-                        function(x, times) rep(x, times),
+                        function (x, times) rep(x, times),
                         times = ee$rep.num)
 
     vector.len <- length(ee$dots.vector)
@@ -246,7 +246,7 @@ aes_group <- function(lst){
 
     # Group xy and dots, and then rename (scrape off the trailing numbers in the
     # dots)
-    ee$groups <-  lapply(seq_len(list.len/vector.len), function(x){
+    ee$groups <-  lapply(seq_len(list.len/vector.len), function(x) {
       unit.vector <- seq(from = 1,
                          to = list.len,
                          by = list.len/vector.len)
@@ -254,7 +254,7 @@ aes_group <- function(lst){
       c(xy, dots.list[iterator])
     }) %>%
       rename_inputs()
-  } else{
+  } else {
     groups <- xy
     # stash
     ee$dots.vector <- NULL

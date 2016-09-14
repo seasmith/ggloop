@@ -13,25 +13,25 @@
 #' \code{aes_assign()} and is ran before a remap function for the any "dots"
 #' in the list.
 
-remap_xy_TRUE <- function(lst){
+remap_xy_TRUE <- function(lst) {
   lst <- as.list(lst)
-  if(exists("x", lst) && exists("y", lst)){
+  if (exists("x", lst) && exists("y", lst)) {
     xy <- expand.grid(y = lst$y, x = lst$x, stringsAsFactors = FALSE)
 
     # Find unordered duplicate pairs and extract them.
     is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = FALSE) %>%
       lapply(sort) %>%
       duplicated()
-    dupes <- if(sum(is.dupes)) which(is.dupes) else NULL
+    dupes <- if (sum(is.dupes)) which(is.dupes) else NULL
 
     # Find exact duplicates (doubles) and extract them.
     is.dubs <- xy$x == xy$y
         is.dubs[is.na(is.dubs)] <- FALSE
-    dubs <- if(sum(is.dubs)) which(is.dubs) else NULL
+    dubs <- if (sum(is.dubs)) which(is.dubs) else NULL
 
     # Delete and duplicates or doubles.
     deletes <- c(dupes, dubs)
-    if(!is.null(deletes)) xy <- xy[-deletes, ]
+    if (!is.null(deletes)) xy <- xy[-deletes, ]
 
     lst$x <- xy$x
     lst$y <- xy$y
@@ -54,9 +54,9 @@ remap_xy_TRUE <- function(lst){
 #' \code{aes_assign()} and is ran before a remap function for the any "dots"
 #' in the list.
 
-remap_xy_NA <- function(lst){
+remap_xy_NA <- function(lst) {
   lst <- as.list(lst)
-  if(exists("x", lst) && exists("y", lst)){
+  if (exists("x", lst) && exists("y", lst)) {
     # SHOULD I ADD SOMETHING TO DEAL WITH DUPES???
       # what did i mean by that?
     xy.lengths <- c(x = length(lst$x), y = length(lst$y))
@@ -83,19 +83,20 @@ remap_xy_NA <- function(lst){
 #' \code{aes_assign()} and is ran before a remap function for the any "dots"
 #' in the list.
 
-remap_xy_FALSE <- function(lst){
+remap_xy_FALSE <- function(lst) {
   lst <- as.list(lst)
-  if(exists("x", lst) && exists("y", lst)){
+
+  if (exists("x", lst) && exists("y", lst)){
     xy.lengths <- c(x = length(lst$x), y = length(lst$y))
-    xy.max <- which.max(xy.lengths) %>% names()
-    xy.min <- which.min(xy.lengths) %>% names()
-      if(xy.max == xy.min) return(lst)
+    xy.max     <- which.max(xy.lengths) %>% names()
+    xy.min     <- which.min(xy.lengths) %>% names()
+      if (xy.max == xy.min) return(lst)
 
-    quotient <- length(lst[[xy.max]]) %/% length(lst[[xy.min]])
+    quotient  <- length(lst[[xy.max]]) %/% length(lst[[xy.min]])
     remainder <- length(lst[[xy.max]]) %% length(lst[[xy.min]])
-    if.zero <- !is.na(remainder/remainder) %>% sum()
+    if.zero   <- !is.na(remainder/remainder) %>% sum()
 
-    xy.quotient <- rep(lst[[xy.min]], quotient)
+    xy.quotient  <- rep(lst[[xy.min]], quotient)
     xy.remainder <- rep(lst[[xy.min]][1L:remainder], if.zero)
 
     lst[[xy.min]] <- c(xy.quotient, xy.remainder)
@@ -107,11 +108,12 @@ remap_xy_FALSE <- function(lst){
 # remap_dots_TRUE() ---------------------------------------------------------
 
 
-remap_dots_TRUE <- function(lst){
+remap_dots_TRUE <- function(lst) {
   lst <- as.list(lst)
-  if(lst$is.dots){
+  if (lst$is.dots) {
     start <- list.pos("is.dots", lst) + 1
-    end <- length(lst)
+    end   <- length(lst)
+
     dots <- expand.grid(lst[end:start], stringsAsFactors = FALSE)
     lst[end:start] <- dots[1L:length(dots)]
   }
@@ -122,16 +124,18 @@ remap_dots_TRUE <- function(lst){
 # remap_dots_FALSE() --------------------------------------------------------
 
 
-remap_dots_FALSE <- function(lst){
+remap_dots_FALSE <- function(lst) {
   lst <- as.list(lst)
-  if(lst$is.dots){
+
+  if (lst$is.dots) {
     start <- list.pos("is.dots", lst) + 1
-    end <- length(lst)
-    dots <- lst[start:end]
+    end   <- length(lst)
+    dots  <- lst[start:end]
+
     recycled.index <- sapply(dots, length) %>% which.max()
-    recycled <- lapply(
-      dots[-recycled.index],
-      function(x, y) x[1L:length(dots[[y]])], y = recycled.index)
+    recycled       <- lapply(dots[-recycled.index], function(x, y) {
+      x[1L:length(dots[[y]])]
+      }, y = recycled.index)
     lst[names(recycled)] <- recycled
   }
   return(lst)
@@ -141,7 +145,7 @@ remap_dots_FALSE <- function(lst){
 # remap_dots_NA() ---------------------------------------------------------
 
 
-remap_dots_NA <- function(lst){
+remap_dots_NA <- function(lst) {
   # lst$is.dots.chained <- FALSE
   return(lst)
 }

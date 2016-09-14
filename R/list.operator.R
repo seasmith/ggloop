@@ -22,7 +22,7 @@
 #'
 #' @export
 
-`%L+%` <- function(lhs, rhs){
+`%L+%` <- function(lhs, rhs) {
 
   # 1. lhs = ggplot
   test_ggplot <- ggplot2::is.ggplot(lhs)
@@ -33,29 +33,29 @@
   # 3. lhs = list(ggplot)
   test_list.ggplot <- tryCatch({
     all(vapply(lhs, ggplot2::is.ggplot, logical(1)))
-  }, warning = function(w){
+  }, warning = function(w) {
     FALSE
-  }, error = function(e){
+  }, error = function(e) {
     FALSE
   })
 
   # 4. lhs = list(list())
   test_list.list <- tryCatch({
     all(vapply(lhs, is.list, logical(1)))
-  }, warning = function(w){
+  }, warning = function(w) {
     FALSE
-  }, error = function(e){
+  }, error = function(e) {
     FALSE
   })
 
   # 5. lhs = list(list(ggplot))
   test_list.list.ggplot <- tryCatch({
-    all(sapply(lhs, function(x){
+    all(sapply(lhs, function(x) {
       vapply(x, ggplot2::is.ggplot, logical(1))
     }))
-  }, warning = function(w){
+  }, warning = function(w) {
     FALSE
-  }, error = function(e){
+  }, error = function(e) {
     FALSE
   })
 
@@ -69,16 +69,16 @@
   first <- function() lhs + rhs
 
   # Second scenario
-  second <- function(){
-    lapply(lhs, function(x){
+  second <- function() {
+    lapply(lhs, function(x) {
       x + rhs
     })
   }
 
   # Third scenario
-  third <- function(){
-    lapply(lhs, function(x){
-      lapply(x, function(y){
+  third <- function() {
+    lapply(lhs, function(x) {
+      lapply(x, function(y) {
         y + rhs
       })
     })
@@ -89,9 +89,9 @@
                    second,
                    third)
 
-  if(sum(lhs.test)){
+  if (sum(lhs.test)) {
     fun.list[[which(lhs.test)]]()
-  } else{
+  } else {
     stop("Left-hand side is not a ggplot object, list of ggplot objects,
          or a nested list of ggplot objects")
   }
