@@ -1,4 +1,3 @@
-
 # `%L%+`() ----------------------------------------------------------------
 #
 #' Add layers to \code{ggloop} outputs
@@ -106,8 +105,3 @@ eval_lhs <- function(lhs) {
     second = all(test_list, test_list.ggplot),
     third = all(test_list.list, test_list.list.ggplot))
   }
-
-
-
-
-
