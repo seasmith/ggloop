@@ -69,8 +69,8 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
   if (mappings$aes.raw[["is.dots"]]){
     gg.list <- lapply(seq_along(mappings$aes.list), function(x) {
       lapply(seq_along(mappings$aes.list[[x]]), function(y){
-        ggplot2::ggplot(data = data,
-                        mapping = mappings$aes.list[[x]][[y]],
+        ggplot2::ggplot(data        = data,
+                        mapping     = mappings$aes.list[[x]][[y]],
                         environment = environment)
       })
     })
@@ -86,8 +86,8 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
     return(gg.list)
   } else {
     gg.list <- lapply(seq_along(mappings$aes.list), function(x) {
-      ggplot2::ggplot(data = data,
-                      mapping = mappings$aes.list[[x]],
+      ggplot2::ggplot(data        = data,
+                      mapping     = mappings$aes.list[[x]],
                       environment = environment)
     })
 
