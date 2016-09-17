@@ -9,7 +9,7 @@ list.pos(name, lst)
 }
 \arguments{
 \item{name}{A character vector. Ideally a character vector of length 1
-(just one name); hoever it can accept a character vector of length greater
+(just one name); however it can accept a character vector of length greater
 than 1. The names in the character vector will be used as names (element
 headings) in the results vector.}
 

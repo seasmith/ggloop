@@ -4,10 +4,10 @@
 \alias{messy_eval}
 \title{Reduce the amount of code by turning this sequence into a function.}
 \usage{
-messy_eval(i, vars, names_list)
+messy_eval(expr, vars, names_list)
 }
 \arguments{
-\item{i}{Lazy dots.}
+\item{expr}{Lazy dots.}
 
 \item{vars}{Variable names}
 
