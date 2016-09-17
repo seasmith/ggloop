@@ -118,17 +118,17 @@ aes_eval <- function(vars, x, y, dots) {
     dots.eval <- list()
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    dots.gg2   <- sapply(dots, function(x) rm.gg2(x) %R% FALSE)
+    dots.gg2   <- lapply(dots, function(x) rm.gg2(x) %R% FALSE)
     dots.dplyr <- lapply(seq_along(dots), function(i) {
       if (isFALSE(dots.gg2[[i]])) seq_along(dots[[i]])
-      else seq_along(dots[[i]])[dots.gg2[[i]]] %R% FALSE
+      else seq_along(dots[[i]])[-dots.gg2[[i]]] %R% FALSE
     })
 
     # "Evaluate" both types of expressions.
     dots.gg2.eval   <- lapply(seq_along(dots), function(i) {
       d.eval <- list()
       d.eval[rev(abs(dots.gg2[[i]]))] <- sapply(
-        dots[[i]][rev(abs(dots.gg2[[i]]))], deparse) %R% NULL
+        dots[[i]][rev(dots.gg2[[i]])], deparse) %R% NULL
     })
     dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i) {
       if (isFALSE(dots.dplyr[[i]])) NULL
@@ -140,7 +140,6 @@ aes_eval <- function(vars, x, y, dots) {
         d.eval
       }
     })
-
 
     # Combine "Evaluations"
     dots.eval <- lapply(seq_along(dots), function(x) {
@@ -217,7 +216,7 @@ aes_group <- function(lst) {
     })
     env$groups <- rename_inputs(env$groups)
   } else {
-    env$groups <- xy
+    env$groups <- env$xy
     env$dots.vector <- NULL
     env$rep.num <- NULL
   }
