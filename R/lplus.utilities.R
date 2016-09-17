@@ -1,42 +1,3 @@
-# `%L%+`() ----------------------------------------------------------------
-#
-#' Add layers to \code{ggloop} outputs
-#'
-#' The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an
-#' \code{lapply()} loop. This function can also be a substitue for adding to
-#' "raw" \code{ggplot} objects.
-#'
-#' \code{\%L+\%} is a substitute for \code{+} and is used in the same fashion:
-#' to add geoms, stats, aesthetics, facets, and other features to \code{ggplot}
-#' object. The returned object from \code{ggloop()} is often a nested list of
-#' \code{ggplot} objects. However it is possible to use \code{\%L+\%} in place
-#' of where \code{+} would normally be used. This is due to the conditional
-#' statements present in \code{\%L+\%}'s structure.
-#'
-#' @param lhs Typically the returned object by \code{ggloop()}: either a nested
-#'   list of \code{ggplot} objects or a list of \code{ggplot} object, but can
-#'   also be a single \code{ggplot} object.
-#' @param rhs A geom, stat, or other layer feature from the \code{ggplot2}
-#'   package.
-#'
-#' @export
-`%L+%` <- function(lhs, rhs) {
-  parent <- parent.frame()
-  env <- new.env(parent = parent)
-
-  chain_parts <- split_chain(match.call())
-
-  lhs_eval <- eval(chain_parts[["lhs"]], env, env)
-  lhs_type <- eval_lhs(lhs_eval)
-
-  wrapping_fun <- names(flist[which(lhs_type)])
-  to_eval <- nest_function(wrapping_fun, chain_parts)
-
-  # "Evaluate the nested function with envir = flist
-  eval(to_eval, flist)
-}
-
-
 # split_chain() -----------------------------------------------------------
 split_chain <- function(expr)
 {
@@ -73,29 +34,29 @@ eval_lhs <- function(lhs) {
   test_list <-
     if (test_ggplot)
       FALSE
-    else
-      is.list(lhs)
+  else
+    is.list(lhs)
 
   # lhs = list(ggplot)
   test_list.ggplot <-
     if (test_list)
       all(vapply(lhs, ggplot2::is.ggplot, logical(1)))
-    else
-      FALSE
+  else
+    FALSE
 
   # lhs = list(list())
   test_list.list <-
     if (test_list && !test_list.ggplot)
       all(vapply(lhs, is.list, logical(1)))
-    else
-      FALSE
+  else
+    FALSE
 
   # lhs = list(list(ggplot))
   test_list.list.ggplot <-
     if (test_list.list)
       all(sapply(lhs, function(x) vapply(x, ggplot2::is.ggplot, logical(1))))
-    else
-      FALSE
+  else
+    FALSE
 
   # if (any(is.na(test_list.list, test_list.list.ggplot)))
   #   stop("Left-hand side is not a list of a list of ggplot objects")
@@ -104,4 +65,42 @@ eval_lhs <- function(lhs) {
   c(first = test_ggplot,
     second = all(test_list, test_list.ggplot),
     third = all(test_list.list, test_list.list.ggplot))
+}
+
+# flist() -----------------------------------------------------------------
+flist <- list(
+  # Single ggplot object.
+  first = function(lhs, rhs) lhs + rhs,
+
+  # List of ggplot objects.
+  second = function(lhs, rhs) {
+    lapply(lhs, function(x) {
+      x + rhs
+    })
+  },
+
+  # Nested list (list of list) of ggplot objects.
+  third = function(lhs, rhs) {
+    lapply(lhs, function(x) {
+      lapply(x, function(y) {
+        y + rhs
+      })
+    })
   }
+
+)
+
+
+# nest_function() ---------------------------------------------------------
+nest_function <- function(fun, chain) {
+  # Set starter variable and iterator.
+  nest.this <- chain$lhs
+  i <- 1L
+
+  while(i <= length(chain$rhss)) {
+    nest.this <- call(fun, nest.this, chain$rhss[[i]])
+    i <- i + 1L
+  }
+
+  nest.this
+}
