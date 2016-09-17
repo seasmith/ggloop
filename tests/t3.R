@@ -1,4 +1,5 @@
-
+# All "dots" should have the exact same xy's. Run test to determine if xy's are
+# all the same among "dots".
 
 # x.y.dot -----------------------------------------------------------------
 
