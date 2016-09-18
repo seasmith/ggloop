@@ -4,7 +4,7 @@
 
 `ggloop` allows the user to use both `dplyr`-like and `ggplot2`-like syntax to call multiple aesthetic pairs. This has the potential to save the users on the amount of code within their projects or session.
 
-## How to use `ggloop`
+## Main functions
 
 `ggloop` has three main functions: 
 * `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )` = Meant to mimick `ggplot()`'s arguments with addition remap arguments to control the remapping behavior of the mappings. There are three returned values:
@@ -15,3 +15,11 @@
 	* `dplyr`-like = `mpg:hp`, `1`, `5:9`, `cyl`, etc
 	* `ggplot2`-like = `factor(cyl)`, `gear + cyl`, etc
 * `%L+%` = magrittr-like (rip-off) to accomodate the addition of geoms, stats, etc to any of the returned values of `ggloop()`
+
+## How to use `ggloop`
+
+```{r}
+g <- ggplot(mtcars, aes_loop(c(mpg:hp, mpg/cyl), c(mpg:hp, disp/hp), color = gear), remap_xy = FALSE)
+g <- g %L+% geom_point()  ## add a simple point geom
+g$gear$`x.mpg/cyl_y.disp/hp`  ## view one of the plots
+```
