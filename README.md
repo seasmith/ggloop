@@ -25,6 +25,6 @@ g <- ggplot(data = mtcars,
                                 y = c(hp:mpg, disp/hp),
                                 color = gear), 
             remap_xy = FALSE)
-g <- g %L+% geom_point()  ## add a simple point geom
+g <- g %L+% geom_point()  ## add a simple point geom to every ggplot object
 g$gear$`x.mpg/cyl_y.disp/hp`  ## view one of the plots
 ```
