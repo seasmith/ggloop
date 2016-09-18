@@ -19,7 +19,9 @@
 ## How to use `ggloop`
 
 ```{r}
-g <- ggplot(mtcars, aes_loop(c(mpg:hp, mpg/cyl), c(mpg:hp, disp/hp), color = gear), remap_xy = FALSE)
+g <- ggplot(data = mtcars, 
+					  mappings = aes_loop(c(mpg:hp, mpg/cyl), c(mpg:hp, disp/hp), color = gear), 
+					  remap_xy = FALSE)
 g <- g %L+% geom_point()  ## add a simple point geom
 g$gear$`x.mpg/cyl_y.disp/hp`  ## view one of the plots
 ```
