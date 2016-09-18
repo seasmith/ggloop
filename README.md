@@ -4,6 +4,9 @@
 
 `ggloop` allows the user to use both `dplyr`-like and `ggplot2`-like syntax to call multiple aesthetic pairs. This has the potential to save the users on the amount of code within their projects or session.
 
+## How can I get a copy of `ggloop`?
+Until I push this project to CRAN, please use `devtools::install_github("seasmith/ggloop")` to install the package.  
+
 ## Main functions
 
 `ggloop` has three main functions: 
