@@ -20,7 +20,9 @@
 
 ```{r}
 g <- ggplot(data = mtcars, 
-            mappings = aes_loop(c(mpg:hp, mpg/cyl), c(mpg:hp, disp/hp), color = gear), 
+            mappings = aes_loop(x = c(mpg:hp, mpg/cyl), 
+                                y = c(mpg:hp, disp/hp),
+                                color = gear), 
             remap_xy = FALSE)
 g <- g %L+% geom_point()  ## add a simple point geom
 g$gear$`x.mpg/cyl_y.disp/hp`  ## view one of the plots
