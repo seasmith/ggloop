@@ -7,9 +7,9 @@
 ## How can I get a copy of `ggloop`?
 Until I push this project to CRAN, please use `devtools::install_github("seasmith/ggloop")` to install the package.  
 
-## Main functions
+## The functions
 
-`ggloop` has three main functions: 
+`ggloop` has three exported functions: 
 * `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )` = Meant to mimick `ggplot()`'s arguments with additional remap arguments to control the remapping behavior of the mappings. There are three possible returned values:
 	* A single `ggplot` object = Created by `x`, `y`, and `...` arguments of length one or less.
 	* A list of `ggplot` objects = Created when there is no `...` argument in `aes_loop()`
