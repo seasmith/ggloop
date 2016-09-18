@@ -36,7 +36,7 @@
 # rename_aes() ------------------------------------------------------------
 
 
-rename_aes <- function(x){
+rename_aes <- function(x) {
   full <- match(names(x), .all_aesthetics)
   names(x)[!is.na(full)] <- .all_aesthetics[full[!is.na(full)]]
 
@@ -47,9 +47,9 @@ rename_aes <- function(x){
 # rename_inputs() ---------------------------------------------------------
 
 
-rename_inputs <- function(lst){
-    for(x in seq_along(lst)){
-      for(y in seq_along(lst[[x]])){
+rename_inputs <- function(lst) {
+    for (x in seq_along(lst)) {
+      for (y in seq_along(lst[[x]])) {
         names(lst[[x]])[y] <- gsub("[0-9]+$",
                                    "",
                                    names(lst[[x]][y]))

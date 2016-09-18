@@ -45,19 +45,17 @@ isFALSE <- function(x) identical(FALSE, x)
 #' present in the list then NA is returned.
 #'
 #' @param  name A character vector. Ideally a character vector of length 1
-#' (just one name); hoever it can accept a character vector of length greater
+#' (just one name); however it can accept a character vector of length greater
 #' than 1. The names in the character vector will be used as names (element
 #' headings) in the results vector.
 #' @param lst A list with all elements named. If each element does not have a
 #' name then there can be no garuantee to the accuracy of the results.
 
-list.pos <- function(name, lst){
-  matches <- sapply(name, function(x){
+list.pos <- function(name, lst) {
+  matches <- sapply(name, function(x) {
     matched <- which(names(lst) %in% x)
 
-    # logic <- names(lst) %>% sapply(function(x) !is.na(x) && nzchar(x))
-    # chars <- which(logic)
-    if(length(matched) == 0) matched <- NA
+    if (!length(matched)) matched <- NA
     matched
   })
   return(matches)
@@ -81,7 +79,7 @@ list.pos <- function(name, lst){
 #' sequence for \code{extract()} to extract the elements of \code{lst}. Default
 #' value is the length of the shortest vector in the list.
 
-extract <- function(lst, num = min(lengths(lst))){
+extract <- function(lst, num = min(lengths(lst))) {
 #   extracted <- list()
 #   for(i in seq_len(num)){
 #     extracted[[i]] <- sapply(lst, `[[`, i)
@@ -91,7 +89,7 @@ extract <- function(lst, num = min(lengths(lst))){
   # classes <- vapply(lst, class, character(1))
   # class.fun <- lapply(classes, match.fun)
   # lst <- lapply(lst, as.character)
-  extracted <- lapply(seq_len(num), function(i){
+  extracted <- lapply(seq_len(num), function(i) {
     sapply(lst, `[[`, i)
     # extracted[[i]] <- vapply(lst, `[[`, cl(1), i)
   })
@@ -117,7 +115,7 @@ extract <- function(lst, num = min(lengths(lst))){
 #' \code{TRUE} (default) then a row such as \code{c("A", "A", "A")} will be
 #' removed.
 
-expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
+expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE) {
   args <- list(...)
   nargs <- length(args)
 
@@ -138,25 +136,25 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
   #   dupes <- NULL
   # }
 
-  if(rm.dupes){
+  if (rm.dupes) {
     is.dupes <- lapply(grid.list, sort) %>%
       duplicated()
-    dupes <- if(sum(is.dupes)) which(is.dupes) else NULL
-  } else{
+    dupes <- if (sum(is.dupes)) which(is.dupes) else NULL
+  } else {
     dupes <- NULL
   }
 
-  if(rm.dubs){
+  if (rm.dubs) {
     is.dubs <- lapply(grid.list, duplicated) %>%
       lapply(sum) %>%
       `==`(nargs - 1)
-    dubs <- if(sum(is.dubs)) which(is.dubs) else NULL
-  } else{
+    dubs <- if (sum(is.dubs)) which(is.dubs) else NULL
+  } else {
     dubs <- NULL
   }
 
   deletes <- c(dupes, dubs)
-  if(!is.null(deletes)) grid <- grid[-deletes, ]
+  if (!is.null(deletes)) grid <- grid[-deletes, ]
   names(grid) <- grid.names
 
   return(grid)
@@ -175,8 +173,8 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
 #' @param lhs A number (integer or numeric)
 #' @param rhs A number (integer or numeric)
 
-"%M%" <- function(lhs, rhs){
-  if(lhs < rhs){
+`%M%` <- function(lhs, rhs) {
+  if (lhs < rhs) {
     old.lhs <- lhs
     lhs <- rhs
     rhs <- old.lhs
@@ -198,7 +196,7 @@ expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE){
 #'
 #' @param x,y Vectors, of which the shorter will be recycled.
 
-recycle.NA <- function(x, y){
+recycle.NA <- function(x, y) {
   xy.list <- list(x = x, y = y)
   xy.lengths <- c(length.x = length(x), length.y = length(y))
   xy.max <- which.max(xy.lengths)
@@ -222,8 +220,8 @@ recycle.NA <- function(x, y){
 #'
 #' @param x,y Vectors, of which the shorter will be recycled.
 
-recycle.vector <- function(x, y){
-  if(is.list(x) && length(x) == 2){
+recycle.vector <- function(x, y) {
+  if (is.list(x) && length(x) == 2) {
     y <- x[[2]]
     x <- x[[1]]
   }
@@ -232,7 +230,7 @@ recycle.vector <- function(x, y){
   xy.max <- which.max(xy.lengths)
   xy.min <- which.min(xy.lengths)
 
-  if(xy.max == xy.min) return(xy.list)
+  if (xy.max == xy.min) return(xy.list)
 
   division <- xy.lengths[[xy.min]] %M% xy.lengths[[xy.max]]
     if.zero <- !is.na(division[["remainder"]]/division[["remainder"]]) %>% sum()
@@ -255,34 +253,16 @@ recycle.vector <- function(x, y){
 #' vector (deafult is \code{TRUE}). Result is a list if \code{FALSE}.
 
 
-what <- function(x, SIMPLIFY = TRUE){
-  if(SIMPLIFY){
+what <- function(x, SIMPLIFY = TRUE) {
+  if(SIMPLIFY) {
     c(class = class(x),
       type = typeof(x),
       mode = mode(x),
       names = names(x))
-  } else{
+  } else {
     list(class = class(x),
          type = typeof(x),
          mode = mode(x),
          names = names(x))
   }
-}
-
-
-# time.test() -------------------------------------------------------------
-#
-#' A simple test for evaluation speed.
-#'
-#' Tests the time it takes to evaluate an expression (such as a function). Uses
-#' \code{proc.time()} to keep track of all three different time types:
-#' \code{user}, \code{system}, and \code{elapsed}.
-#'
-#' @param x An expression, such as a function, arithmetic equation, etc.
-
-time.test <- function(x){
-  p1 <- proc.time()
-  eval(x)
-  p2 <- proc.time() - p1
-  print(p2)
 }

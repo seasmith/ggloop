@@ -38,6 +38,6 @@ Collate:
     'aes.map.R'
     'aes.rename.R'
     'ggloop.R'
-    'list.operator.R'
+    'lplus.main.R'
+    'lplus.utilities.R'
     'plot.R'
-    'utilities.info.R'
