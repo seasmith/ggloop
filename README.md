@@ -21,7 +21,7 @@
 ```{r}
 g <- ggplot(data = mtcars, 
             mappings = aes_loop(x = c(mpg:hp, mpg/cyl), 
-                                y = c(mpg:hp, disp/hp),
+                                y = c(hp:mpg, disp/hp),
                                 color = gear), 
             remap_xy = FALSE)
 g <- g %L+% geom_point()  ## add a simple point geom
