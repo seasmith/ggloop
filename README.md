@@ -7,7 +7,7 @@
 ## Main functions
 
 `ggloop` has three main functions: 
-* `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )` = Meant to mimick `ggplot()`'s arguments with addition remap arguments to control the remapping behavior of the mappings. There are three returned values:
+* `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )` = Meant to mimick `ggplot()`'s arguments with additional remap arguments to control the remapping behavior of the mappings. There are three possible returned values:
 	* A single `ggplot` object = Created by `x`, `y`, and `...` arguments of length one or less.
 	* A list of `ggplot` objects = Created when there is no `...` argument in `aes_loop()`
 	* A nest list (a list of a list) of `ggplot` objects = Created when a `...` argument is supplied. `...` names sit on the top-level of the nested list (they divide the list into however many parts based on the number of such arguments and the remapping behavior). `x` and `y` sit at the bottom-level of the nested list
@@ -18,6 +18,7 @@
 
 ## How to use `ggloop`
 
+A simple example:  
 ```{r}
 g <- ggplot(data = mtcars, 
             mappings = aes_loop(x = c(mpg:hp, mpg/cyl), 
