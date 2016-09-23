@@ -132,7 +132,7 @@ remap_dots_FALSE <- function(lst) {
     end   <- length(lst)
     dots  <- lst[start:end]
 
-    recycled.index <- sapply(dots, length) %>% which.max()
+    recycled.index <- vapply(dots, length, numeric(1)) %>% which.max()
     recycled       <- lapply(dots[-recycled.index], function(x, y) {
       x[1L:length(dots[[y]])]
       }, y = recycled.index)

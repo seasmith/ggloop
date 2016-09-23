@@ -71,7 +71,7 @@ aes_eval <- function(vars, x, y, dots) {
 
     # "Evaluate" both type of expression variables.
     x.eval <- list()
-    x.eval[x.gg2]   <- if (!isFALSE(x.gg2)) sapply(x[x.gg2], deparse)
+    x.eval[x.gg2]   <- if (!isFALSE(x.gg2)) vapply(x[x.gg2], deparse, character(1))
     x.eval[x.dplyr] <- if (!isFALSE(x.dplyr)) {
       lapply(x.dplyr, function(i) messy_eval(x[[i]], vars, names_list))
       }
@@ -94,7 +94,7 @@ aes_eval <- function(vars, x, y, dots) {
 
     # "Evaluate" both type of expression variables.
     y.eval <- list()
-    y.eval[y.ggplot2] <- if (!isFALSE(y.ggplot2)) sapply(y[y.ggplot2], deparse)
+    y.eval[y.ggplot2] <- if (!isFALSE(y.ggplot2)) vapply(y[y.ggplot2], deparse, character(1))
     y.eval[y.dplyr]   <- if (!isFALSE(y.dplyr)) {
       lapply(y.dplyr, function(i) messy_eval(y[[i]], vars, names_list))
     }
