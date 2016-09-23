@@ -106,30 +106,29 @@ aes_eval <- function(vars, x, y, dots) {
 
   ### Capture dots if exist
   if (length(dots)) {
-    # Capture names (names will be lost in the following lapply()'s).
+    # Capture names (names will be lost by the dots.dplyr.eval lapply()).
     dots.names <- names(dots)
 
     # Strip c().
-    dots <- lapply(seq_along(dots), function(x) {
-      if (is.c(dots[[x]])) dots[[x]][-1L] else list(dots[[x]])
-    })
+    dots <- lapply(dots, function(x) if (is.c(x)) x[-1L] else list(x))
 
     # Creat list to hold evaluations.
     dots.eval <- list()
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
     dots.gg2   <- lapply(dots, function(x) rm.gg2(x) %R% FALSE)
-    dots.dplyr <- lapply(seq_along(dots), function(i) {
-      if (isFALSE(dots.gg2[[i]])) seq_along(dots[[i]])
-      else seq_along(dots[[i]])[-dots.gg2[[i]]] %R% FALSE
-    })
+      find.dplyr <- function(x, y) {
+        if (isFALSE(y)) seq_along(x)
+        else seq_along(x)[-y] %R% FALSE
+      }
+    dots.dplyr <- Map(find.dplyr, x = dots, y = dots.gg2)
 
     # "Evaluate" both types of expressions.
-    dots.gg2.eval   <- lapply(seq_along(dots), function(i) {
-      d.eval <- list()
-      d.eval[rev(abs(dots.gg2[[i]]))] <- sapply(
-        dots[[i]][rev(dots.gg2[[i]])], deparse) %R% NULL
-    })
+      eval.gg2 <- function(x, y) {
+        d.eval <- list()
+        d.eval[rev(abs(y))] <- vapply(x[rev(y)], deparse, character(1)) %R% NULL
+      }
+    dots.gg2.eval   <- Map(eval.gg2, x = dots, y = dots.gg2)
     dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i) {
       if (isFALSE(dots.dplyr[[i]])) NULL
       else {
