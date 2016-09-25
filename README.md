@@ -2,10 +2,14 @@
 
 > Create ggplot2 plots in a loop.
 
-`ggloop` allows the user to use both `dplyr`-like and `ggplot2`-like syntax to call multiple aesthetic pairs. This has the potential to save the users on the amount of code within their projects or session.
+## Overview
+`ggloop` allows the user to use both `dplyr`-like and `ggplot2`-like syntax to either create multiple `ggplot2` plots or create the list of aesthetics used to make such plots. This has the potential to save the users on the amount of code within their projects or sessions.
 
-## How can I get a copy of `ggloop`?
-Until I push this project to CRAN, please use `devtools::install_github("seasmith/ggloop")` to install the package.  
+## Installation
+Please use `devtools::install_github("seasmith/ggloop")` to install the package.  
+
+## Where can I learn about how to use `ggloop`?
+You can try the [Intro vignette](vignettes/Intro.Rmd). You can also read the very brief overview of the functions and example below.
 
 ## The functions
 
