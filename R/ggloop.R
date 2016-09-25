@@ -1,4 +1,3 @@
-#' @importFrom methods hasArg
 #' @include aes.loop.R
 #' @include aes.map.R
 
