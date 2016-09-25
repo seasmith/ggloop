@@ -1,5 +1,5 @@
 ---
-title: "Looping and Adding"
+title: "Intro to ggloop"
 author: "Luke Smith"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -7,6 +7,143 @@ vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+---
+
+# Table of Contents
+
+* [Overview](#overview)
+* [Main Functions](#main-functions)
+    * [ggloop](#ggloop)
+    * [aes_loop](#aes_loop)
+    * [%L+%](#l)
+* [Trivial Examples](#trivial-examples)
+    * [Example 1](#example-1)
+    * [Example 2](#example-2)
+    * [Example 3](#example-3)
+
+# Overview
+
+`ggloop`'s main function is `ggloop()`, and it allows the user to create one of two things:
+
+1. Multiple `ggplot2` plots using `ggplot()`.
+2. A list of aesthetics, which can be supported by any number of `ggplot2` functions (i.e. `geom_point()`, etc) or perhaps with some other function from a `gg`-like package.
+
+The idea is that instead of passing a single aesthetic (`x`, `y`, `...`) to `ggplot`, the user can pass a vector of aesthetics while controlling the "remapping" behavior of the aesthetics. Remapping behaviors are intended to mimick functionality already available within R.
+
+Of course, if the user only wishes to have access to the list of aesthetics, then they may request such by setting `gg_obs = FALSE` (see [Args](#args)). While currently there is no support for using this list with other functions, a simple function/functional could be written to carry out such a task (with an example below). 
+
+# Main Functions
+
+## `ggloop`
+
+Mimickry of `ggplot()`'s arguments (for the most part).
+
+#### Args  
+
+* `data` = Same as `data`
+* `mappings` = Same as `mapping`, except `aes_loop()` is used in place of `aes()`. There currently is no support for a "strings" function.
+* `remap_xy` = Controls the "remapping" behavior of the `x` and `y` vectors. Default = `TRUE`; other options include `FALSE` and `NA`
+* `remap_dots` = Controls the "remapping" behavior of the `dots` arguments. Default = `FALSE`; other option is `FALSE`
+* `gg_obs` = Specifies whether `ggplot2` plot objects will be returned or whether the list of aesthetics used to make such objects is returned. To understand the structure of the list object, see [Value](#value).
+* `...` = The same as `...`; directly passed into `ggplot()`
+* `environment` = The same as `environment`; directly passed into `ggplot()`. Default = `parent.frame()`.
+
+#### Value
+
+  1. A list of `ggplot` objects - when no `...` are specified in `aes_loop()`.
+  2. A nested list (a list of a list) of `ggplot` objects - when `...` are specified in `aes_loop()`.
+
+## `aes_loop`
+
+Mimickry of `ggplot()`'s `aes()`, except:
+
+  1. You can use `dplyr`'s syntax to call variables (i.e. `y = mpg:cyl`, `x = 1:5`, etc) in addition to `ggplot2`'s syntax to call variables (i.e. `x = disp`, `x = mpg/hp`, `color = factor(cyl)`, `y = gear + cyl`, etc).
+  2. If you are calling more than one variable, then you need to wrap it in `c()` and not have any other `c()` within that wrapping (i.e. `x = c(mpg:cyl, 5, 6:8, gear + cyl)`, `color = c(factor(cyl), factor(gear))`).
+
+#### Args
+
+* `x` = Same as `x`
+* `y` = Same as `y`
+* `...` = Same as `...`
+
+## `%L+%`
+
+Mimickry of `+` with `magrittr`-like implementation. Can be used to add to three different types of objects:
+
+  1. A single `ggplot` object.
+  2. A list of `ggplot` objects.
+  3. A nested list (a list of a list) of `ggplot` objects.
+  
+This ability allows the user to add to only a subset of the returned value of `ggloop()` . The remainder of the object will not have anything added to it. Of course, the results of `%L+%` will not be saved unless they are assigned (just like with normal `ggplot` objects).
+
+Pronounced 'el-plus`.
+
+---
+
+# A Trivial Example
+
+### Example 1
+
+**Example:** Using the `mtcars` data set, create and plot all possible xy-pairs between `mpg` and `hp`.  
+**Steps:** Load the necessary packages, create plots with `ggloop()`, and add to plots using `%L+%`.
+
+```{r xy-pairs, message=FALSE}
+library(ggplot2)
+devtools::load_all(".")
+g <- ggloop(mtcars, aes_loop(x = mpg:hp, y = mpg:hp))
+```
+
+View some of the plots.
+```{r simple-1}
+g$x.mpg_y.hp %L+% geom_point()
+g$x.cyl_y.disp %L+% geom_point()
+g$x.disp_y.hp %L+% geom_point() %L+% geom_line()
+```
+
+Use `%L+%` to add to two plots, save the output, and then display the results.
+```{r simple-2}
+g[1:2] <- g[1:2] %L+% geom_point()
+g[1:2]
+```
+
+Look at the mappings of each name in `g`. Note how the list is NOT nested (because no `...` were called in `aes_loop()`).
+```{r simple-3}
+lapply(g, `[[`, "mapping")
+```
+
+### Example 2
+
+**Example:** Plot `c(mpg, disp, hp)` against `wt` and facet the resulting plots.  
+**Steps:** Create plots, add geoms, and add `facet_grid()`.  
+
+```{r facet-1}
+g2 <- ggloop(mtcars, aes_loop(x = c(mpg, disp, hp), y = wt, color = factor(cyl))) %L+%
+  geom_point() %L+%
+  facet_grid(. ~ cyl)
+```
+
+View some plots
+```{r facet-2}
+g2$`color.factor(cyl)`[1:3]
+```
+
+Look at the mappings of each name in `g2`. Note how the list is nested (because a `...` argument was called in `aes_loop()`).
+```{r facet-3}
+lapply(g2, function(x) lapply(x, `[[`, "mapping"))
+```
+
+### Example 3
+
+**Example:** Return the list of aesthetics rather than the list of plots.  
+**Steps:** Call `ggloop()` with `gg_obs = FALSE`.
+
+```{r aes.list-1}
+g3 <- ggloop(mtcars,
+             aes_loop(x = c(mpg, disp, hp), y = wt, color = c(factor(cyl), factor(gear))), 
+             gg_obs = FALSE)
+print(g3)
+```
+
 ---
 
 FRED series to scrape:
@@ -21,52 +158,3 @@ FRED series to scrape:
 * All Employees: Mining: Oil and Gas Extraction in Houston-The Woodlands-Sugar Land, TX (MSA)
 * All Employees: Manufacturing in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264203000000001A)	
 * All Employees: Health Care and Social Assistance in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264206562000001A)	
-
----
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
