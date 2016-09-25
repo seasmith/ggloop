@@ -5,7 +5,7 @@
 \title{Create ggplot plots in a loop.}
 \usage{
 ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE,
-  ..., environment = parent.frame())
+  gg_obs = TRUE, ..., environment = parent.frame())
 }
 \arguments{
 \item{data}{Default dataset to use for plot. Must be a data frame and can be
