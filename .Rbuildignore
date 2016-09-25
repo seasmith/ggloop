@@ -1,7 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^obsolete$
-^Scratch$
-^Issues\.MD$
-^R/mplot\.R$
+^scratch$
+^R/plot\.R$
 ^man/mplot\.Rd$

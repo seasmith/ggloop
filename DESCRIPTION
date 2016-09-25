@@ -7,21 +7,18 @@ Authors@R: person("Luke", "Smith", email = "luke@protocolvital.info",
 URL: https://github.com/seasmith/ggloop
 BugReports: https://github.com/seasmith/ggloop/issues
 Description: Pass a data frame and mapping aesthetics to ggloop() in order
-    to create a list of ggplot object for the specified remapping of aesthetics.
-    Pass x, y, and ... aesthetics to ggloop() as you would with ggplot(). You
-    can add geoms, themes, facets, and other features to these objects with the
-    special %L+% (L-plus) operator.
+    to create a list of ggplot2 plots. The way x-y and dots are paired together
+    is controlled by the remapping arguments. Geoms, themes, facets, and other 
+    features can be added with the special %L+% (L-plus) operator.
 License: GPL-2
 LazyData: TRUE
 Imports:
     plyr,
     dplyr,
     ggplot2,
-    grid,
     magrittr,
     lazyeval,
-    assertthat,
-    methods
+    assertthat
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
