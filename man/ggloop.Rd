@@ -19,6 +19,9 @@ in \code{aes_loop()}.}
 \item{remap_dots}{Remapping behavior of \code{...} vectors specified in
 \code{aes_loop()}.}
 
+\item{gg_obs}{Logical. Specifies whether to return ggplot2 plots or the list
+of aesthetics used to make such a plots.}
+
 \item{...}{Other arguments, such as \code{map.list} which is set to
 \code{FALSE} by default.}
 

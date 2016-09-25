@@ -18,6 +18,8 @@
 #'   in \code{aes_loop()}.
 #' @param remap_dots Remapping behavior of \code{...} vectors specified in
 #'   \code{aes_loop()}.
+#' @param gg_obs Logical. Specifies whether to return ggplot2 plots or the list
+#'   of aesthetics used to make such a plots.
 #' @param ... Other arguments, such as \code{map.list} which is set to
 #'   \code{FALSE} by default.
 #' @param environment An environment and only one environment (cannot be a

@@ -89,7 +89,7 @@ Pronounced 'el-plus`.
 
 ```{r xy-pairs, message=FALSE}
 library(ggplot2)
-devtools::load_all(".")
+library(ggloop)
 g <- ggloop(mtcars, aes_loop(x = mpg:hp, y = mpg:hp))
 ```
 
