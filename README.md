@@ -21,7 +21,7 @@ You can try the [Intro vignette](vignettes/intro.Rmd) (`vignette("intro", "ggloo
 * `aes_loop()` = meant to mimick `aes()`; can accept one or more arguments (a vector of arguments) with `dplyr`-like and `ggplot2`-like syntax; both syntax styles can be combined for one argument using the `c()` as a wrapper and only `c()`.
 	* `dplyr`-like = `mpg:hp`, `1`, `5:9`, `cyl`, etc
 	* `ggplot2`-like = `factor(cyl)`, `gear + cyl`, etc
-* `%L+%` = magrittr-like (rip-off) to accomodate the addition of geoms, stats, etc to any of the returned values of `ggloop()`
+* `%L+%` = magrittr-like (rip-off) `+` operator to accomodate the addition of geoms, stats, etc to any of the returned values of `ggloop()`
 
 ## How to use `ggloop`
 
