@@ -9,7 +9,7 @@
 Please use `devtools::install_github("seasmith/ggloop")` to install the package.  
 
 ## Where can I learn about how to use `ggloop`?
-You can try the [Intro vignette](vignettes/Intro.Rmd). You can also read the very brief overview of the functions and example below.
+You can try the [Intro vignette](vignettes/intro.Rmd). You can also read the very brief overview of the functions and example below.
 
 ## The functions
 
