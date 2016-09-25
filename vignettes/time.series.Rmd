@@ -1,0 +1,23 @@
+---
+title: "Working With Time Series"
+author: "Luke Smith"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+FRED series to scrape:
+* All Employees: Total Nonfarm in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264200000000001A)	
+* All Employees: Real Estate and Rental and Leasing in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264205553000001A)	
+* All Employees: Professional, Scientific, and Technical Services in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264206054000001A)	
+* All Employees: Utilities in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264204322000001A)	
+* All Employees: Government in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264209000000001A)	
+* All Employees: Retail Trade in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264204200000001A)	
+* All Employees: Legal Services in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264206054110001A)
+* All Employees: Construction in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264202000000001A)	
+* All Employees: Mining: Oil and Gas Extraction in Houston-The Woodlands-Sugar Land, TX (MSA)
+* All Employees: Manufacturing in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264203000000001A)	
+* All Employees: Health Care and Social Assistance in Houston-The Woodlands-Sugar Land, TX (MSA) (SMU48264206562000001A)	
