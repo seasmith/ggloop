@@ -1,5 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^scratch$
-^R/plot\.R$
 ^man/mplot\.Rd$
+^.travis.yml$
