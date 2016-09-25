@@ -50,7 +50,8 @@
 #' @export
 
 ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
-                   remap_dots = FALSE, ..., environment = parent.frame()) {
+                   remap_dots = FALSE, gg_obs = TRUE, ...,
+                   environment = parent.frame()) {
 
   # Create names variable and evaluate `mappings` to give it ggloop() enclosure
   # so that it may use other ggloop() arguments.
@@ -58,36 +59,33 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
   mappings <- eval(mappings)
   mappings <- mappings(vars, remap_xy, remap_dots)
 
-  # Check if map.list argument was passed.
-  if (methods::hasArg("map.list")) map.list <- list(...)$map.list
-  else map.list <- FALSE
-
-  # Return mappings$aes.list if map.list == TRUE
-  if (eval(parse(text = map.list))) return(mappings$aes.list)
+  # Check if user just wants the aes.list.
+  if (!gg_obs) return(mappings$aes.list)
 
   # Loop.
   if (mappings$aes.raw[["is.dots"]]){
-    gg.list <- lapply(seq_along(mappings$aes.list), function(x) {
-      lapply(seq_along(mappings$aes.list[[x]]), function(y){
+    gg.list <- lapply(mappings$aes.list, function(x) {
+      lapply(x, function(y) {
         ggplot2::ggplot(data        = data,
-                        mapping     = mappings$aes.list[[x]][[y]],
+                        mapping     = y,
+                        ...         = ...,
                         environment = environment)
       })
     })
-
     # Tidy-up the group names ("dots" names).
     names(gg.list) <- name_groups(mappings$aes.raw, mappings$dots.vector)
 
     # Tidy-up the subgroup names ("xy" names).
-    for (i in seq_along(gg.list)){
+    for (i in seq_along(gg.list)) {
       names(gg.list[[i]]) <- name_subgroups(mappings$xy, mappings$dots.vector)
     }
 
     return(gg.list)
   } else {
-    gg.list <- lapply(seq_along(mappings$aes.list), function(x) {
+    gg.list <- lapply(mappings$aes.list, function(x) {
       ggplot2::ggplot(data        = data,
-                      mapping     = mappings$aes.list[[x]],
+                      mapping     = x,
+                      ...         = ...,
                       environment = environment)
     })
 

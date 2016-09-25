@@ -67,6 +67,7 @@ aes_loop <- function(x, y, ...) {
     # stash
     e$aes.raw <- aes.raw
 
+    # Create the aes.list to pass to ggloop() with or without "dots".
     if (e$aes.raw[["is.dots"]]) {
       aes.inputs.dirty <- lapply(e$groups, function(x) extract(x, e$rep.num))
 
@@ -74,9 +75,7 @@ aes_loop <- function(x, y, ...) {
         lapply(x, function(y) y[which(!is.na(y))])
       })
 
-      e$aes.list <- lapply(seq_along(aes.inputs.clean), function(x) {
-        mapply(map_aes, aes.inputs.clean[[x]], SIMPLIFY = FALSE)
-      })
+      e$aes.list <- lapply(aes.inputs.clean, function(x) Map(map_aes, x))
   } else {
     aes.inputs.dirty <- extract(e$xy, lengths(e$xy)[[1]])
 
@@ -84,7 +83,7 @@ aes_loop <- function(x, y, ...) {
       x[which(!is.na(x))]
     })
 
-    e$aes.list <- mapply(map_aes, aes.inputs.clean, SIMPLIFY = FALSE)
+    e$aes.list <- Map(map_aes, aes.inputs.clean)
   }
     return(e)
   }
