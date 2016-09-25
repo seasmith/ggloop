@@ -11,36 +11,34 @@ ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE,
 \item{data}{Default dataset to use for plot. Must be a data frame and can be
 only one data frame.}
 
-\item{mappings}{Default list of aesthetic mappings to use for plots.}
+\item{mappings}{List of aesthetic mappings to use for plots. Works like
+\code{mapping} from \code{ggplot()}.}
 
-\item{remap_xy}{Remapping behavior of \code{x} and \code{y} vectors specified
-in \code{aes_loop()}.}
+\item{remap_xy}{Remapping behavior of the \code{x} and \code{y} vectors
+specified in \code{aes_loop()}. See details below for more on remapping
+behavior.}
 
-\item{remap_dots}{Remapping behavior of \code{...} vectors specified in
-\code{aes_loop()}.}
+\item{remap_dots}{Remapping behavior of the \code{...} vectors specified in
+\code{aes_loop()}. See details below for more on remapping behavior.}
 
-\item{gg_obs}{Logical. Specifies whether to return ggplot2 plots or the list
-of aesthetics used to make such a plots.}
+\item{gg_obs}{Logical. Specifies whether to return plots or the list (or
+nested list) of aesthetics used to make such a plots.}
 
-\item{...}{Other arguments, such as \code{map.list} which is set to
-\code{FALSE} by default.}
+\item{...}{Other arguments. Similar to \code{ggplot()}'s \code{...}.}
 
 \item{environment}{An environment and only one environment (cannot be a
-vector). If a variable defined in the aesthetic mapping is not found in the
-data, \code{ggplot()} (called inside \code{ggloop()}) will look for it in
-this environment. It defaults to using the environment in which
-\code{ggloop()} was called.}
+vector). Similar to \code{ggplot()}'s \code{environment}.}
 }
 \description{
 \code{ggloop()} mimics \code{ggplot()} by excepting a data frame and mappings
-and returning a plot. Only, \code{ggloop()} accepts vectors for aesthetics
-and returns a list of grouped \code{ggplot} plots.
+in order to return a plot. The main difference is that \code{ggloop()}
+accepts vectors for aesthetics and returns a list or nested list of
+\code{ggplot} plots.
 }
 \details{
-\code{ggloop()} makes use of the first of two \code{aes_loop}
-functions. \code{aes_loop()} is meant to mimic \code{aes} from
-\code{ggplot2}, and because of this, the remapping behavior of the aesthetics
-is controlled by the remapping arguments supplied to \code{ggloop()}.
+\code{ggloop()} makes use of \code{aes_loop}, which is meant to
+  mimic \code{aes} from \code{ggplot2}. Because of this, the remapping
+  arguments are supplied to \code{ggloop} instead of \code{aes_loop()}.
 
 The first remapping argument, \code{remap_xy} can take three values:
 \itemize{ \item \code{TRUE} = The default behavior. All unqiue combinations
