@@ -1,38 +1,38 @@
 # All "dots" should have the exact same xy's. Run test to determine if xy's are
 # all the same among "dots".
 
-# x.y.dot -----------------------------------------------------------------
+# xydot -----------------------------------------------------------------
 
 
-gg.x.y.dot.T.F <- ggloop::ggloop(mtcars,
+xydot.TF <- ggloop::ggloop(mtcars,
                          ggloop::aes_loop(mpg:hp, mpg:cyl, color = am:carb),
                          TRUE,
                          FALSE)
 
-gg.x.y.dot.T.T <- ggloop::ggloop(mtcars,
+xydot.TT <- ggloop::ggloop(mtcars,
                          ggloop::aes_loop(mpg:hp, mpg:cyl, color = am:carb),
                          TRUE,
                          TRUE)
 
-gg.x.y.dot.F.F <- ggloop::ggloop(mtcars,
+xydot.FF <- ggloop::ggloop(mtcars,
                          ggloop::aes_loop(mpg:disp, mpg:hp, color = am:carb),
                          FALSE,
                          FALSE)
 
-gg.x.y.dot.NA.T <- ggloop::ggloop(mtcars,
+xydot.NAT <- ggloop::ggloop(mtcars,
                          ggloop::aes_loop(mpg:hp, mpg:cyl, color = am:carb),
                          NA,
                          TRUE)
 
-gg.x.y.dot.NA.F <- ggloop::ggloop(mtcars,
+xydot.NAF <- ggloop::ggloop(mtcars,
                          ggloop::aes_loop(mpg:disp, mpg:hp, color = am:carb),
                          NA,
                          FALSE)
 
-# x.y.dots ----------------------------------------------------------------
+# xydots ----------------------------------------------------------------
 
 
-gg.x.y.dots.T.F <- ggloop::ggloop(mtcars,
+xydots.TF <- ggloop::ggloop(mtcars,
                           ggloop::aes_loop(x = mpg:hp,
                                    y = mpg:hp,
                                    color = am:carb,
@@ -40,7 +40,7 @@ gg.x.y.dots.T.F <- ggloop::ggloop(mtcars,
                           TRUE,
                           FALSE)
 
-gg.x.y.dots.T.T <- ggloop::ggloop(mtcars,
+xydots.TT <- ggloop::ggloop(mtcars,
                           ggloop::aes_loop(x = mpg:hp,
                                    y = mpg:hp,
                                    color = am:carb,
@@ -48,7 +48,7 @@ gg.x.y.dots.T.T <- ggloop::ggloop(mtcars,
                           TRUE,
                           TRUE)
 
-gg.x.y.dots.F.F <- ggloop::ggloop(mtcars,
+xydots.FF <- ggloop::ggloop(mtcars,
                           ggloop::aes_loop(x = mpg:hp,
                                    y = mpg:hp,
                                    color = am:carb,
@@ -56,7 +56,7 @@ gg.x.y.dots.F.F <- ggloop::ggloop(mtcars,
                           FALSE,
                           FALSE)
 
-gg.x.y.dots.NA.T <- ggloop::ggloop(mtcars,
+xydots.NAT <- ggloop::ggloop(mtcars,
                           ggloop::aes_loop(x = mpg:hp,
                                    y = mpg:hp,
                                    color = am:carb,
@@ -64,7 +64,7 @@ gg.x.y.dots.NA.T <- ggloop::ggloop(mtcars,
                           NA,
                           TRUE)
 
-gg.x.y.dots.NA.F <- ggloop::ggloop(mtcars,
+xydots.NAF <- ggloop::ggloop(mtcars,
                            ggloop::aes_loop(x = mpg:hp,
                                     y = mpg:hp,
                                     color = am:carb,
@@ -73,34 +73,34 @@ gg.x.y.dots.NA.F <- ggloop::ggloop(mtcars,
                            FALSE)
 
 
-# x.y ---------------------------------------------------------------------
+# xy ---------------------------------------------------------------------
 
 
-gg.x.y.T.F <- ggloop::ggloop(mtcars,
+xyTF <- ggloop::ggloop(mtcars,
                 ggloop::aes_loop(x = mpg,
                          y = cyl:hp),
                 TRUE,
                 FALSE)
 
-gg.x.y.T.T <- ggloop::ggloop(mtcars,
+xyTT <- ggloop::ggloop(mtcars,
                      ggloop::aes_loop(x = mpg,
                               y = cyl:hp),
                      TRUE,
                      TRUE)
 
-gg.x.y.F.F <- ggloop::ggloop(mtcars,
+xyFF <- ggloop::ggloop(mtcars,
                      ggloop::aes_loop(x = mpg,
                               y = cyl:hp),
                      FALSE,
                      FALSE)
 
-gg.x.y.NA.T <- ggloop::ggloop(mtcars,
+xyNAT <- ggloop::ggloop(mtcars,
                      ggloop::aes_loop(x = mpg,
                               y = cyl:hp),
                      NA,
                      TRUE)
 
-gg.x.y.NA.F <- ggloop::ggloop(mtcars,
+xyNAF <- ggloop::ggloop(mtcars,
                       ggloop::aes_loop(x = mpg,
                                y = cyl:hp),
                       NA,
