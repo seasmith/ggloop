@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/seasmith/ggloop.svg?branch=master)](https://travis-ci.org/seasmith/ggloop)
+
 # ggloop
 
 > Create ggplot2 plots in a loop.
