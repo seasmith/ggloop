@@ -7,13 +7,14 @@ context("List names")
 
 # xydot -----------------------------------------------------------------
 
-test_that("xydot names 1", {
+test_that("Test xydot.TF names", {
 
 
   xydot.TF <- ggloop(mtcars,
-                     aes_loop(x = mpg:hp,
-                              y = mpg:cyl,
-                              color = am:carb),
+                     aes_loop(x = c(mpg:cyl, 5:6, qsec, 8, factor(cyl), mpg/wt),
+                              y = c(mpg:cyl, 5:6, qsec, 8, factor(cyl), mpg/wt),
+                              color = c(am:carb, 1:2, qsec, 3,
+                                        factor(cyl), mpg/wt)),
                      remap_xy = TRUE,
                      remap_dots = FALSE,
                      gg_obs = TRUE
@@ -29,23 +30,37 @@ test_that("xydot names 1", {
   # to be correct.
 
   # First `...` names.
-  xydot.TF.dotnames <- c("color.am", "color.gear", "color.carb")
-  Map(expect_match, names(xydot.TF), xydot.TF.dotnames)
+  xydot.TF.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+                         "color.gear", "color.carb", "color.mpg", "color.cyl",
+                         "color.qsec", "color.disp")
+  Map(expect_match, names(xydot.TF), xydot.TF.dotnames, fixed = TRUE)
 
   # Then `x` and `y`` names.
-  xydot.TF.xynames <- c("x.mpg_y.cyl", "x.disp_y.mpg", "x.disp_y.cyl",
-                        "x.hp_y.mpg", "x.hp_y.cyl")
-  lapply(xydot.TF, function(x) Map(expect_match, names(x), xydot.TF.xynames))
+  xydot.TF.xynames <- c("x.mpg_y.cyl", "x.mpg_y.drat", "x.mpg_y.wt",
+                        "x.mpg_y.qsec", "x.mpg_y.vs", "x.mpg_y.factor(cyl)",
+                        "x.mpg_y.mpg/wt", "x.cyl_y.drat", "x.cyl_y.wt",
+                        "x.cyl_y.qsec", "x.cyl_y.vs", "x.cyl_y.factor(cyl)",
+                        "x.cyl_y.mpg/wt", "x.drat_y.wt", "x.drat_y.qsec",
+                        "x.drat_y.vs", "x.drat_y.factor(cyl)",
+                        "x.drat_y.mpg/wt", "x.wt_y.qsec", "x.wt_y.vs",
+                        "x.wt_y.factor(cyl)", "x.wt_y.mpg/wt", "x.qsec_y.vs",
+                        "x.qsec_y.factor(cyl)", "x.qsec_y.mpg/wt",
+                        "x.vs_y.factor(cyl)", "x.vs_y.mpg/wt",
+                        "x.factor(cyl)_y.mpg/wt")
+  lapply(xydot.TF, function(x) {
+    Map(expect_match, names(x), xydot.TF.xynames, fixed = TRUE)
+    })
 })
 
 
-test_that("xydot names 2", {
+test_that("Test xydot.TT names", {
 
 
   xydot.TT <- ggloop(mtcars,
-                     aes_loop(x = mpg:hp,
-                              y = mpg:cyl,
-                              color = am:carb),
+                     aes_loop(x = c(mpg:cyl, 5:6, qsec, 8, factor(cyl), mpg/wt),
+                              y = c(mpg:cyl, 5:6, qsec, 8, factor(cyl), mpg/wt),
+                              color = c(am:carb, 1:2, qsec, 3,
+                                        factor(cyl), mpg/wt)),
                      remap_xy = TRUE,
                      remap_dots = TRUE,
                      gg_obs = TRUE)
@@ -60,23 +75,37 @@ test_that("xydot names 2", {
   # to be correct.
 
   # First `...` names.
-  xydot.TT.dotnames <- c("color.am", "color.gear", "color.carb")
-  Map(expect_match, names(xydot.TT), xydot.TT.dotnames)
+  xydot.TT.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+                         "color.gear", "color.carb", "color.mpg", "color.cyl",
+                         "color.qsec", "color.disp")
+  Map(expect_match, names(xydot.TT), xydot.TT.dotnames, fixed = TRUE)
 
   # Then `x` and `y`` names.
-  xydot.TT.xynames <- c("x.mpg_y.cyl", "x.disp_y.mpg", "x.disp_y.cyl",
-                        "x.hp_y.mpg", "x.hp_y.cyl")
-  lapply(xydot.TT, function(x) Map(expect_match, names(x), xydot.TT.xynames))
+  xydot.TT.xynames <- c("x.mpg_y.cyl", "x.mpg_y.drat", "x.mpg_y.wt",
+                        "x.mpg_y.qsec", "x.mpg_y.vs", "x.mpg_y.factor(cyl)",
+                        "x.mpg_y.mpg/wt", "x.cyl_y.drat", "x.cyl_y.wt",
+                        "x.cyl_y.qsec", "x.cyl_y.vs", "x.cyl_y.factor(cyl)",
+                        "x.cyl_y.mpg/wt", "x.drat_y.wt", "x.drat_y.qsec",
+                        "x.drat_y.vs", "x.drat_y.factor(cyl)",
+                        "x.drat_y.mpg/wt", "x.wt_y.qsec", "x.wt_y.vs",
+                        "x.wt_y.factor(cyl)", "x.wt_y.mpg/wt", "x.qsec_y.vs",
+                        "x.qsec_y.factor(cyl)", "x.qsec_y.mpg/wt",
+                        "x.vs_y.factor(cyl)", "x.vs_y.mpg/wt",
+                        "x.factor(cyl)_y.mpg/wt")
+  lapply(xydot.TT, function(x) {
+    Map(expect_match, names(x), xydot.TT.xynames, fixed = TRUE)
+    })
 })
 
 
-test_that("xydot names 3", {
+test_that("Teest xydot.FF names", {
 
 
   xydot.FF <- ggloop(mtcars,
-                     aes_loop(x = mpg:disp,
-                              y = mpg:hp,
-                              color = am:carb),
+                     aes_loop(x = c(mpg:cyl, 5:6, qsec, 8, factor(cyl), mpg/wt),
+                              y = c(factor(gear) + factor(cyl), mpg:cyl),
+                              color = c(am:carb, 1:2, qsec, 3,
+                                        factor(cyl), mpg/wt)),
                      remap_xy = FALSE,
                      remap_dots = FALSE,
                      gg_obs = TRUE)
@@ -91,17 +120,24 @@ test_that("xydot names 3", {
   # to be correct.
 
   # First `...` names.
-  xydot.FF.dotnames <- c("color.am", "color.gear", "color.carb")
-  Map(expect_match, names(xydot.FF), xydot.FF.dotnames)
+  xydot.FF.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+                         "color.gear", "color.carb", "color.mpg", "color.cyl",
+                         "color.qsec", "color.disp")
+  Map(expect_match, names(xydot.FF), xydot.FF.dotnames, fixed = TRUE)
 
   # Then `x` and `y`` names.
-  xydot.FF.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
-                        "x.mpg_y.hp")
-  lapply(xydot.FF, function(x) Map(expect_match, names(x), xydot.FF.xynames))
+  xydot.FF.xynames <- c("x.mpg_y.factor(gear) + factor(cyl)", "x.cyl_y.mpg",
+                        "x.drat_y.cyl", "x.wt_y.factor(gear) + factor(cyl)",
+                        "x.qsec_y.mpg", "x.vs_y.cyl",
+                        "x.factor(cyl)_y.factor(gear) + factor(cyl)",
+                        "x.mpg/wt_y.mpg")
+  lapply(xydot.FF, function(x) {
+    Map(expect_match, names(x), xydot.FF.xynames, fixed = TRUE)
+    })
   })
 
 
-test_that("xydot names 4", {
+test_that("Test xydot.FT names", {
 
 
   xydot.FT <- ggloop(mtcars,
@@ -123,16 +159,18 @@ test_that("xydot names 4", {
 
   # First `...` names.
   xydot.FT.dotnames <- c("color.am", "color.gear", "color.carb")
-  Map(expect_match, names(xydot.FT), xydot.FT.dotnames)
+  Map(expect_match, names(xydot.FT), xydot.FT.dotnames, fixed = TRUE)
 
   # Then `x` and `y`` names.
   xydot.FT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                         "x.mpg_y.hp")
-  lapply(xydot.FT, function(x) Map(expect_match, names(x), xydot.FT.xynames))
+  lapply(xydot.FT, function(x) {
+    Map(expect_match, names(x), xydot.FT.xynames, fixed = TRUE)
+    })
 })
 
 
-test_that("xydot names 5", {
+test_that("Test xydot.NAT names", {
 
 
   xydot.NAT <- ggloop(mtcars,
@@ -162,7 +200,7 @@ test_that("xydot names 5", {
 })
 
 
-test_that("xydot names 6", {
+test_that("Test xydot.NAF names", {
 
 
   xydot.NAF <- ggloop(mtcars,
@@ -194,7 +232,7 @@ test_that("xydot names 6", {
 
 # xydots ----------------------------------------------------------------
 
-test_that("xydots names 1", {
+test_that("Test xydots.TF names", {
 
 
   xydots.TF <- ggloop(mtcars,
@@ -226,7 +264,7 @@ test_that("xydots names 1", {
 })
 
 
-test_that("xydots names 2", {
+test_that("Test xydots.TT names", {
 
 
   xydots.TT <- ggloop(mtcars,
@@ -258,7 +296,7 @@ test_that("xydots names 2", {
   lapply(xydots.TT, function(x) Map(expect_match, names(x), xydots.TT.xynames))
 })
 
-test_that("xydots names 3", {
+test_that("Test xydots.FF names", {
 
 
   xydots.FF <- ggloop(mtcars,
@@ -273,7 +311,7 @@ test_that("xydots names 3", {
   expect_identical(is.list(xydots.FF), TRUE)
   vapply(xydots.FF, function(x) {
     expect_identical(all(vapply(x, is.ggplot, logical(1))), TRUE)
-  }, logcial(1))
+  }, logical(1))
 
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
@@ -289,7 +327,7 @@ test_that("xydots names 3", {
   lapply(xydots.FF, function(x) Map(expect_match, names(x), xydots.FF.xynames))
 })
 
-test_that("xydots names 4", {
+test_that("Test xydots.FT names", {
 
 
   xydots.FT <- ggloop(mtcars,
@@ -321,7 +359,7 @@ test_that("xydots names 4", {
   lapply(xydots.FT, function(x) Map(expect_match, names(x), xydots.FT.xynames))
 })
 
-test_that("xydots names 5", {
+test_that("Test xydots.NAT names", {
 
 
   xydots.NAT <- ggloop(mtcars,
@@ -354,7 +392,7 @@ test_that("xydots names 5", {
 })
 
 
-test_that("xydots names 6", {
+test_that("Test xydots.NAF names", {
 
 
   xydots.NAF <- ggloop(mtcars,
@@ -380,15 +418,15 @@ test_that("xydots names 6", {
   Map(expect_match, names(xydots.NAF), xydots.NAF.dotnames)
 
   # Then `x` and `y`` names.
-  xydots.NAT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
+  xydots.NAF.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                           "x.hp_y.hp")
-  lapply(xydots.NAT, function(x) Map(expect_match, names(x), xydots.NAT.xynames))
+  lapply(xydots.NAF, function(x) Map(expect_match, names(x), xydots.NAF.xynames))
 })
 
 
 # xy ---------------------------------------------------------------------
 
-test_that("xy names 1", {
+test_that("Test xy.TF names", {
 
 
   xy.TF <- ggloop(mtcars,
@@ -410,7 +448,7 @@ test_that("xy names 1", {
 })
 
 
-test_that("xy names 2", {
+test_that("Test xy.TT names", {
 
 
   xy.TT <- ggloop(mtcars,
@@ -432,7 +470,7 @@ test_that("xy names 2", {
 })
 
 
-test_that("xy names 3", {
+test_that("Test xy.FF names", {
 
 
   xy.FF <- ggloop(mtcars,
@@ -454,7 +492,7 @@ test_that("xy names 3", {
 })
 
 
-test_that("xy names 4", {
+test_that("Test xy.FT names", {
 
 
   xy.FT <- ggloop(mtcars,
@@ -476,7 +514,7 @@ test_that("xy names 4", {
 })
 
 
-test_that("xy names 5", {
+test_that("Test xy.NAT names", {
 
 
   xy.NAT <- ggloop(mtcars,
@@ -498,7 +536,7 @@ test_that("xy names 5", {
 })
 
 
-test_that("xy names 6", {
+test_that("Test xy.NAF names", {
 
 
   xy.NAF <- ggloop(mtcars,
