@@ -24,13 +24,12 @@ bunch of \code{aes()} mappings in a list waiting to be passed to
 \code{ggplot()}.
 }
 \description{
-This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
-wish to return the grouped list of uneval aesthetics, then use
-\code{aes_loop2()}.
+\code{aes_loop} cannot be used affectively outside of \code{ggloop()} (or at
+least with access to the data frame names).
 }
 \details{
 \code{aes_loop()} is solely meant to be called within
-\code{ggloop()}. To create the raw list of grouped mappings, use
-\code{aes_loop2()}.
+\code{ggloop()}. To create the raw list of grouped mappings, set
+\code{ggloop()}'s \code{gg_obs} argument to \code{FALSE}.
 }
 

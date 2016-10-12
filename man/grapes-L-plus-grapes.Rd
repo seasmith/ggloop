@@ -2,7 +2,7 @@
 % Please edit documentation in R/lplus.main.R
 \name{\%L+\%}
 \alias{\%L+\%}
-\title{Add layers to \code{ggloop} outputs}
+\title{Add components to a ggloop object.}
 \usage{
 lhs \%L+\% rhs
 }
@@ -15,9 +15,13 @@ also be a single \code{ggplot} object.}
 package.}
 }
 \description{
-The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an
-\code{lapply()} loop. This function can also be a substitue for adding to
-"raw" \code{ggplot} objects.
+The \code{\%L+\%} (L-plus) operator allows you to add components to a ggloop
+object - whether that object is a:
+\itemize{
+ \item{nested list of ggplot plots}
+ \item{list of ggplot plots}
+ \item{single ggplot.}
+}
 }
 \details{
 \code{\%L+\%} is a substitute for \code{+} and is used in the same fashion:

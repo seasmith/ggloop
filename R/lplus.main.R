@@ -1,10 +1,14 @@
 # `%L%+`() ----------------------------------------------------------------
 #
-#' Add layers to \code{ggloop} outputs
+#' Add components to a ggloop object.
 #'
-#' The \code{\%L+\%} (L-plus) operator, is a \code{+} operator wrapped by an
-#' \code{lapply()} loop. This function can also be a substitue for adding to
-#' "raw" \code{ggplot} objects.
+#' The \code{\%L+\%} (L-plus) operator allows you to add components to a ggloop
+#' object - whether that object is a:
+#' \itemize{
+#'  \item{nested list of ggplot plots}
+#'  \item{list of ggplot plots}
+#'  \item{single ggplot.}
+#' }
 #'
 #' \code{\%L+\%} is a substitute for \code{+} and is used in the same fashion:
 #' to add geoms, stats, aesthetics, facets, and other features to \code{ggplot}

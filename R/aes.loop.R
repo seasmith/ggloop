@@ -7,9 +7,8 @@
 #' Create a list of grouped aesthetic mappings.
 #'
 #' @description
-#' This version of \code{aes_loop} is to be used inside \code{ggloop()}. If you
-#' wish to return the grouped list of uneval aesthetics, then use
-#' \code{aes_loop2()}.
+#' \code{aes_loop} cannot be used affectively outside of \code{ggloop()} (or at
+#' least with access to the data frame names).
 #'
 #' @param x,y,... A vector of variable names. Vector can consist of a
 #'   combination of \code{dplyr}-like symbols (unqouted names) and
@@ -17,8 +16,8 @@
 #'   \code{data}.
 #'
 #' @details \code{aes_loop()} is solely meant to be called within
-#' \code{ggloop()}. To create the raw list of grouped mappings, use
-#' \code{aes_loop2()}.
+#' \code{ggloop()}. To create the raw list of grouped mappings, set
+#' \code{ggloop()}'s \code{gg_obs} argument to \code{FALSE}.
 #'
 #' @return
 #' \code{aes_loop()} returns an environment that includes \code{aes.list} (the
