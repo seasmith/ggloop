@@ -118,8 +118,6 @@
 #' sapply(plots4, names)
 #' # [1] "x.mpg/disp_y.hp"   "x.mpg/hp_y.disp"   "x.mpg/cyl_y.hp"    "x.mpg/gear_y.disp"
 #'
-
-
 ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
                    remap_dots = FALSE, gg_obs = TRUE, ...,
                    environment = parent.frame()) {

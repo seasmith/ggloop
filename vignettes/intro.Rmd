@@ -25,40 +25,50 @@ vignette: >
 
 `ggloop`'s main function is `ggloop()`, and it allows the user to create one of two things:
 
-1. Multiple `ggplot2` plots using `ggplot()`.
-2. A list of aesthetics, which can be supported by any number of `ggplot2` functions (i.e. `geom_point()`, etc) or perhaps with some other function from a `gg`-like package.
+1. Multiple `ggplot2` plots.
+2. A list of aesthetics, which can used to make `ggplot2` plots using `ggplot()`.
 
-The idea is that instead of passing a single aesthetic (`x`, `y`, `...`) to `ggplot`, the user can pass a vector of aesthetics while controlling the "remapping" behavior of the aesthetics. Remapping behaviors are intended to mimick functionality already available within R.
+Instead of passing a single aesthetic (`x`, `y`, `...`) to `ggplot()`, the user can pass multiple aesthetics by using a vector of aesthetics. "Remapping"" behaviors control how the `x` and `y` vectors are paired with one another, and they control how mutliple `...` arguments are paired with
+one another.
 
-Of course, if the user only wishes to have access to the list of aesthetics, then they may request such by setting `gg_obs = FALSE` (see [Args](#args)). While currently there is no support for using this list with other functions, a simple function/functional could be written to carry out such a task (with an example below). 
+The `gg_obs` argument controls the returned value: either `ggplot2` plots or a list of aesthetics which can be used to make `ggplot2` plots. `gg_obs`'s default value is `TRUE`, which instructs `ggloop()` to return plots. `FALSE` instructs `ggloop()` to return a list of aesthetics.
+
+---
 
 # Main Functions
 
 ## `ggloop`
 
-Mimickry of `ggplot()`'s arguments (for the most part).
+Mimicry of `ggplot()`'s arguments (for the most part).
 
 #### Args  
 
 * `data` = Same as `data`
-* `mappings` = Same as `mapping`, except `aes_loop()` is used in place of `aes()`. There currently is no support for a "strings" function.
-* `remap_xy` = Controls the "remapping" behavior of the `x` and `y` vectors. Default = `TRUE`; other options include `FALSE` and `NA`
-* `remap_dots` = Controls the "remapping" behavior of the `dots` arguments. Default = `FALSE`; other option is `FALSE`
-* `gg_obs` = Specifies whether `ggplot2` plot objects will be returned or whether the list of aesthetics used to make such objects is returned. To understand the structure of the list object, see [Value](#value).
-* `...` = The same as `...`; directly passed into `ggplot()`
-* `environment` = The same as `environment`; directly passed into `ggplot()`. Default = `parent.frame()`.
+* `mappings` = Same as `mapping`, except `aes_loop()` is used in place of `aes()`. There currently is no support for a "strings"-type function.
+* `remap_xy` = Controls the "remapping" behavior of the `x` and `y` vectors. Default = `TRUE`; other options include `FALSE` and `NA`.
+    + `TRUE` = acts like `expand.grid()` except that exact duplicates (i.e. `x <- mpg; y <- mpg`) and unordered-pair duplicates (i.e. `x <- mpg; y <- cyl` and `x <- cyl; y <- mpg`) are removed.
+    + `FALSE` = acts like R's internal recycling mechanism, which replicates the shorter of the two vectors however many times necessary to pair with the longer vector.
+    + `NA` = leaves an unpaired vector element unpaired (i.e. `x = (mpg, wt, hp); y = (cyl, gear)` produces `x <- hp` with no y mapping)
+* `remap_dots` = Controls the "remapping" behavior of the `dots` arguments. Default = `FALSE`; other option is `FALSE`.
+    + `TRUE` = acts like R's internal recycling mechanism, which replicates the shorter of the two vectors however many times necessary to pair with the longer vector.
+    + `FALSE` = leaves un unpaired vecotr element unpaired; similar to `remap_xy = NA` behavior.
+* `gg_obs` = Controls the returned value. `TRUE` (default) returns `ggplot2` plots; `FALSE` returns a list of aesthetics (see [Value](#value)).
+* `...` = The same as `...`; directly passed to `ggplot()`.
+* `environment` = The same as `environment`; directly passed into `ggplot()`.
 
 #### Value
 
-  1. A list of `ggplot` objects - when no `...` are specified in `aes_loop()`.
-  2. A nested list (a list of a list) of `ggplot` objects - when `...` are specified in `aes_loop()`.
+There are two main types of returned values when `gg_obs = TRUE`:
+
+  1. A list of `ggplot2` plots - when no `...` are specified in `aes_loop()`.
+  2. A nested list (a list of a list) of `ggplot2` plots - when there are `...` specified in `aes_loop()`.
 
 ## `aes_loop`
 
-Mimickry of `ggplot()`'s `aes()`, except:
+Mimicry of `ggplot()`'s `aes()`, except:
 
-  1. You can use `dplyr`'s syntax to call variables (i.e. `y = mpg:cyl`, `x = 1:5`, etc) in addition to `ggplot2`'s syntax to call variables (i.e. `x = disp`, `x = mpg/hp`, `color = factor(cyl)`, `y = gear + cyl`, etc).
-  2. If you are calling more than one variable, then you need to wrap it in `c()` and not have any other `c()` within that wrapping (i.e. `x = c(mpg:cyl, 5, 6:8, gear + cyl)`, `color = c(factor(cyl), factor(gear))`).
+  1. You can use `dplyr`'s syntax to call variables (i.e. `y = mpg:cyl`, `x = 1:5`, etc). You can still use `ggplot2`'s syntax to call variables (i.e. `x = disp`, `x = mpg/hp`, `color = factor(cyl)`, `y = gear + cyl`, etc). You can also use both within a vector, but do adhere to the rule below.
+  2. If you are calling more than one variable, then you need to wrap the variables in `c()` and not have any other `c()` within that wrapping (i.e. `x = c(mpg:cyl, 5, 6:8, gear + cyl, mpg/hp)`, `color = c(factor(cyl), factor(gear))`).
 
 #### Args
 
@@ -68,15 +78,14 @@ Mimickry of `ggplot()`'s `aes()`, except:
 
 ## `%L+%`
 
-Mimickry of `+` with `magrittr`-like implementation. Can be used to add to three different types of objects:
+Mimicry of `+` with `magrittr`-like implementation. Can be used to add to three different types of objects:
 
-  1. A single `ggplot` object.
-  2. A list of `ggplot` objects.
-  3. A nested list (a list of a list) of `ggplot` objects.
+  1. A single `ggplot2` plot.
+  2. A list of `ggplot2` plots.
+  3. A nested list (a list of a list) of `ggplot2` plots.
   
-This ability allows the user to add to only a subset of the returned value of `ggloop()` . The remainder of the object will not have anything added to it. Of course, the results of `%L+%` will not be saved unless they are assigned (just like with normal `ggplot` objects).
+The user thus has the ability to add components to a subset of plots. Much like `+`, the results of `%L+%` will not be saved unless they are assigned.
 
-Pronounced 'el-plus`.
 
 ---
 
