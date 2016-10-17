@@ -42,20 +42,10 @@
 aes_eval <- function(vars, x, y, dots) {
 
   # test if anything was actually passed as x or y
-  x.exists <- tryCatch({
-    get0("x")
-    TRUE
-    }, error = function(e) {
-      FALSE
-    })
+  x.exists <- if (is.null(x)) FALSE else TRUE
+  y.exists <- if (is.null(y)) FALSE else TRUE
 
-  y.exists <- tryCatch({
-    get0("y")
-    TRUE
-  }, error = function(e) {
-    FALSE
-  })
-
+  # Prepare the list of data frame names
   names_list <- stats::setNames(as.list(seq_along(vars)), vars)
 
   ### Capture x values if x exists
@@ -152,9 +142,7 @@ aes_eval <- function(vars, x, y, dots) {
     is.dots   <- FALSE
   }
   # list values and logical existance of ... arguments
-  mappings <- c(list(x = x.eval,
-                     y = y.eval,
-                     is.dots = is.dots),
+  mappings <- c(list(x = x.eval, y = y.eval, is.dots = is.dots),
                 dots.eval)
 
   mappings <- mappings[!vapply(mappings, is.null, logical(1))]
@@ -189,7 +177,7 @@ aes_group <- function(lst) {
 
   if (lst[["is.dots"]]) {
     start <- list.pos("is.dots", lst) + 1
-    end <- length(lst)
+    end   <- length(lst)
     env$dots.vector <- start:end
 
     # might need to use max()
@@ -202,7 +190,7 @@ aes_group <- function(lst) {
                         times = env$rep.num)
 
     vector.len <- length(env$dots.vector)
-    list.len <- length(dots.list)
+    list.len   <- length(dots.list)
 
     # Group xy and dots, and then rename (scrape off the trailing numbers in the
     # dots)
@@ -215,9 +203,9 @@ aes_group <- function(lst) {
     })
     env$groups <- rename_inputs(env$groups)
   } else {
-    env$groups <- env$xy
+    env$groups      <- env$xy
     env$dots.vector <- NULL
-    env$rep.num <- NULL
+    env$rep.num     <- NULL
   }
   # xy, dots.vector, rep.num, groups
   return(env)

@@ -36,8 +36,8 @@
 aes_loop <- function(x, y, ...) {
 
   # Handle the first set of arguments (x, y, ...).
-  if(!missing(x)) x <- substitute(x)
-  if(!missing(y)) y <- substitute(y)
+  if(!missing(x)) x <- substitute(x) else x <- NULL
+  if(!missing(y)) y <- substitute(y) else y <- NULL
   dots <- as.list(substitute(list(...)))[-1L]
 
   # Write the function body to be assigned inside ggloop(). This will allow the
