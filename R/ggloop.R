@@ -52,15 +52,7 @@
 #'
 #' @export
 #' @examples
-#' # If you want to view all possible combinations of every column in a data
-#' # frame:
-#' # Find first and last column names.
-#' names(mtcars)[c(1, length(mtcars))]
-#' # [1] "mpg"  "carb"
-#'
-#' # Retrieve all plot x-y combinations. The default remap_xy behavior is
-#' # TRUE, which will produce all possible unique combinations of column
-#' # names.
+#' # 1. Return all possible x-y combinations.
 #' plots <- ggloop(data = mtcars,
 #'                 mappings = aes_loop(x = mpg:carb, y = mpg:carb))
 #' names(plots)
@@ -79,10 +71,9 @@
 #' # [49] "x.qsec_y.carb" "x.vs_y.am"     "x.vs_y.gear"   "x.vs_y.carb"
 #' # [53] "x.am_y.gear"   "x.am_y.carb"   "x.gear_y.carb"
 #'
-#' # View one of the plots
 #' plots$x.mpg_y.hp + ggplot2::geom_point()
 #'
-#' # Add an additional aesthetic (facet).
+#' # 2. Add an additional aesthetic (facet) to plots.
 #' plots2 <- ggloop(data = mtcars,
 #'                  mappings = aes_loop(
 #'                                      x = c(disp, hp, wt),
@@ -94,13 +85,12 @@
 #' # [2,] "x.hp_y.mpg"
 #' # [3,] "x.wt_y.mpg"
 #'
-#' # View one of the plots
 #' plots2$`color.factor(cyl)`$x.hp_y.mpg + ggplot2::geom_point()
 #'
 #' # A look at remap_xy's other two behaviors:
-#'
-#' # Setting remap_xy = NA will cause any "unpaired" x-vector elements to be
-#' # produced in the returned value.
+#' # 3. remap_xy = NA
+#' #    The longer vector will go "unpaired" after the shorter vector
+#' #    runs out of elements.
 #' plots3 <- ggloop(data = mtcars,
 #'                  mappings = aes_loop(x = c(mpg/disp, mpg/hp, mpg/cyl, mpg/gear),
 #'                                      y = c(hp, disp)),
@@ -108,9 +98,9 @@
 #' names(plots3)
 #' # [1] "x.mpg/disp_y.hp" "x.mpg/hp_y.disp" "x.mpg/cyl"       "x.mpg/gear"
 #'
-#' # Setting remap_xy = FALSE will cause any "unpaired" x-vector elements to be
-#' # paired with y elements, starting with the first y element. This mimics
-#' # R's internal recycling mechanism for functions like mapply.
+#' # 4. remap_xy = FALSE
+#' #    The longer vector will be "paired" with the shorter vector using
+#' #    recycling (similar to R's internal recycling, i.e. mapply()).
 #' plots4 <- ggloop(data = mtcars,
 #'                  mappings = aes_loop(x = c(mpg/disp, mpg/hp, mpg/cyl, mpg/gear),
 #'                                      y = c(hp, disp)),
