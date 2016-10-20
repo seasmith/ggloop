@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/seasmith/ggloop.svg?branch=master)](https://travis-ci.org/seasmith/ggloop)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ggloop)](http://cran.r-project.org/package=ggloop)
 
 # ggloop
 
