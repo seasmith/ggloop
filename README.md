@@ -30,7 +30,7 @@ You can try the [Intro vignette](vignettes/intro.Rmd) (`vignette("intro", "ggloo
 
 A simple example:  
 ```{r}
-g <- ggplot(data = mtcars, 
+g <- ggloop(data = mtcars, 
             mappings = aes_loop(x = c(mpg:hp, mpg/cyl), 
                                 y = c(hp:mpg, disp/hp),
                                 color = gear), 
