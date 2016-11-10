@@ -1,0 +1,16 @@
+reference:
+- title: Plot creation
+  desc: >
+    The two main functions for creating a list of plots are `ggloop()`
+    and `aes_loop()`. These are meant to mimic `ggplot()` and `aes()`,
+    respectively.
+  contents:
+  - ggloop
+  - aes_loop
+
+- title: Adding to plots
+  desc: >
+    There is a special funtion which allows the addition of features
+    to a nested list or a list of plots - `%L+%` (l-plus).
+  contents:
+  - "%L+%"

@@ -3,4 +3,4 @@
 ^scratch$
 ^man/mplot\.Rd$
 ^.travis.yml$
-^vignettes/time\.series\.Rmd$
+^_pkgdown\.yml$
