@@ -22,6 +22,8 @@ remap_xy_TRUE <- function(lst) {
     is.dupes <- mapply(FUN = c, xy$x, xy$y, SIMPLIFY = FALSE) %>%
       lapply(sort) %>%
       duplicated()
+    # StackOverflow approach: http://stackoverflow.com/questions/40324891/extracting-unique-rows-in-a-3-column-matrix
+    # is.dupes <- xy[!duplicated(apply(xy, 1, sort), MARGIN = 2), ]
     dupes <- if (sum(is.dupes)) which(is.dupes) else NULL
 
     # Find exact duplicates (doubles) and extract them.

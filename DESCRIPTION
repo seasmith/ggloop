@@ -7,9 +7,8 @@ Authors@R: person("Luke", "Smith", email = "luke@protocolvital.info",
 URL: https://github.com/seasmith/ggloop
 BugReports: https://github.com/seasmith/ggloop/issues
 Description: Pass a data frame and mapping aesthetics to ggloop() in order
-    to create a list of 'ggplot2' plots. The way x-y and dots are paired together
-    is controlled by the remapping arguments. Geoms, themes, facets, and other
-    features can be added with the special %L+% (L-plus) operator.
+    to create a list of 'ggplot2' plots. Add 'ggplot2' components to a list of plots
+    or a single plot with the special %L+% (L-plus) operator.
 License: GPL-2
 LazyData: TRUE
 Imports:

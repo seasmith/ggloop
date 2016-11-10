@@ -4,7 +4,7 @@ author: "Luke Smith"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Intro to ggloop}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -41,7 +41,7 @@ The `gg_obs` argument controls the returned value: either `ggplot2` plots or a l
 
 Mimicry of `ggplot()`'s arguments (for the most part).
 
-#### Args  
+##### Args  
 
 * `data` = Same as `data`
 * `mappings` = Same as `mapping`, except `aes_loop()` is used in place of `aes()`. There currently is no support for a "strings"-type function.
@@ -56,7 +56,7 @@ Mimicry of `ggplot()`'s arguments (for the most part).
 * `...` = The same as `...`; directly passed to `ggplot()`.
 * `environment` = The same as `environment`; directly passed into `ggplot()`.
 
-#### Value
+##### Value
 
 There are two main types of returned values when `gg_obs = TRUE`:
 
@@ -70,7 +70,7 @@ Mimicry of `ggplot()`'s `aes()`, except:
   1. You can use `dplyr`'s syntax to call variables (i.e. `y = mpg:cyl`, `x = 1:5`, etc). You can still use `ggplot2`'s syntax to call variables (i.e. `x = disp`, `x = mpg/hp`, `color = factor(cyl)`, `y = gear + cyl`, etc). You can also use both within a vector, but do adhere to the rule below.
   2. If you are calling more than one variable, then you need to wrap the variables in `c()` and not have any other `c()` within that wrapping (i.e. `x = c(mpg:cyl, 5, 6:8, gear + cyl, mpg/hp)`, `color = c(factor(cyl), factor(gear))`).
 
-#### Args
+##### Args
 
 * `x` = Same as `x`
 * `y` = Same as `y`
@@ -91,7 +91,7 @@ The user thus has the ability to add components to a subset of plots. Much like 
 
 # A Trivial Example
 
-### Example 1
+## Example 1
 
 **Example:** Using the `mtcars` data set, create and plot all possible xy-pairs between `mpg` and `hp`.  
 **Steps:** Load the necessary packages, create plots with `ggloop()`, and add to plots using `%L+%`.
@@ -100,17 +100,14 @@ The user thus has the ability to add components to a subset of plots. Much like 
 library(ggplot2)
 library(ggloop)
 g <- ggloop(mtcars, aes_loop(x = mpg:hp, y = mpg:hp))
-```
 
-View some of the plots.
-```{r simple-1}
+# View some plots
 g$x.mpg_y.hp %L+% geom_point()
 g$x.cyl_y.disp %L+% geom_point()
 g$x.disp_y.hp %L+% geom_point() %L+% geom_line()
-```
 
-Use `%L+%` to add to two plots, save the output, and then display the results.
-```{r simple-2}
+
+# Use `%L+%` to add to two plots, save the output, and then display the results.
 g[1:2] <- g[1:2] %L+% geom_point()
 g[1:2]
 ```
@@ -120,7 +117,7 @@ Look at the mappings of each name in `g`. Note how the list is NOT nested (becau
 lapply(g, `[[`, "mapping")
 ```
 
-### Example 2
+## Example 2
 
 **Example:** Plot `c(mpg, disp, hp)` against `wt` and facet the resulting plots.  
 **Steps:** Create plots, add geoms, and add `facet_grid()`.  
@@ -129,19 +126,16 @@ lapply(g, `[[`, "mapping")
 g2 <- ggloop(mtcars, aes_loop(x = c(mpg, disp, hp), y = wt, color = factor(cyl))) %L+%
   geom_point() %L+%
   facet_grid(. ~ cyl)
-```
 
-View some plots
-```{r facet-2}
+# View some plots
 g2$`color.factor(cyl)`[1:3]
-```
 
-Look at the mappings of each name in `g2`. Note how the list is nested (because a `...` argument was called in `aes_loop()`).
-```{r facet-3}
+# Look at the mappings of each name in `g2`. Note how the list is nested
+# (because a `...` argument was called in `aes_loop()`).
 lapply(g2, function(x) lapply(x, `[[`, "mapping"))
 ```
 
-### Example 3
+## Example 3
 
 **Example:** Return the list of aesthetics rather than the list of plots.  
 **Steps:** Call `ggloop()` with `gg_obs = FALSE`.
