@@ -9,7 +9,7 @@ ggloop
 Overview
 --------
 
-ggloop allows the user to use both dplyr-like and ggplot2-like syntax to either create multiple ggplot2 plots or create the list of aesthetics used to make such plots. This has the potential to save the users on the amount of code within their projects or sessions.
+ggloop allows the user to use create multiple 'ggplot2' plots. Plots are created by passing multiple aesthetics via a vector of aesthetics to `ggloop()`. Users can use both dplyr-like syntax (i.e. `x = mpg:hp`, `y = 1`, `color = 4:8`, etc) and ggplot2-like syntax (i.e `x = mpg/cyl`, `y = wt + hp`, `color = factor(cyl)`, etc).
 
 Installation
 ------------
@@ -22,29 +22,12 @@ install.packages("ggloop")
 devtools::install_github("seasmith/ggloop")  
 ```
 
-Where can I learn about how to use `ggloop`?
---------------------------------------------
+Where can I learn how to use ggloop?
+------------------------------------
 
-You can see `ggloop` in action with the intro vignette (`vignette("intro", "ggloop")`). You can also read the very brief overview of the functions and example below.
+You can see `ggloop` in action with the intro vignette (`vignette("intro", "ggloop")`). You can also see the example and the very brief overview available below.
 
-The functions
--------------
-
-`ggloop` has three exported functions:
-
--   `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )` = Meant to mimick `ggplot()`'s arguments with additional remap arguments to control the remapping behavior of the mappings. There are three possible returned values:
-    -   A single ggplot object = Created by `x`, `y`, and `...` arguments of length one or less.
-    -   A list of ggplot objects = Created when there is no `...` argument in `aes_loop()`.
-    -   A nest list (a list of a list) of ggplot objects = Created when a `...` argument is supplied. `...` names sit on the top-level of the nested list (they divide the list into however many parts based on the number of such arguments and the remapping behavior). `x` and `y` sit at the bottom-level of the nested list
--   `aes_loop()` = meant to mimick `aes()`; can accept one or more arguments (a vector of arguments) with dplyr-like and ggplot2-like syntax; both syntax styles can be combined for one argument using the `c()` as a wrapper and only `c()`.
-    -   dplyr-like = `mpg:hp`, `1`, `5:9`, `cyl`, etc
-    -   ggplot2-like = `factor(cyl)`, `gear + cyl`, etc
--   `%L+%` = magrittr-like (rip-off) `+` operator to accomodate the addition of geoms, stats, etc to any of the returned values of `ggloop()`
-
-How to use ggloop
------------------
-
-A simple example:
+### A simple example
 
 ``` r
 library(ggloop)
@@ -59,3 +42,24 @@ g$color.gear$x.mpg_y.hp  ## view one of the plots
 ```
 
 ![](README-example-1.png)
+
+### The functions
+
+`ggloop` has three exported functions:
+
+-   `ggloop(data, mappings = aes_loop(), remap_xy = TRUE, remap_dots = FALSE, ..., environment = parent.frame() )`
+    -   Mimicks `ggplot2::ggplot()` and its arguments.
+    -   Returned values:
+        -   A single ggplot object = Created by `x`, `y`, and `...` arguments of length one or less.
+        -   A list of ggplot objects = Created when there is no `...` argument in `aes_loop()`.
+        -   A nest list (a list of a list) of ggplot objects = Created when a `...` argument is supplied. `...` names sit on the top-level of the nested list (they divide the list into however many parts based on the number of such arguments and the remapping behavior). `x` and `y` sit at the bottom-level of the nested list
+-   `aes_loop()`
+    -   Mimicks `aes()`
+    -   Accepts vectors of values for each argument.
+    -   Arguments with more than one value must be wrapped by `c()` and NOT have any nested `c()`.
+    -   Syntax:
+        -   `dplyr-like` = `mpg:hp`, `1`, `5:9`, `cyl`, etc.
+        -   `ggplot2-like` = `factor(cyl)`, `gear + cyl`, etc.
+        -   Both syntax styles can be combined for one argument using the `c()` as a wrapper and only `c()`.
+-   `%L+%`
+    -   Is a `+` operator for a nested list, list, or single 'ggplot' object.
