@@ -1,6 +1,5 @@
 
-[![Build Status](https://travis-ci.org/seasmith/ggloop.svg?branch=master)](https://travis-ci.org/seasmith/ggloop)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ggloop)](http://cran.r-project.org/package=ggloop)
+[![Build Status](https://travis-ci.org/seasmith/ggloop.svg?branch=master)](https://travis-ci.org/seasmith/ggloop) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ggloop)](http://cran.r-project.org/package=ggloop)
 
 ggloop
 ======
@@ -12,16 +11,8 @@ Overview
 
 ggloop allows the user to use create multiple 'ggplot2' plots. Plots are created by passing multiple aesthetics via a vector of aesthetics to `ggloop()`. Users can use both dplyr-like syntax (i.e. `x = mpg:hp`, `y = 1`, `color = 4:8`, etc) and ggplot2-like syntax (i.e `x = mpg/cyl`, `y = wt + hp`, `color = factor(cyl)`, etc).
 
-<<<<<<< HEAD
 Installation
 ------------
-||||||| merged common ancestors
-## Installation
-Please use `devtools::install_github("seasmith/ggloop")` to install the package.  
-=======
-## Installation
-You can use `install.packages("ggloop")` to install the package.  
->>>>>>> 9beca7e97e4a97e32290edcda7c3f226d294c0e5
 
 ``` r
 ## CRAN
