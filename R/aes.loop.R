@@ -33,18 +33,26 @@
 #'
 #' @export
 
-aes_loop <- function(x, y, ...) {
+aes_loop <- function(x, y, z, ...) {
 
-  # Handle the first set of arguments (x, y, ...).
-  if(!missing(x)) x <- substitute(x) else x <- NULL
-  if(!missing(y)) y <- substitute(y) else y <- NULL
+  # Inputs - handle the first set of arguments (x, y, ...).
+  if (!missing(x)) x <- substitute(x) else x <- NULL
+  if (!missing(y)) y <- substitute(y) else y <- NULL
+  if (!missing(z)) z <- substitute(z) else z <- NULL
   dots <- as.list(substitute(list(...)))[-1L]
+
+  if (all(is.null(x), is.null(y), is.null(z)))
+    stop("You must supply at least one x, y, or z aesthetic")
+
+  # Structure - build and assign class to pass to generics
+  maps <- list(x = x, y = y, z = z, dots = dots)
+  class(maps) <- if (is.null(maps$dots[1][[1]])) "no_dots" else "dots"
 
   # Write the function body to be assigned inside ggloop(). This will allow the
   # function body to have access to the other formal arguments declared in
   # ggloop().
   function(vars, remap_xy, remap_dots) {
-    aes.raw <- aes_eval(vars, x, y, dots)
+    aes.raw <- aes_eval(maps, vars)
 
     # remap_xy precedence: NA -> TRUE -> FALSE
     if (is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else {
