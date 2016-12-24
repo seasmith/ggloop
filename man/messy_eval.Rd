@@ -17,6 +17,6 @@ messy_eval(expr, vars, names_list)
 Reduce the amount of code by turning this sequence into a function.
 }
 \details{
-The bulk of this code was taken from the \code{dply} package.
+The bulk of this code was taken from the \code{dplyr} package.
 }
 
