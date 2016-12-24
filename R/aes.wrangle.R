@@ -39,86 +39,76 @@
 #' and
 #' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
-aes_eval <- function(vars, x, y, dots) {
+aes_eval <- function(x, y, dots, vars) {
 
   # test if anything was actually passed as x or y
   x.exists <- if (is.null(x)) FALSE else TRUE
   y.exists <- if (is.null(y)) FALSE else TRUE
+  xy.exists <- list(x.exists, y.exists)
 
   # Prepare the list of data frame names
   names_list <- stats::setNames(as.list(seq_along(vars)), vars)
 
-  ### Capture x values if x exists
-  if (x.exists) {
-    # Strip c() wrapper or wrap in list if no c() (for is.fun()).
-    x <- if (is.c(x)) x[-1L] else list(x)
+  # Function - retrieve the unevaluated x and y variables
+  get_xy <- function(aes, aes.exists, names) {
 
-    # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    x.gg2   <- rm.gg2(x) %R% FALSE
-    x.dplyr <- if (isFALSE(x.gg2)) seq_along(x) else {
-      seq_along(x)[-x.gg2] %R% FALSE
-    }
+    if (aes.exists) {
 
-    # "Evaluate" both type of expression variables.
-    x.eval <- list()
-    x.eval[x.gg2]   <- if (!isFALSE(x.gg2)) vapply(x[x.gg2], deparse, character(1))
-    x.eval[x.dplyr] <- if (!isFALSE(x.dplyr)) {
-      lapply(x.dplyr, function(i) messy_eval(x[[i]], vars, names_list))
+      # Strip c() wrapper or wrap in list if no c() exists (for is.fun()).
+      aes <- if (is_c(aes)) aes[-1L] else list(aes)
+
+      # Determine variables by expression type: ggplot2 (gg2) or dplyr.
+      aes.gg2   <- rm_gg2(aes) %R% FALSE
+      aes.dplyr <- if (isFALSE(aes.gg2)) seq_along(aes) else {
+        seq_along(aes)[-aes.gg2] %R% FALSE
       }
 
-    x.eval <- unlist(x.eval, use.names = FALSE)
+      # "Evaluate" both type of expression variables.
+      aes.eval <- list()
+      aes.eval[aes.gg2]   <- if (!isFALSE(aes.gg2)) vapply(aes[aes.gg2], deparse, character(1))
+      aes.eval[aes.dplyr] <- if (!isFALSE(aes.dplyr)) {
+        lapply(aes.dplyr, function(i) messy_eval(aes[[i]], vars, names_list))
+      }
+
+      return(unlist(aes.eval, use.names = FALSE))
     } else {
-      x.eval <- NULL
-      }
-
-  ### Capture y values if y exists.
-  if (y.exists) {
-    # Strip c() wrapper or wrap in list if no c() (for is.fun()).
-    y <- if (is.c(y)) y[-1L] else list(y)
-
-    # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    y.ggplot2 <- rm.gg2(y) %R% FALSE
-    y.dplyr   <- if (isFALSE(y.ggplot2)) seq_along(y) else {
-      seq_along(y)[-y.ggplot2] %R% FALSE
+      return(NULL)
     }
+  }
 
-    # "Evaluate" both type of expression variables.
-    y.eval <- list()
-    y.eval[y.ggplot2] <- if (!isFALSE(y.ggplot2)) vapply(y[y.ggplot2], deparse, character(1))
-    y.eval[y.dplyr]   <- if (!isFALSE(y.dplyr)) {
-      lapply(y.dplyr, function(i) messy_eval(y[[i]], vars, names_list))
-    }
-
-    y.eval <- unlist(y.eval, use.names = FALSE)
-    } else {
-      y.eval <- NULL
-      }
+  # Get names .
+  xy.eval <- Map(get_xy, list(x, y), xy.exists, list(vars))
+  names(xy.eval) <- c("x", "y")
 
   ### Capture dots if exist
   if (length(dots)) {
-    # Capture names (names will be lost by the dots.dplyr.eval lapply()).
+    # - Capture names (names will be lost by the dots.dplyr.eval lapply()).
+    # - Strip c().
+    # - Creat list to hold evaluations.
     dots.names <- names(dots)
-
-    # Strip c().
-    dots <- lapply(dots, function(x) if (is.c(x)) x[-1L] else list(x))
-
-    # Creat list to hold evaluations.
-    dots.eval <- list()
+    print(dots)
+    dots       <- lapply(dots, function(x) if (is_c(x)) x[-1L] else list(x))
+    dots.eval  <- list()
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    dots.gg2   <- lapply(dots, function(x) rm.gg2(x) %R% FALSE)
-      find.dplyr <- function(x, y) {
-        if (isFALSE(y)) seq_along(x)
-        else seq_along(x)[-y] %R% FALSE
-      }
-    dots.dplyr <- Map(find.dplyr, x = dots, y = dots.gg2)
+    dots.gg2   <- lapply(dots, function(x) rm_gg2(x) %R% FALSE)
+print(dots)
+print(dots.gg2)
+    find_dplyr <- function(x, y) {
+      if (isFALSE(y)) seq_along(x)
+      else seq_along(x)[-y] %R% FALSE
+    }
+    dots.dplyr <- Map(find_dplyr, x = dots, y = dots.gg2)
 
-    # "Evaluate" both types of expressions.
-      eval.gg2 <- function(x, y) {
+    # - "Evaluate" ggplot2-like expressions.
+      eval_gg2 <- function(x, y) {
         d.eval <- list()
-        d.eval[rev(abs(y))] <- vapply(x[rev(y)], deparse, character(1)) %R% NULL
+        # removed rev(abs(y)) and rev(y)
+        d.eval[abs(y)] <- vapply(x[y], deparse, character(1)) %R% NULL
       }
-    dots.gg2.eval   <- Map(eval.gg2, x = dots, y = dots.gg2)
+    dots.gg2.eval   <- Map(eval_gg2, x = dots, y = dots.gg2)
+
+    # - "Evaluate" dplyr-like expressions
     dots.dplyr.eval <- lapply(seq_along(dots.dplyr), function(i) {
       if (isFALSE(dots.dplyr[[i]])) NULL
       else {
@@ -130,7 +120,7 @@ aes_eval <- function(vars, x, y, dots) {
       }
     })
 
-    # Combine "Evaluations"
+    # Combine dots "Evaluations"
     dots.eval <- lapply(seq_along(dots), function(x) {
       c(unlist(dots.gg2.eval[[x]]), unlist(dots.dplyr.eval[[x]]))
       })
@@ -142,7 +132,9 @@ aes_eval <- function(vars, x, y, dots) {
     is.dots   <- FALSE
   }
   # list values and logical existance of ... arguments
-  mappings <- c(list(x = x.eval, y = y.eval, is.dots = is.dots),
+  mappings <- c(list(x = xy.eval[["x"]],
+                     y = xy.eval[["y"]],
+                     is.dots = is.dots),
                 dots.eval)
 
   mappings <- mappings[!vapply(mappings, is.null, logical(1))]

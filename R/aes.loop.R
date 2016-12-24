@@ -40,11 +40,15 @@ aes_loop <- function(x, y, ...) {
   if(!missing(y)) y <- substitute(y) else y <- NULL
   dots <- as.list(substitute(list(...)))[-1L]
 
+  # Stop if no x or y has been supplied.
+  if (all(is.null(x), is.null(y)))
+    stop("You must supply at least one x or y aesthetic")
+
   # Write the function body to be assigned inside ggloop(). This will allow the
   # function body to have access to the other formal arguments declared in
   # ggloop().
   function(vars, remap_xy, remap_dots) {
-    aes.raw <- aes_eval(vars, x, y, dots)
+    aes.raw <- aes_eval(x, y, dots, vars)
 
     # remap_xy precedence: NA -> TRUE -> FALSE
     if (is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else {

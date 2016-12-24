@@ -4,7 +4,7 @@
 \alias{aes_eval}
 \title{Assign inputs to \code{x}, \code{y} or \code{dots}.}
 \usage{
-aes_eval(vars, x, y, dots)
+aes_eval(x, y, dots, vars)
 }
 \arguments{
 \item{vars, x, y, dots}{Arguments passed from \code{aes_loop()} or
