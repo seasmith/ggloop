@@ -51,18 +51,14 @@ aes_loop <- function(x, y, ...) {
     aes.raw <- aes_eval(x, y, dots, vars)
 
     # remap_xy precedence: NA -> TRUE -> FALSE
-    if (is.na(remap_xy)) aes.raw <- remap_xy_NA(aes.raw) else {
-      if (remap_xy) aes.raw <- remap_xy_TRUE(aes.raw) else {
-        if (!remap_xy) aes.raw <- remap_xy_FALSE(aes.raw)
-      }
-    }
+    aes.raw <- if (is.na(remap_xy)) remap_xy_NA(aes.raw) else
+        if (remap_xy) remap_xy_TRUE(aes.raw) else
+            if (!remap_xy) remap_xy_FALSE(aes.raw)
 
     # remap_dots precedence: NA -> TRUE -> FALSE
-    if (is.na(remap_dots)) aes.raw <- remap_dots_NA(aes.raw) else {
-      if (remap_dots) aes.raw <- remap_dots_TRUE(aes.raw) else {
-        if (!remap_dots) aes.raw <- remap_dots_FALSE(aes.raw)
-      }
-    }
+    aes.raw <- if (is.na(remap_dots)) remap_dots_NA(aes.raw) else
+        if (remap_dots) remap_dots_TRUE(aes.raw) else
+            if (!remap_dots) remap_dots_FALSE(aes.raw)
 
     # Create "group" combinations between the x,y and the dots.
     e <- aes_group(aes.raw)
