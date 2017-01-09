@@ -1,6 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^scratch$
+scratch
+Scratch
 ^man/mplot\.Rd$
 ^.travis.yml$
 ^_pkgdown\.yml$
+^README\.Rmd$
+^README-.*\.png$
