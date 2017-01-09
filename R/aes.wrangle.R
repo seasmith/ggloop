@@ -54,18 +54,24 @@ aes_eval <- function(x, y, dots, vars) {
 
     if (aes.exists) {
 
-      # Strip c() wrapper or wrap in list if no c() exists (for is.fun()).
-      aes <- if (is_c(aes)) aes[-1L] else list(aes)
+      # An outer c() will cause subsetting failure/confusion, as will a single
+      # variable expression.
+      aes <- if (is_c(aes))
+        aes[-1L] else
+          list(aes)
 
-      # Determine variables by expression type: ggplot2 (gg2) or dplyr.
+      # Need to distinguish between dplyr- and ggplot2-like calling.
+      # Non-ggplot2 calling styles are assumed to be, and fall within, dplyr.
       aes.gg2   <- rm_gg2(aes) %R% FALSE
-      aes.dplyr <- if (isFALSE(aes.gg2)) seq_along(aes) else {
-        seq_along(aes)[-aes.gg2] %R% FALSE
-      }
+      aes.dplyr <- if (isFALSE(aes.gg2))
+        seq_along(aes) else
+          seq_along(aes)[-aes.gg2] %R% FALSE
 
       # "Evaluate" both type of expression variables.
       aes.eval <- list()
-      aes.eval[aes.gg2]   <- if (!isFALSE(aes.gg2)) vapply(aes[aes.gg2], deparse, character(1))
+      aes.eval[aes.gg2]   <- if (!isFALSE(aes.gg2)) {
+        vapply(aes[aes.gg2], deparse, character(1))
+      }
       aes.eval[aes.dplyr] <- if (!isFALSE(aes.dplyr)) {
         lapply(aes.dplyr, function(i) messy_eval(aes[[i]], vars, names_list))
       }
@@ -86,14 +92,11 @@ aes_eval <- function(x, y, dots, vars) {
     # - Strip c().
     # - Creat list to hold evaluations.
     dots.names <- names(dots)
-    print(dots)
     dots       <- lapply(dots, function(x) if (is_c(x)) x[-1L] else list(x))
     dots.eval  <- list()
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
     dots.gg2   <- lapply(dots, function(x) rm_gg2(x) %R% FALSE)
-print(dots)
-print(dots.gg2)
     find_dplyr <- function(x, y) {
       if (isFALSE(y)) seq_along(x)
       else seq_along(x)[-y] %R% FALSE
@@ -163,7 +166,7 @@ print(dots.gg2)
 
 aes_group <- function(lst) {
   parent <- parent.frame()
-  env <- new.env(parent = parent)
+  env    <- new.env(parent = parent)
 
   env$xy <- lst[stats::na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
 
