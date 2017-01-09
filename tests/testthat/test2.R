@@ -30,7 +30,7 @@ test_that("Test xydot.TF names", {
   # to be correct.
 
   # First `...` names.
-  xydot.TF.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+  xydot.TF.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
                          "color.gear", "color.carb", "color.mpg", "color.cyl",
                          "color.qsec", "color.disp")
   Map(expect_match, names(xydot.TF), xydot.TF.dotnames, fixed = TRUE)
@@ -75,7 +75,7 @@ test_that("Test xydot.TT names", {
   # to be correct.
 
   # First `...` names.
-  xydot.TT.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+  xydot.TT.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
                          "color.gear", "color.carb", "color.mpg", "color.cyl",
                          "color.qsec", "color.disp")
   Map(expect_match, names(xydot.TT), xydot.TT.dotnames, fixed = TRUE)
@@ -120,7 +120,7 @@ test_that("Teest xydot.FF names", {
   # to be correct.
 
   # First `...` names.
-  xydot.FF.dotnames <- c("color.factor(cyl)", "color.mpg/wt", "color.am",
+  xydot.FF.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
                          "color.gear", "color.carb", "color.mpg", "color.cyl",
                          "color.qsec", "color.disp")
   Map(expect_match, names(xydot.FF), xydot.FF.dotnames, fixed = TRUE)
