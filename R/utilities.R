@@ -1,9 +1,5 @@
 #' @importFrom magrittr %>%
-
-# magrittr::`%>%` ---------------------------------------------------------
-# This is an alias for \code{magrittr::`\%>\%`}.
-
-# `%>%` <- magrittr::`%>%`
+NULL
 
 # isFALSE() ---------------------------------------------------------------
 #
@@ -56,6 +52,7 @@ list.pos <- function(name, lst) {
     matched <- which(names(lst) %in% x)
 
     if (!length(matched)) matched <- NA
+
     matched
   })
   return(matches)
