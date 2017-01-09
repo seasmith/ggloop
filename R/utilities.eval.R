@@ -1,53 +1,8 @@
 #' @include utilities.eval2.R
 
-# is_gg2() ----------------------------------------------------------------
+# Suprres "No visible binding for global variable "."" NOTE
 #
-#' @title
-#' Determine if an input uses an arithmetical operator (\code{/}, \code{+},
-#' \code{-}, \code{*}, \code{^}).
-#'
-#' @description
-#' Matches the arugment the \code{ops} string using \code{grep}. Any matches are
-#' subsequently noted and the unique list is returned.
-#'
-#' @param lst A list object to be tested.
-
-is_gg2 <- function(lst) {
-  logic <- grep("[^[:alnum:]|^:|_|\\.]", lst) %>%
-    unlist() %>%
-    unique()
-  return(logic)
-}
-
-# fun.par -----------------------------------------------------------------
-#
-#' Regular expression pattern for determing if possible function parenthesis
-#' are present. Searches for \code{"("} and \code{")"} preceeded by any number
-#' of characters.
-
-fun.par <- c("[A-Za-z]+\\(.+\\)")
-
-
-# is_fun() ----------------------------------------------------------------
-#
-#' @title
-#' Is it a function?
-#'
-#' @description
-#' Attempts to decipher if a function other than \code{c()} has been supplied as
-#' input. Returns the position of the possible non-\code{c} functions in
-#' \code{lst}.
-#'
-#' @param lst A list of inputs wrapped in \code{substitute()} and coerced to a
-#' list using \code{as.list()}.
-
-is_fun <- function(lst) {
-  funs <- sapply(fun.par, function(expr) grep(expr, lst))
-  names(funs) <- NULL
-  funs <- unique(funs)
-  funs <- if (is.list(funs)) unlist(funs)
-  funs
-}
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
 
 
 # is_c() ------------------------------------------------------------------
@@ -68,7 +23,89 @@ is_fun <- function(lst) {
 is_c <- function(expr) {
   if (is.symbol(expr)) FALSE
   else identical(expr[[1L]], quote(c))
-  }
+}
+
+
+
+
+
+# is_dplyr ----------------------------------------------------------------
+#
+#' Determine if an input expression is a dplyr-like call.
+#'
+#' @param expr A vector of substituted variables or functions. Either a call to
+#'   multiple variables with the outer \code{c()} wrapper stripped, a single
+#'   variable call wrapped in a \code{list()}, or a \code{:} expression.
+
+is_dplyr <- function(expr) {
+  expr <- expr %>% as.list()
+
+  is_single_var <- expr %>%
+    sapply(function(x) x %>% as.list() %>% length() %>% `==`(1))
+
+  has_colon <- expr %>%
+    as.list() %>%
+    sapply(function(y) y %>% as.list() %>% grepl(":", .) %>% any())
+}
+
+
+
+
+
+# is_op() ----------------------------------------------------------------
+#
+#' @title
+#' Determine if an input uses an arithmetical operator (\code{/}, \code{+},
+#' \code{-}, \code{*}, \code{^}).
+#'
+#' @description
+#' Matches the arugment the \code{ops} string using \code{grep}. Any matches are
+#' subsequently noted and the unique list is returned.
+#'
+#' @param expr An expression to be tested.
+
+is_op <- function(expr) {
+  ops <- c("/|\\+|-|\\*|\\^")
+
+  logic <- ops %>%
+    grep(expr) %>%
+    unlist() %>%
+    `names<-`(NULL) %>%
+    unique()
+
+  return(logic)
+}
+
+
+
+
+
+# is_fun() ----------------------------------------------------------------
+#
+#' @title
+#' Is it a function?
+#'
+#' @description
+#' Attempts to decipher if a function other than \code{c()} has been supplied as
+#' input. Returns the position of the possible non-\code{c} functions in
+#' \code{lst}.
+#'
+#' @param lst A list of inputs wrapped in \code{substitute()} and coerced to a
+#' list using \code{as.list()}.
+
+is_fun <- function(lst) {
+  funRegEx <- c("^[A-Za-z\\.][A-Za-z0-9\\._]+\\(.+\\)")
+
+  funs <- funRegEx %>%
+    grep(lst) %>%
+    `names<-`(NULL) %>%
+    unique()
+  funs <- if (is.list(funs)) unlist(funs) else funs
+  return(funs)
+}
+
+
+
 
 
 # rm_gg2() ----------------------------------------------------------------
@@ -93,10 +130,13 @@ is_c <- function(expr) {
 #' assumed, so therefore the \code{list} wrapping is needed.
 
 rm_gg2 <- function(expr) {
-  ops <- if (is.list(expr)) is_gg2(expr[[1L]]) else is_gg2(expr)
+  ops <- if (is.list(expr)) is_op(expr[[1L]]) else is_op(expr)
   funs <- is_fun(expr)
   return(c(ops, funs))
 }
+
+
+
 
 
 # messy_eval --------------------------------------------------------------
