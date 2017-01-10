@@ -13,7 +13,7 @@ e <- expr_maker(x = c(disp, hp, wt),
 e$x <- if (is_c(e$x)) e$x[-1L] else list(e$x)
 e$y <- if (is_c(e$y)) e$y[-1L] else list(e$y)
 
-x.gg2 <- rm_gg2(e$x) %R% FALSE
+x.gg2 <- which_gg2(e$x) %R% FALSE
 
 x.dplyr <- if (isFALSE(x.gg2)) seq_along(e$x) else {
   seq_along(e$x)[-x.gg2] %R% FALSE
@@ -50,7 +50,7 @@ get_xy <- function(aes, aes.exists, names) {
     aes <- if (is_c(aes)) aes[-1L] else list(aes)
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    aes.gg2   <- rm_gg2(aes) %R% FALSE
+    aes.gg2   <- which_gg2(aes) %R% FALSE
     aes.dplyr <- if (isFALSE(aes.gg2)) seq_along(aes) else {
       seq_along(aes)[-aes.gg2] %R% FALSE
     }
@@ -88,7 +88,7 @@ if (length(dots)) {
   dots.eval <- list()
 
   # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-  dots.gg2   <- lapply(dots, function(x) rm_gg2(x) %R% FALSE)
+  dots.gg2   <- lapply(dots, function(x) which_gg2(x) %R% FALSE)
   find_dplyr <- function(x, y) {
     if (isFALSE(y)) seq_along(x)
     else seq_along(x)[-y] %R% FALSE

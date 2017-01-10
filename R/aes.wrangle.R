@@ -62,7 +62,7 @@ aes_eval <- function(x, y, dots, vars) {
 
       # Need to distinguish between dplyr- and ggplot2-like calling.
       # Non-ggplot2 calling styles are assumed to be, and fall within, dplyr.
-      aes.gg2   <- rm_gg2(aes) %R% FALSE
+      aes.gg2   <- which_gg2(aes) %R% FALSE
       aes.dplyr <- if (isFALSE(aes.gg2))
         seq_along(aes) else
           seq_along(aes)[-aes.gg2] %R% FALSE
@@ -96,7 +96,7 @@ aes_eval <- function(x, y, dots, vars) {
     dots.eval  <- list()
 
     # Determine variables by expression type: ggplot2 (gg2) or dplyr.
-    dots.gg2   <- lapply(dots, function(x) rm_gg2(x) %R% FALSE)
+    dots.gg2   <- lapply(dots, function(x) which_gg2(x) %R% FALSE)
     find_dplyr <- function(x, y) {
       if (isFALSE(y)) seq_along(x)
       else seq_along(x)[-y] %R% FALSE

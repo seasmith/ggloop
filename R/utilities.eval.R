@@ -108,7 +108,7 @@ is_fun <- function(lst) {
 
 
 
-# rm_gg2() ----------------------------------------------------------------
+# which_gg2() ----------------------------------------------------------------
 #
 #' @title
 #' Remove \code{ggplot2} style and stand-alone aesthetic arguments (i.e.
@@ -129,7 +129,7 @@ is_fun <- function(lst) {
 #' \code{x} will be indexed/subsetted. The \code{c} function wrapping is
 #' assumed, so therefore the \code{list} wrapping is needed.
 
-rm_gg2 <- function(expr) {
+which_gg2 <- function(expr) {
   ops <- if (is.list(expr)) is_op(expr[[1L]]) else is_op(expr)
   funs <- is_fun(expr)
   return(c(ops, funs))
