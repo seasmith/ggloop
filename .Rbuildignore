@@ -7,3 +7,4 @@ Scratch
 ^_pkgdown\.yml$
 ^README\.Rmd$
 ^README-.*\.png$
+^NEWS.MD$
