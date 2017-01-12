@@ -1,14 +1,14 @@
 Package: ggloop
 Type: Package
 Title: Create 'ggplot2' Plots in a Loop
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: person("Luke", "Smith", email = "luke@protocolvital.info",
     role = c("aut", "cre"))
 URL: https://github.com/seasmith/ggloop
 BugReports: https://github.com/seasmith/ggloop/issues
-Description: Pass a data frame and mapping aesthetics to ggloop() in order
-    to create a list of 'ggplot2' plots. Add 'ggplot2' components to a list of plots
-    or a single plot with the special %L+% (L-plus) operator.
+Description: Create multiple 'ggplot2' plots using ggloop() and then add
+    each individual plot, list, or nested list of plots as you would with
+    'ggplot2'.
 License: GPL-2
 LazyData: TRUE
 Imports:
