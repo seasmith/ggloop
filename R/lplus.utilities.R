@@ -1,3 +1,5 @@
+# Code is "taken" from magrittr version 1.5 and can be found in various files.
+
 # split_chain() -----------------------------------------------------------
 split_chain <- function(expr)
 {
@@ -26,6 +28,7 @@ is_L <- function(spec_op) identical(spec_op, quote(`%L+%`))
 
 
 # eval_lhs() --------------------------------------------------------------
+# This part differs from magrittr.
 eval_lhs <- function(lhs) {
   # lhs = ggplot
   test_ggplot <- ggplot2::is.ggplot(lhs)

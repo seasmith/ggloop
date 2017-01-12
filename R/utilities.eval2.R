@@ -1,4 +1,6 @@
-#' Helper functions to select NSE (non-standard evaluation) variable names.
+#' Helper functions to select NSE (non-standard evaluation) variable names. Code
+#' is "taken" from dplyr version 0.5.0, and can be found in file R/select-vars.R
+#' and R/select-utils.R.
 #'
 #' @rdname select_helpers
 #'

@@ -3,13 +3,17 @@
 \docType{data}
 \name{cur_vars_env}
 \alias{cur_vars_env}
-\title{Helper functions to select NSE (non-standard evaluation) variable names.}
+\title{Helper functions to select NSE (non-standard evaluation) variable names. Code
+is "taken" from dplyr version 0.5.0, and can be found in file R/select-vars.R
+and R/select-utils.R.}
 \format{An object of class \code{environment} of length 0.}
 \usage{
 cur_vars_env
 }
 \description{
-Helper functions to select NSE (non-standard evaluation) variable names.
+Helper functions to select NSE (non-standard evaluation) variable names. Code
+is "taken" from dplyr version 0.5.0, and can be found in file R/select-vars.R
+and R/select-utils.R.
 }
 \seealso{
 Source for \code{select_helpers} and the helper functions can be found at
