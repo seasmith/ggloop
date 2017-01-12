@@ -30,12 +30,12 @@ test_that("Test xydot.TF names", {
   # to be correct.
 
   # First `...` names.
-  xydot.TF.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
-                         "color.gear", "color.carb", "color.mpg", "color.cyl",
-                         "color.qsec", "color.disp")
+  xydot.TF.dotnames <- c("color.am", "color.gear", "color.carb", "color.mpg",
+                         "color.cyl", "color.qsec", "color.disp",
+                         "color.factor(cyl)", "color.mpg/wt")
   Map(expect_match, names(xydot.TF), xydot.TF.dotnames, fixed = TRUE)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.TF.xynames <- c("x.mpg_y.cyl", "x.mpg_y.drat", "x.mpg_y.wt",
                         "x.mpg_y.qsec", "x.mpg_y.vs", "x.mpg_y.factor(cyl)",
                         "x.mpg_y.mpg/wt", "x.cyl_y.drat", "x.cyl_y.wt",
@@ -75,12 +75,12 @@ test_that("Test xydot.TT names", {
   # to be correct.
 
   # First `...` names.
-  xydot.TT.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
-                         "color.gear", "color.carb", "color.mpg", "color.cyl",
-                         "color.qsec", "color.disp")
+  xydot.TT.dotnames <- c("color.am", "color.gear", "color.carb", "color.mpg",
+                         "color.cyl", "color.qsec", "color.disp",
+                         "color.factor(cyl)", "color.mpg/wt")
   Map(expect_match, names(xydot.TT), xydot.TT.dotnames, fixed = TRUE)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.TT.xynames <- c("x.mpg_y.cyl", "x.mpg_y.drat", "x.mpg_y.wt",
                         "x.mpg_y.qsec", "x.mpg_y.vs", "x.mpg_y.factor(cyl)",
                         "x.mpg_y.mpg/wt", "x.cyl_y.drat", "x.cyl_y.wt",
@@ -120,12 +120,12 @@ test_that("Teest xydot.FF names", {
   # to be correct.
 
   # First `...` names.
-  xydot.FF.dotnames <- c("color.mpg/wt", "color.factor(cyl)", "color.am",
-                         "color.gear", "color.carb", "color.mpg", "color.cyl",
-                         "color.qsec", "color.disp")
+  xydot.FF.dotnames <- c("color.am", "color.gear", "color.carb", "color.mpg",
+                         "color.cyl", "color.qsec", "color.disp",
+                         "color.factor(cyl)", "color.mpg/wt")
   Map(expect_match, names(xydot.FF), xydot.FF.dotnames, fixed = TRUE)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.FF.xynames <- c("x.mpg_y.factor(gear) + factor(cyl)", "x.cyl_y.mpg",
                         "x.drat_y.cyl", "x.wt_y.factor(gear) + factor(cyl)",
                         "x.qsec_y.mpg", "x.vs_y.cyl",
@@ -161,7 +161,7 @@ test_that("Test xydot.FT names", {
   xydot.FT.dotnames <- c("color.am", "color.gear", "color.carb")
   Map(expect_match, names(xydot.FT), xydot.FT.dotnames, fixed = TRUE)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.FT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                         "x.mpg_y.hp")
   lapply(xydot.FT, function(x) {
@@ -194,7 +194,7 @@ test_that("Test xydot.NAT names", {
   xydot.NAT.dotnames <- c("color.am", "color.gear", "color.carb")
   Map(expect_match, names(xydot.NAT), xydot.NAT.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.NAT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp", "x.hp" )
   lapply(xydot.NAT, function(x) Map(expect_match, names(x), xydot.NAT.xynames))
 })
@@ -224,7 +224,7 @@ test_that("Test xydot.NAF names", {
   xydot.NAF.dotnames <- c("color.am", "color.gear", "color.carb")
   Map(expect_match, names(xydot.NAF), xydot.NAF.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydot.NAF.xynames <- c( "x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp", "y.hp")
   lapply(xydot.NAF, function(x) Map(expect_match, names(x), xydot.NAF.xynames))
 })
@@ -257,7 +257,7 @@ test_that("Test xydots.TF names", {
                           "color.carb")
   Map(expect_match, names(xydots.TF), xydots.TF.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.TF.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp",
                          "x.cyl_y.disp", "x.cyl_y.hp", "x.disp_y.hp")
   lapply(xydots.TF, function(x) Map(expect_match, names(x), xydots.TF.xynames))
@@ -290,7 +290,7 @@ test_that("Test xydots.TT names", {
                           "color.carb_size.vs", "color.carb_size.am")
   Map(expect_match, names(xydots.TT), xydots.TT.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.TT.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp",
                          "x.cyl_y.disp", "x.cyl_y.hp", "x.disp_y.hp")
   lapply(xydots.TT, function(x) Map(expect_match, names(x), xydots.TT.xynames))
@@ -321,7 +321,7 @@ test_that("Test xydots.FF names", {
                           "color.carb")
   Map(expect_match, names(xydots.FF), xydots.FF.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.FF.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                          "x.hp_y.hp")
   lapply(xydots.FF, function(x) Map(expect_match, names(x), xydots.FF.xynames))
@@ -353,7 +353,7 @@ test_that("Test xydots.FT names", {
                           "color.carb_size.vs", "color.carb_size.am")
   Map(expect_match, names(xydots.FT), xydots.FT.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.FT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                          "x.hp_y.hp")
   lapply(xydots.FT, function(x) Map(expect_match, names(x), xydots.FT.xynames))
@@ -385,7 +385,7 @@ test_that("Test xydots.NAT names", {
                            "color.carb_size.vs", "color.carb_size.am")
   Map(expect_match, names(xydots.NAT), xydots.NAT.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.NAT.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                          "x.hp_y.hp")
   lapply(xydots.NAT, function(x) Map(expect_match, names(x), xydots.NAT.xynames))
@@ -417,7 +417,7 @@ test_that("Test xydots.NAF names", {
                            "color.carb")
   Map(expect_match, names(xydots.NAF), xydots.NAF.dotnames)
 
-  # Then `x` and `y`` names.
+  # Then `x` and `y` names.
   xydots.NAF.xynames <- c("x.mpg_y.mpg", "x.cyl_y.cyl", "x.disp_y.disp",
                           "x.hp_y.hp")
   lapply(xydots.NAF, function(x) Map(expect_match, names(x), xydots.NAF.xynames))
@@ -442,7 +442,7 @@ test_that("Test xy.TF names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.TF.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp")
   Map(expect_match, names(xy.TF), xy.TF.xynames)
 })
@@ -464,7 +464,7 @@ test_that("Test xy.TT names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.TT.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp")
   Map(expect_match, names(xy.TT), xy.TT.xynames)
 })
@@ -486,7 +486,7 @@ test_that("Test xy.FF names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.FF.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp")
   Map(expect_match, names(xy.FF), xy.FF.xynames)
 })
@@ -508,7 +508,7 @@ test_that("Test xy.FT names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.FT.xynames <- c("x.mpg_y.cyl", "x.mpg_y.disp", "x.mpg_y.hp")
   Map(expect_match, names(xy.FT), xy.FT.xynames)
 })
@@ -530,7 +530,7 @@ test_that("Test xy.NAT names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.NAT.xynames <- c("x.mpg_y.cyl", "y.disp", "y.hp")
   Map(expect_match, names(xy.NAT), xy.NAT.xynames)
 })
@@ -552,7 +552,7 @@ test_that("Test xy.NAF names", {
   # Check that the names are correct. If names are correct, mappings are assumed
   # to be correct.
 
-  # Only `x` and `y`` names.
+  # Only `x` and `y` names.
   xy.NAF.xynames <- c("x.mpg_y.cyl", "y.disp", "y.hp")
   Map(expect_match, names(xy.NAF), xy.NAF.xynames)
 })
