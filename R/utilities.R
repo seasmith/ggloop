@@ -40,22 +40,26 @@ isFALSE <- function(x) identical(FALSE, x)
 #' to the names in the character vector given to the function.If a name is not
 #' present in the list then NA is returned.
 #'
-#' @param  name A character vector. Ideally a character vector of length 1
-#' (just one name); however it can accept a character vector of length greater
-#' than 1. The names in the character vector will be used as names (element
-#' headings) in the results vector.
+#' @param  x A character vector of possible list element names. The names in the
+#'   character vector will be used as names (element headings) in the results
+#'   vector.
 #' @param lst A list with all elements named. If each element does not have a
 #' name then there can be no garuantee to the accuracy of the results.
 
-list.pos <- function(name, lst) {
-  matches <- sapply(name, function(x) {
-    matched <- which(names(lst) %in% x)
+list.pos <- function(x, lst) {
 
+  vars <- names(lst)
+
+  matches <- sapply(x, function(i) {
+
+    matched <- which(vars %in% i)
     if (!length(matched)) matched <- NA
-
     matched
+
   })
+
   return(matches)
+
 }
 
 
@@ -113,11 +117,12 @@ extract <- function(lst, num = min(lengths(lst))) {
 #' removed.
 
 expand.grid2 <- function(..., rm.dupes = TRUE, rm.dubs = TRUE) {
-  args <- list(...)
+
+  args  <- list(...)
   nargs <- length(args)
 
   grid <- expand.grid(args, stringsAsFactors = FALSE)
-    grid.names <- names(grid)
+    grid.names  <- names(grid)
     names(grid) <- NULL
 
   grid.list <- extract(grid, nrow(grid))

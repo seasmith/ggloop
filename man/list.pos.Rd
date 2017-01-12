@@ -5,13 +5,12 @@
 \title{Finds the position of a named list element within a list (with no
 recurssion).}
 \usage{
-list.pos(name, lst)
+list.pos(x, lst)
 }
 \arguments{
-\item{name}{A character vector. Ideally a character vector of length 1
-(just one name); however it can accept a character vector of length greater
-than 1. The names in the character vector will be used as names (element
-headings) in the results vector.}
+\item{x}{A character vector of possible list element names. The names in the
+character vector will be used as names (element headings) in the results
+vector.}
 
 \item{lst}{A list with all elements named. If each element does not have a
 name then there can be no garuantee to the accuracy of the results.}
