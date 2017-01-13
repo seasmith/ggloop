@@ -15,7 +15,7 @@ vignette: >
 * [Main Functions](#main-functions)
     * [ggloop](#ggloop)
     * [aes_loop](#aes_loop)
-    * [%L+%](#l)
+    * [+.gglist](#gglist)
 * [Trivial Examples](#trivial-examples)
     * [Example 1](#example-1)
     * [Example 2](#example-2)
@@ -76,25 +76,24 @@ Mimicry of `ggplot()`'s `aes()`, except:
 * `y` = Same as `y`
 * `...` = Same as `...`
 
-## `%L+%`
+## `+.gglist`
 
-Mimicry of `+` with `magrittr`-like implementation. Can be used to add to three different types of objects:
+A `+` operator method for objects with class `gglist` (the returned objects of `ggloop()`). `+.gglist` will add features to plots in both:
 
-  1. A single `ggplot2` plot.
-  2. A list of `ggplot2` plots.
-  3. A nested list (a list of a list) of `ggplot2` plots.
+  1. A list of `ggplot2` plots.
+  2. A nested list (a list of a list) of `ggplot2` plots.
   
-The user thus has the ability to add components to a subset of plots. Much like `+`, the results of `%L+%` will not be saved unless they are assigned.
+Users can `+.gglist` by calling `+`, like they would when using `+.gg` from the `ggplot2` package. Much like `+.gg`, the results of `+.gglist` will not be saved unless the result is assigned.
 
 
 ---
 
-# A Trivial Example
+# Trivial Examples
 
 ## Example 1
 
 **Example:** Using the `mtcars` data set, create and plot all possible xy-pairs between `mpg` and `hp`.  
-**Steps:** Load the necessary packages, create plots with `ggloop()`, and add to plots using `%L+%`.
+**Steps:** Load the necessary packages, create plots with `ggloop()`, and add to plots using `+.gglist`.
 
 ```{r xy-pairs, message=FALSE}
 library(ggplot2)
@@ -102,13 +101,13 @@ library(ggloop)
 g <- ggloop(mtcars, aes_loop(x = mpg:hp, y = mpg:hp))
 
 # View some plots
-g$x.mpg_y.hp %L+% geom_point()
-g$x.cyl_y.disp %L+% geom_point()
-g$x.disp_y.hp %L+% geom_point() %L+% geom_line()
+g$x.mpg_y.hp + geom_point()
+g$x.cyl_y.disp + geom_point()
+g$x.disp_y.hp + geom_point() + geom_line()
 
 
-# Use `%L+%` to add to two plots, save the output, and then display the results.
-g[1:2] <- g[1:2] %L+% geom_point()
+# Use `+.gglist` to add to two plots, save the output, and then display the results.
+g[1:2] <- g[1:2] + geom_point()
 g[1:2]
 ```
 
@@ -123,8 +122,8 @@ lapply(g, `[[`, "mapping")
 **Steps:** Create plots, add geoms, and add `facet_grid()`.  
 
 ```{r facet-1}
-g2 <- ggloop(mtcars, aes_loop(x = c(mpg, disp, hp), y = wt, color = factor(cyl))) %L+%
-  geom_point() %L+%
+g2 <- ggloop(mtcars, aes_loop(x = c(mpg, disp, hp), y = wt, color = factor(cyl))) +
+  geom_point() +
   facet_grid(. ~ cyl)
 
 # View some plots

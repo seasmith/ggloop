@@ -37,7 +37,7 @@ g <- ggloop(data = mtcars,
                                 y = c(hp:mpg, disp/hp),
                                 color = gear), 
             remap_xy = FALSE)
-g <- g %L+% geom_point()
+g <- g + geom_point()
 g$color.gear$x.mpg_y.hp
 ```
 
