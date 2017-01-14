@@ -8,3 +8,4 @@ Scratch
 ^README\.Rmd$
 ^README-.*\.png$
 ^NEWS.MD$
+^codecov\.yml$
