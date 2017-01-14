@@ -1,14 +1,14 @@
 Package: ggloop
 Type: Package
 Title: Create 'ggplot2' Plots in a Loop
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: person("Luke", "Smith", email = "luke@protocolvital.info",
     role = c("aut", "cre"))
 URL: https://github.com/seasmith/ggloop
 BugReports: https://github.com/seasmith/ggloop/issues
-Description: Create multiple 'ggplot2' plots using ggloop() and then add
-    each individual plot, list, or nested list of plots as you would with
-    'ggplot2'.
+Description: Create multiple 'ggplot2' plots and then add features to each
+    individual plot, list of plots, or nested list of plots, just as you would
+    with 'ggplot2'.
 License: GPL-2
 LazyData: TRUE
 Imports:
@@ -16,7 +16,8 @@ Imports:
     ggplot2,
     magrittr,
     lazyeval,
-    assertthat
+    assertthat,
+    stringi
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
