@@ -4,10 +4,10 @@
 \alias{aes_eval}
 \title{Assign inputs to \code{x}, \code{y} or \code{dots}.}
 \usage{
-aes_eval(x, y, dots, vars)
+aes_eval(x, y, dots, types, vars)
 }
 \arguments{
-\item{vars, x, y, dots}{Arguments passed from \code{aes_loop()} or
+\item{x, y, dots, types, vars}{Arguments passed from \code{aes_loop()} or
 \code{aes_loop2()}.}
 }
 \value{
@@ -33,12 +33,5 @@ ggplot-like syntax and dplyr-like syntax calling of variables.
 \details{
 \code{aes_eval()} is the first major function to be called by
 \code{aes_loop()}.
-}
-\seealso{
-Source for \code{names_list} and code structure of \code{lazyeval::} function
-calls can be found at
-\href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-vars.R}
-and
-\href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 }
 

@@ -115,43 +115,58 @@ ggloop <- function(data, mappings = aes_loop(), remap_xy = TRUE,
   # Create names variable and evaluate `mappings` to give it ggloop() enclosure
   # so that it may use other ggloop() arguments.
   vars <- names(data)
+  types <- sapply(data, class)
   mappings <- eval(mappings)
-  mappings <- mappings(vars, remap_xy, remap_dots)
+  mappings <- mappings(types, vars, remap_xy, remap_dots)
 
   # Check if user just wants the aes.list.
   if (!gg_obs) return(mappings$aes.list)
 
   # Loop.
   if (mappings$aes.raw[["is.dots"]]){
+
     gg.list <- lapply(mappings$aes.list, function(x) {
+
       gg.sub <- lapply(x, function(y) {
+
         ggplot2::ggplot(data        = data,
                         mapping     = y,
                         ...         = ...,
                         environment = environment)
+
       })
+
       structure(gg.sub, class = c("gglist"))
+
     })
+
     # Tidy-up the group names ("dots" names).
     names(gg.list) <- name_groups(mappings$aes.raw, mappings$dots.vector)
 
     # Tidy-up the subgroup names ("xy" names).
     for (i in seq_along(gg.list)) {
+
       names(gg.list[[i]]) <- name_subgroups(mappings$xy, mappings$dots.vector)
+
     }
 
     return(structure(gg.list, class = c("gglist", class(gg.list))))
+
   } else {
+
     gg.list <- lapply(mappings$aes.list, function(x) {
+
       ggplot2::ggplot(data        = data,
                       mapping     = x,
                       ...         = ...,
                       environment = environment)
+
     })
 
     # No need to run name_groups since there are no "dots" in the FALSE case.
     names(gg.list) <- name_subgroups(mappings$xy, lengths(mappings$xy)[1])
 
     return(structure(gg.list, class = c("gglist")))
+
   }
 }

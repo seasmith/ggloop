@@ -11,7 +11,7 @@
 #' ggplot-like syntax and dplyr-like syntax calling of variables.
 #'
 #'
-#' @param vars,x,y,dots Arguments passed from \code{aes_loop()} or
+#' @param x,y,dots,types,vars Arguments passed from \code{aes_loop()} or
 #'   \code{aes_loop2()}.
 #'
 #' @details
@@ -31,15 +31,8 @@
 #' If an \code{x} or \code{y} variable is passed more than once, then it will be
 #' present in the vector the same number of times it was passed into
 #' \code{aes_loop()}.
-#'
-#' @seealso
-#' Source for \code{names_list} and code structure of \code{lazyeval::} function
-#' calls can be found at
-#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-vars.R}
-#' and
-#' \href{https://github.com/hadley/dplyr/blob/master/R/select-utils.R}{~/dplyr/R/select-utils.R}.
 
-aes_eval <- function(x, y, dots, vars) {
+aes_eval <- function(x, y, dots, types, vars) {
 
   # test if anything was actually passed as x or y
   x.exists <- if (is.null(x)) FALSE else TRUE
@@ -49,8 +42,15 @@ aes_eval <- function(x, y, dots, vars) {
   # Prepare the list of data frame names
   names_list <- stats::setNames(as.list(seq_along(vars)), vars)
 
+  # Prepare list of built-in double-dot wrapper options.
+  ..something.. <- list(
+    all    = types,
+    number = c("integer", "numeric"),
+    string = c("character", "factor")
+    )
+
   # Function - retrieve the unevaluated x and y variables
-  get_aes <- function(aes, aes.exists, names) {
+  get_aes <- function(aes, aes.exists, types, vars, ..something..) {
 
     if (aes.exists) {
 
@@ -59,6 +59,47 @@ aes_eval <- function(x, y, dots, vars) {
       aes <- if (is_c(aes))
         aes[-1L] else
           list(aes)
+
+      is_dotdot <- sapply(aes, function(x) {
+        grepl("^\\.\\..*\\.\\.$", x)
+      })
+
+      #
+      if (any(unlist(is_dotdot))) {
+
+        select_type <- aes %>%
+          sapply(deparse) %>%
+          stringi::stri_extract_all_words()
+
+
+        col_type <- lapply(select_type, function(x) {
+
+          names(..something..) %in% x %>%
+            `[`(..something.., .) %>%
+            unlist(use.names = FALSE) %>%
+            unique()
+
+        })
+
+        insert_index <- !sapply(col_type, is.null)
+
+        select_type[insert_index] <- col_type[insert_index]
+
+        # select_index <- unlist(select_type) %T>% print()
+        # select_type <- lapply(aes, function(x) {
+        #   sapply(names(..something..), function(y) {
+        #     identical(deparse(x), y)
+        #   })
+        # }) %>%
+        #   sapply(which) %T>% print() %>%
+        #   ..something..[.] %>%
+        #   unlist()
+
+
+        select_index  <- (types %in% select_type)
+
+        return(vars[select_index])
+      }
 
       # Need to distinguish between dplyr- and ggplot2-like calling.
       # Non-ggplot2 calling styles are assumed to be, and fall within, dplyr.
@@ -86,14 +127,14 @@ aes_eval <- function(x, y, dots, vars) {
   }
 
   # Get xy names.
-  xy.eval <- Map(get_aes, list(x, y), xy.exists, list(vars))
+  xy.eval <- Map(get_aes, list(x, y), xy.exists, list(types), list(vars), list(..something..))
   names(xy.eval) <- c("x", "y")
 
   ### Get dot names (if exist).
   if (length(dots)) {
 
     dots.eval <- list()
-    dots.eval <- Map(get_aes, dots, list(TRUE), list(vars))
+    dots.eval <- Map(get_aes, dots, list(TRUE), list(types), list(vars), list(..something..))
     is.dots   <- TRUE
 
   } else {
@@ -140,25 +181,30 @@ aes_group <- function(lst) {
   parent <- parent.frame()
   env    <- new.env(parent = parent)
 
-  env$xy <- lst[stats::na.omit(c(list.pos("x", lst), list.pos("y",lst)))]
+  xy_index <- which(names(lst) %in% c("x", "y")) %R% NA
+  env$xy   <- lst[xy_index]
 
-  if (lst[["is.dots"]]) {
+  if (lst[["is.dots"]]) {  # TRUE
 
-    start <- list.pos("is.dots", lst) + 1
-    end   <- length(lst)
-    env$dots.vector <- start:end
+    is.dots_index <- which(names(lst) %in% c("is.dots"))
 
-    # might need to use max()
-    env$rep.num <- lengths(lst[stats::na.omit(c(list.pos("x", lst),
-                                               list.pos("y", lst),
-                                               list.pos("is.dots", lst)))])[1]
+    start <- is.dots_index + 1    # Start of dots
+    end   <- length(lst)          # End of dots
+    env$dots.vector <- start:end  # lst elements that are dots
 
+    vector.len <- length(env$dots.vector)   # Number of dots aesthetics
+    list.len   <- lst[env$dots.vector] %>%  # Number of total variables
+      lengths() %>%
+      sum()
+
+    # Use lengths of x, y, and dots as rep number. Use max()?
+    env$rep.num <- lengths(lst[stats::na.omit(c(xy_index, is.dots_index))])[1]
+
+    # Place each dots variable in its own vector in its own list element,
+    # and then rep() it env$rep.num of times.
     dots.list <- lapply(unlist(lst[env$dots.vector]),
                         function (x, times) rep(x, times),
                         times = env$rep.num)
-
-    vector.len <- length(env$dots.vector)
-    list.len   <- length(dots.list)
 
     # Group xy and dots, and then rename (scrape off the trailing numbers in the
     # dots)
@@ -172,7 +218,7 @@ aes_group <- function(lst) {
 
     env$groups <- rename_inputs(env$groups)
 
-  } else {
+  } else {                 # FALSE
 
     env$groups      <- env$xy
     env$dots.vector <- NULL
